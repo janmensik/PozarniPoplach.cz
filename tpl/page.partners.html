@@ -1,0 +1,70 @@
+{include file="inc.header.html" title=#partners_title#}
+
+{include file="inc.page-breadcrumb.html"   
+  page_icon=#partners_icon#
+  page_title=#partners_title# 
+  page_b1_title=#partners_title#
+}
+
+{if $data}
+<!-- Main content -->
+<div class="content">
+  <div class="container-fluid">
+    <!-- row table -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">{#partners_title#}</h3>
+
+            <div class="card-tools">
+              {if $create_new}
+              <a href="{$BASE_URL}/{#partners_url#}/new" class="btn btn-xs btn-primary"><i class="fas fa-plus mr-1"></i> {#partner_create#}</a>
+              {/if}
+            </div>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body table-responsive p-0">
+            <table class="table table-head-fixed table-hover text-nowrap">
+              <thead>
+                <tr>
+                  {include file="inc.activetabletitle.html" key=3 value="Partner"} 
+                  {include file="inc.activetabletitle.html" key=2 value="Status"} 
+                  {include file="inc.activetabletitle.html" key=4 value="Označení"}
+                  {include file="inc.activetabletitle.html" key=5 value="Fakturace" th_class="text-center"}
+                </tr>
+              </thead>
+              <tbody>
+                {foreach from=$data item=item}
+                <tr{if $item.status=="deleted"} class="text-muted"{/if}> 
+                  <td>
+                    <strong><a href="{$BASE_URL}/{#partners_url#}/{$item.id}">{$item.fullname|escape}</a></strong>
+                  </td>
+                  <td>
+                    <span class="badge badge-{$item.status_color|default:'secondary'}">{$item.status_cs|default:$item.status|escape}</span>
+                  </td>
+                  <td>
+                    <span class="badge badge-dark">{$item.shortcut|escape}</span>
+                  </td>    
+                  <td class="text-center">
+                    {if $item.prepaid_invoice}
+                      <i class="fas fa-check text-success" title="Rezervace jsou automaticky předplaceny na fakturu."></i>
+                    {else}
+                      <i class="fas fa-times text-dark"></i>
+                    {/if}
+                  </td>             
+                </tr>
+                {/foreach}
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+          {include file="inc.pagination.html" pagination=$pagination show_total=true}
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+</div>
+{elseif $ERROR=='403'} {include file="inc.403.html"} {/if} {include file="inc.footer.html"}

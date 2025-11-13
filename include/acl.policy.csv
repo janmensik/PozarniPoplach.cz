@@ -1,0 +1,22 @@
+p, admin, *, *, allow
+
+p, deputy, users, *, allow
+p, deputy, dashboard, read, allow
+p, deputy, settings, *, allow
+p, deputy, version-history, read, allow
+p, deputy, reservations, *, allow
+p, deputy, reservation, read, allow
+p, deputy, transfer, *, allow
+p, deputy, search, *, allow
+
+p, keeper_solver, users, read, allow
+p, keeper_solver, dashboard, read, allow
+p, keeper_solver, settings, *, allow
+p, keeper_solver, version-history, read, allow
+p, keeper_admin, hubs, read, allow
+p, keeper_admin, hub, read, allow
+
+p, disabled, settings, read, allow
+p, disabled, version-history, read, allow
+
+p, deleted, version-history, read, allow

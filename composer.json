@@ -1,0 +1,11 @@
+{
+    "require": {
+        "smarty/smarty": "^5.4",        
+        "bramus/router": "^1.6",
+        "casbin/casbin": "^3.25",
+        "chillerlan/php-qrcode": "^5.0",
+        "getbrevo/brevo-php": "^2.0",
+        "nette/utils": "^4.0",
+        "php-imap/php-imap": "^5.0"
+    }
+}

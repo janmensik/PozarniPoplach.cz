@@ -1,0 +1,12 @@
+# VERSION HISTORY
+# Jan Mensik, WebWorks.cz email: jan.mensik@webworks.cz
+#
+0.0.0 / 2025-08-22
+- 1. build running
+* Bug fixed
++ All libs added
+0.1.0 / 2025-10-01
++ Email parser into DB
+- Lib update> Symfony v7.3.4, PHP QRCode v5.0.4
+0.2.0 / 2025-10-03
++ Alarm page working

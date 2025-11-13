@@ -1,0 +1,79 @@
+{
+    "cSpell.words": [
+        "activetabletitle",
+        "algoliasearch",
+        "autohide",
+        "Aynz",
+        "backlink",
+        "Bramus",
+        "brevo",
+        "callsign",
+        "CÁST",
+        "checkin",
+        "Checkins",
+        "cooluri",
+        "daterange",
+        "FAILONERROR",
+        "filterbox",
+        "GATECODE",
+        "gatecodes",
+        "Getcode",
+        "getmail",
+        "holidayparkin",
+        "holidayparkingcz",
+        "inarray",
+        "justone",
+        "LICENSEPLATE",
+        "MAPBOX",
+        "mapboxgl",
+        "maxzoom",
+        "minzoom",
+        "noshows",
+        "parkclosure",
+        "PAYLINK",
+        "plaindata",
+        "pozarnipoplach",
+        "pozarnipoplachcz",
+        "pricelists",
+        "pushmenu",
+        "RESERVATIONDATE",
+        "reslock",
+        "rzpk",
+        "SCANIA",
+        "setday",
+        "startdate",
+        "streetview",
+        "subpackage",
+        "Subquery",
+        "TIMEOUTED",
+        "xmark",
+        "Zocv"
+    ],
+    "cSpell.ignoreWords": [
+        "Tqjk",
+        "UPRESNENÍ",
+        "UPXLC",
+        "Zpmkgl"
+    ],
+    "files.exclude": {
+        "node_modules/": true
+    },
+    "prettier.bracketSameLine": true,
+    "prettier.printWidth": 120,
+    "prettier.singleAttributePerLine": false,
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MariaDB",
+            "name": "SQL: holidayparkingcz",
+            "username": "root",
+            "database": "holidayparkingcz"
+        }
+    ]
+}

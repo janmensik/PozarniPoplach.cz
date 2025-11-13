@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>3D Rotating Map with Terrain and Buildings</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- Mapbox GL JS v3+ includes -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiamFubWVuc2lrIiwiYSI6ImNtZXppeHZpYTFrM3Aya3NkaDV0aWt2a3gifQ.Ye6eOACnKC2xgWAE8mNASA';
+
+const map = new mapboxgl.Map({
+    container: 'map',
+    // style: 'mapbox://styles/mapbox/satellite-streets-v12'
+    style: 'mapbox://styles/mapbox/outdoors-v12', // Use the new "standard" style
+    center: [14.35332, 50.19204], // Prague
+    zoom: 16,
+    pitch: 60,
+    bearing: 0,
+    antialias: false
+});
+
+map.on('load', () => {
+    // Add terrain source
+    map.addSource('mapbox-dem', {
+        'type': 'raster-dem',
+        'url': 'mapbox://mapbox.terrain-rgb',
+        'tileSize': 512,
+        'maxzoom': 14
+    });
+
+    // Enable terrain with exaggeration
+    map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 2.0 });
+
+    // Add sky layer for atmosphere effect
+    /*
+    map.addLayer({
+        'id': 'sky',
+        'type': 'sky',
+        'paint': {
+            'sky-type': 'atmosphere',
+            'sky-atmosphere-sun': [0.0, 0.0],
+            'sky-atmosphere-sun-intensity': 15
+        }
+    });
+    */
+
+    new mapboxgl.Marker()
+        .setLngLat([14.35332, 50.19204]) // [longitude, latitude]
+        .addTo(map);
+
+    // Add 3D buildings
+    map.addLayer({
+        'id': '3d-buildings',
+        'source': 'composite',
+        'source-layer': 'building',
+        'filter': ['==', 'extrude', 'true'],
+        'type': 'fill-extrusion',
+        'minzoom': 15,
+        'paint': {
+            'fill-extrusion-color': '#aaa',
+            'fill-extrusion-height': ['get', 'height'],
+            'fill-extrusion-base': ['get', 'min_height'],
+            'fill-extrusion-opacity': 0.6
+        }
+    });
+
+    // Example Directions API URL (replace with your own, or build dynamically)
+    //const directionsUrl = 'https://api.mapbox.com/directions/v5/mapbox/driving/14.35332,50.19204;14.360334226367874,50.199705016022726?geometries=geojson&access_token=' + mapboxgl.accessToken;
+    const directionsUrl = 'https://api.mapbox.com/directions/v5/mapbox/driving/14.35332,50.19204;14.360334226367874,50.199705016022726?alternatives=false&exclude=ferry&geometries=geojson&overview=simplified&steps=false&max_height=3&max_width=2.5&max_weight=10&access_token=' + mapboxgl.accessToken;
+
+    fetch(directionsUrl)
+        .then(response => response.json())
+        .then(data => {
+            const route = data.routes[0].geometry;
+
+            // Add the route as a GeoJSON source
+            map.addSource('route', {
+                'type': 'geojson',
+                'data': {
+                    'type': 'Feature',
+                    'geometry': route
+                }
+            });
+
+            // Add a line layer to display the route
+            map.addLayer({
+                'id': 'route-line',
+                'type': 'line',
+                'source': 'route',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#ff0000',
+                    'line-width': 8
+                }
+            }, '3d-buildings');
+
+            /*
+            // Fit the map to the route
+            const coordinates = route.coordinates;
+            const bounds = coordinates.reduce(function(bounds, coord) {
+                return bounds.extend(coord);
+            }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+            map.fitBounds(bounds, { padding: 60 });
+            */
+        });
+
+    // Start rotating the map (optimized)
+    let bearing = 0;
+    const rotateSpeed = 0.005; // degrees per millisecond
+
+    /*
+    const interval = setInterval(() => {
+        bearing = (bearing + rotateSpeed * 80) % 360; // 80 ms per tick
+        map.setBearing(bearing);
+    }, 80);
+
+    // Optional: Stop rotation when the map is removed
+    map.on('remove', () => clearInterval(interval));
+    */
+
+});
+</script>
+</body>
+</html>

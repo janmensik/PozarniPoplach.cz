@@ -1,0 +1,11 @@
+# dependencies
+/vendor/
+/lib/
+
+# cache files
+/cache/
+
+# sensitive files
+local.php
+local_localhost.php
+data.txt
