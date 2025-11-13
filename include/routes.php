@@ -165,7 +165,6 @@ $router->get('/' . $APPD->data['CONFIG']['mail_schedule_url'], function () use (
 
 # *******************************************************************
 
-
 # index (dashboard)
 $router->get('/', function () use ($Smarty, $DB, $User) {
     include('./view/page/dashboard.php');
