@@ -214,11 +214,9 @@ class Dispatch extends Modul {
 		$resp = curl_exec($ch);
 		if ($resp === false) {
 			$err = curl_error($ch);
-			curl_close($ch);
 			throw new RuntimeException("cURL error: $err");
 		}
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
 
 		if ($httpCode !== 200) {
 			return null;
