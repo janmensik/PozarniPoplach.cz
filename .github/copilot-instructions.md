@@ -37,8 +37,8 @@ This is a PHP web application.
 ## Examples
 
 - **Adding a new page**: Create a PHP file in `/view/page/`, add a route in `/include/routes.php`, and a template in `/tpl/`.
-- **Debugging**: Use Smarty's debug console and PHP error logs. Enable debug mode via `$LOCAL['DEBUGGING']`.
+- **Debugging**: Use Smarty's debug console and PHP error logs. Enable debug mode via `$_ENV['DEBUGGING']`.
 
 ---
 
-**Feedback Request:**  
+**Feedback Request:**

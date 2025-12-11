@@ -4,8 +4,10 @@
 # NEEDS
 # *******************************************************************
 
-require_once(__DIR__ . '/local.php'); # hesla, atd.
+# composer autoloader
+require 'vendor/autoload.php';
 
+require_once(__DIR__ . '/local.php'); # hesla, atd.
 
 require_once(__DIR__ . '/lib/functions/function.getip.php'); # prevod "minuly mesic" na time interval
 require_once(__DIR__ . '/lib/functions/function.parseFloat.php'); # prevod "minuly mesic" na time interval
@@ -19,16 +21,13 @@ require_once(__DIR__ . '/lib/class.Modul.php'); # Base modul
 require_once(__DIR__ . '/include/class.Version.php');
 require_once(__DIR__ . '/include/class.User.php');
 
-# composer autoloader
-require 'vendor/autoload.php';
-
 # *******************************************************************
 # GLOBAL APPDATA
 # *******************************************************************
 $APPD = AppData::getInstance();
 
-$APPD->setData('BASE_URL', $LOCAL['ABSOLUTE_URL']);
-$APPD->setData('APP', $LOCAL);
+$APPD->setData('BASE_URL', $_ENV['ABSOLUTE_URL']);
+$APPD->setData('APP', $_ENV);
 
 # ...................................................................
 # version info
@@ -54,12 +53,12 @@ date_default_timezone_set('Europe/Prague');
 mb_internal_encoding("UTF-8");
 
 # rucni debug (pouze pokud neni ostry provoz)
-if ($LOCAL['DEBUGGING'] == 1 && isset($_GET['debug']))
-    $LOCAL['DEBUGGING'] = 2;
-$APPD->setData('DEBUG_MODE', $LOCAL['DEBUGGING']);
+if ($_ENV['DEBUGGING'] == 1 && isset($_GET['debug']))
+    $_ENV['DEBUGGING'] = 2;
+$APPD->setData('DEBUG_MODE', $_ENV['DEBUGGING']);
 
 # spusteni tridy Database
-$DB = new Database($LOCAL['SQL']['HOST'], $LOCAL['SQL']['DATABASE'], $LOCAL['SQL']['USER'], $LOCAL['SQL']['PASSWORD']);
+$DB = new Database($_ENV['SQL_HOST'], $_ENV['SQL_DATABASE'], $_ENV['SQL_USER'], $_ENV['SQL_PASSWORD']);
 $DB->query('SET CHARACTER SET utf8;');
 
 # Smarty templates
@@ -90,7 +89,7 @@ $router = new \Bramus\Router\Router();
 # CASBIN access policy
 use Casbin\Enforcer;
 
-$CASBIN = new Casbin\Enforcer($LOCAL['casbin']['model'], $LOCAL['casbin']['policy']);
+$CASBIN = new Casbin\Enforcer($_ENV['CASBIN_MODEL'], $_ENV['CASBIN_POLICY']);
 
 # *******************************************************************
 # LOGIN, LOGOUT & USER CHECK
@@ -101,11 +100,11 @@ $User = new User($DB, $CASBIN);
 if (isset($_SESSION['user_id'])) {
     $User->load($_SESSION['user_id']);
 
-} else {    
+} else {
     # check for permanent login cookie
     if (isset($_COOKIE['permanent_login'])) {
         $user_id = $User->verifyPermanent($_COOKIE['permanent_login']);
-        if ($user_id) {                        
+        if ($user_id) {
             // $APPD->setData('USER', $User->load($user_id));
             $APPD->setData('USER', $User->getUser());
             $_SESSION['user_id'] = $user_id;
@@ -117,7 +116,7 @@ if (isset($_SESSION['user_id'])) {
 
 # login check
 if ($User->getUser()) {
-    # load up access policy (CASBIN)    
+    # load up access policy (CASBIN)
 }
 
 // # *******************************************************************
@@ -175,7 +174,7 @@ $Smarty->assign('FILTERS', $APPD->getFilters($APPD->getData('PAGE')));
 
 $Smarty->assign('DEBUG_sql_queries', $DB->messages);
 
-# prefix 
+# prefix
 if ($APPD->getData('TYPE') == 'controller')
     $template_prefix = 'ctrl';
 else
@@ -184,7 +183,7 @@ else
 if ($APPD->getData('API')) {
 	header('Content-Type: application/json');
 	header('Content-Encoding: UTF-8');
-	header('Content-language: cs');	
+	header('Content-language: cs');
 } else
     $Smarty->display($template_prefix . '.' . $APPD->getData('PAGE') . '.html');
 

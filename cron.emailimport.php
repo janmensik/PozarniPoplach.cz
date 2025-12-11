@@ -32,15 +32,15 @@ use PhpImap\Mailbox;
 use PhpImap\Exceptions\ConnectionException;
 
 # spusteni tridy Database
-$DB = new Database($LOCAL['SQL']['HOST'], $LOCAL['SQL']['DATABASE'], $LOCAL['SQL']['USER'], $LOCAL['SQL']['PASSWORD']);
+$DB = new Database($_ENV['SQL_HOST'], $_ENV['SQL_DATABASE'], $_ENV['SQL_USER'], $_ENV['SQL_PASSWORD']);
 $DB->query('SET CHARACTER SET utf8;');
 
 
 // Create PhpImap\Mailbox instance for all further actions
 $mailbox = new PhpImap\Mailbox(
-	$LOCAL['IMAP']['hostname'], // IMAP server and mailbox folder
-	$LOCAL['IMAP']['username'], // Username for the before configured mailbox
-	$LOCAL['IMAP']['password'], // Password for the before configured username
+	$_ENV['IMAP_HOSTNAME'], // IMAP server and mailbox folder
+	$_ENV['IMAP_USERNAME'], // Username for the before configured mailbox
+	$_ENV['IMAP_PASSWORD'], // Password for the before configured username
 	false,
 	'UTF-8'
 );

@@ -25,7 +25,7 @@ date_default_timezone_set('Europe/Prague');
 mb_internal_encoding("UTF-8");
 
 # spusteni tridy Database
-$DB = new Database($LOCAL['SQL']['HOST'], $LOCAL['SQL']['DATABASE'], $LOCAL['SQL']['USER'], $LOCAL['SQL']['PASSWORD']);
+$DB = new Database($_ENV['SQL_HOST'], $_ENV['SQL_DATABASE'], $_ENV['SQL_USER'], $_ENV['SQL_PASSWORD']);
 $DB->query('SET CHARACTER SET utf8;');
 
 if (!isset($Reservation))
@@ -44,7 +44,7 @@ $output = 0;
 $error = 0;
 
 # Brevo
-$brevo_config = Brevo\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', $LOCAL['BREVO_API_KEY']);
+$brevo_config = Brevo\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', $_ENV['BREVO_API_KEY']);
 $Brevo = new Brevo\Client\Api\TransactionalEmailsApi(new GuzzleHttp\Client(), $brevo_config);
 
 # *******************************************************************
@@ -66,7 +66,7 @@ if (is_array($emails)) {
         # Brevo API
         $email_brevo = new \Brevo\Client\Model\SendSmtpEmail([
             'to' => [['name' => $data['name'], 'email' => $data['email']]],
-            'bcc' => [['name' => 'ROBOT Holiday Parking', 'email' => $LOCAL['MASTER_EMAIL']]],
+            'bcc' => [['name' => 'ROBOT Holiday Parking', 'email' => $_ENV['MASTER_EMAIL']]],
             'templateId' => (int) $email['template'],
             'params' => [
                 "RESERVATION_ID" => $data['id'],

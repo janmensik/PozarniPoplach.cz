@@ -103,7 +103,7 @@ class Dispatch extends Modul {
 	 *
 	 */
 	public function beautifulLastDispatch(array|null $dispatch): array|null {
-		global $LOCAL;
+		// global $LOCAL;
 
 		if (empty($dispatch) || !is_array($dispatch))
 			return null;
@@ -150,7 +150,7 @@ class Dispatch extends Modul {
 		$dispatch['directions'] = $this->googleMapsDirection($dispatch['base_latitude'], $dispatch['base_longitude'], $dispatch['gps_latitude'], $dispatch['gps_longitude']);
 
 		// find out if streetview is available
-		$streetview_url = 'https://maps.googleapis.com/maps/api/streetview/metadata?location=' . $dispatch['gps_latitude'] . ',' . $dispatch['gps_longitude'] . '&key=' . $LOCAL['GOOGLE_MAPS_API_KEY'] . '&fov=120&return_error_code=true';
+		$streetview_url = 'https://maps.googleapis.com/maps/api/streetview/metadata?location=' . $dispatch['gps_latitude'] . ',' . $dispatch['gps_longitude'] . '&key=' . $_ENV['GOOGLE_MAPS_API_KEY'] . '&fov=120&return_error_code=true';
 		$streetview_json = @file_get_contents($streetview_url);
 		$streetview_data = null;
 		if ($streetview_json !== false) {
@@ -160,16 +160,16 @@ class Dispatch extends Modul {
 			$dispatch['streetview_available'] = true;
 
 			# Google Maps Static Streetview URL
-			$dispatch['directions']['static_streetview'] = 'https://maps.googleapis.com/maps/api/streetview?size=500x280&location=' . $dispatch['gps_latitude'] . ',' . $dispatch['gps_longitude'] . '&key=' . $LOCAL['GOOGLE_MAPS_API_KEY'] . '&fov=120';
+			$dispatch['directions']['static_streetview'] = 'https://maps.googleapis.com/maps/api/streetview?size=500x280&location=' . $dispatch['gps_latitude'] . ',' . $dispatch['gps_longitude'] . '&key=' . $_ENV['GOOGLE_MAPS_API_KEY'] . '&fov=120';
 		} else {
 			$dispatch['streetview_available'] = false;
 
 			# Mapbox Static map URL
-			$dispatch['directions']['static_streetview'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/pin-s+e44b38(' . $dispatch['gps_longitude'] . ',' . $dispatch['gps_latitude'] . ')/' . $dispatch['gps_longitude'] . ',' . $dispatch['gps_latitude'] . ',17,0/500x280@2x?access_token=' . $LOCAL['MAPBOX_API_KEY'];
+			$dispatch['directions']['static_streetview'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/pin-s+e44b38(' . $dispatch['gps_longitude'] . ',' . $dispatch['gps_latitude'] . ')/' . $dispatch['gps_longitude'] . ',' . $dispatch['gps_latitude'] . ',17,0/500x280@2x?access_token=' . $_ENV['MAPBOX_API_KEY'];
 		}
 
 		# Google Maps Static URL
-		$dispatch['directions']['static_big_map'] = 'https://maps.googleapis.com/maps/api/staticmap?size=640x405&scale=2&markers=color:red|' . $dispatch['gps_latitude'] . ',' . $dispatch['gps_longitude'] . '&key=' . $LOCAL['GOOGLE_MAPS_API_KEY'] . ($dispatch['directions']['polyline'] ? '&path=color:0x0000ff|weight:5|enc:' . $dispatch['directions']['polyline'] : '');
+		$dispatch['directions']['static_big_map'] = 'https://maps.googleapis.com/maps/api/staticmap?size=640x405&scale=2&markers=color:red|' . $dispatch['gps_latitude'] . ',' . $dispatch['gps_longitude'] . '&key=' . $_ENV['GOOGLE_MAPS_API_KEY'] . ($dispatch['directions']['polyline'] ? '&path=color:0x0000ff|weight:5|enc:' . $dispatch['directions']['polyline'] : '');
 
 		// remove plaindata
 		unset($dispatch['plaindata']);
@@ -188,9 +188,9 @@ class Dispatch extends Modul {
 	 *
 	 */
 	private function googleMapsDirection(string|null $origin_latitude = null, string|null $origin_longitude = null, string|null $destination_latitude = null, string|null $destination_longitude = null): array|null {
-		global $LOCAL;
+		// global $LOCAL;
 
-		if (empty($origin_latitude) || empty($origin_longitude) || empty($destination_latitude) || empty($destination_longitude) || empty($LOCAL['GOOGLE_MAPS_API_KEY'])) {
+		if (empty($origin_latitude) || empty($origin_longitude) || empty($destination_latitude) || empty($destination_longitude) || empty($_ENV['GOOGLE_MAPS_API_KEY'])) {
 			return null;
 		}
 
@@ -198,7 +198,7 @@ class Dispatch extends Modul {
 			'origin' => $origin_latitude . ',' . $origin_longitude,
 			'destination' => $destination_latitude . ',' . $destination_longitude,
 			'mode' => 'driving',
-			'key' => $LOCAL['GOOGLE_MAPS_API_KEY'],
+			'key' => $_ENV['GOOGLE_MAPS_API_KEY'],
 			'alternatives' => 'false',
 			'avoid' => 'ferries'
 		]);

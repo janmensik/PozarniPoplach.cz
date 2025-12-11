@@ -24,7 +24,7 @@ date_default_timezone_set('Europe/Prague');
 mb_internal_encoding("UTF-8");
 
 # spusteni tridy Database
-$DB = new Database($LOCAL['SQL']['HOST'], $LOCAL['SQL']['DATABASE'], $LOCAL['SQL']['USER'], $LOCAL['SQL']['PASSWORD']);
+$DB = new Database($_ENV['SQL_HOST'], $_ENV['SQL_DATABASE'], $_ENV['SQL_USER'], $_ENV['SQL_PASSWORD']);
 $DB->query('SET CHARACTER SET utf8;');
 
 if (!isset($Reservation))

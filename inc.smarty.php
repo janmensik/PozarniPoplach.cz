@@ -5,13 +5,13 @@
 use Smarty\Smarty;
 
 $Smarty = new Smarty();
-$Smarty->setTemplateDir($LOCAL['smarty']['TEMPLATE_DIR']);
-$Smarty->setConfigDir($LOCAL['smarty']['TEMPLATE_DIR']);
-$Smarty->setCompileDir($LOCAL['smarty']['COMPILE_DIR']);
+$Smarty->setTemplateDir($_ENV['SMARTY_TEMPLATE_DIR']);
+$Smarty->setConfigDir($_ENV['SMARTY_TEMPLATE_DIR']);
+$Smarty->setCompileDir($_ENV['SMARTY_COMPILE_DIR']);
 
 
-$Smarty->compile_check = $LOCAL['DEBUGGING'];
-if ($LOCAL['DEBUGGING'] === 2)
+$Smarty->compile_check = $_ENV['DEBUGGING'];
+if ($_ENV['DEBUGGING'] === 2)
 	$Smarty->debugging = true;
 $Smarty->error_reporting = E_ALL ^ E_WARNING;
 

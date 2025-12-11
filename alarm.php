@@ -26,8 +26,8 @@ require 'vendor/autoload.php';
 # *******************************************************************
 $APPD = AppData::getInstance();
 
-$APPD->setData('BASE_URL', $LOCAL['ABSOLUTE_URL']);
-$APPD->setData('APP', $LOCAL);
+$APPD->setData('BASE_URL', $_ENV['ABSOLUTE_URL']);
+$APPD->setData('APP', $_ENV);
 
 # ...................................................................
 # version info
@@ -56,12 +56,12 @@ date_default_timezone_set('Europe/Prague');
 mb_internal_encoding("UTF-8");
 
 # rucni debug (pouze pokud neni ostry provoz)
-if ($LOCAL['DEBUGGING'] == 1 && isset($_GET['debug']))
-    $LOCAL['DEBUGGING'] = 2;
-$APPD->setData('DEBUG_MODE', $LOCAL['DEBUGGING']);
+if ($_ENV['DEBUGGING'] == 1 && isset($_GET['debug']))
+    $_ENV['DEBUGGING'] = 2;
+$APPD->setData('DEBUG_MODE', $_ENV['DEBUGGING']);
 
 # spusteni tridy Database
-$DB = new Database($LOCAL['SQL']['HOST'], $LOCAL['SQL']['DATABASE'], $LOCAL['SQL']['USER'], $LOCAL['SQL']['PASSWORD']);
+$DB = new Database($_ENV['SQL_HOST'], $_ENV['SQL_DATABASE'], $_ENV['SQL_USER'], $_ENV['SQL_PASSWORD']);
 $DB->query('SET CHARACTER SET utf8;');
 
 # Smarty templates
