@@ -4,22 +4,20 @@
 # NEEDS
 # *******************************************************************
 
-require_once(__DIR__ . '/local.php'); # hesla, atd.
+# composer autoloader
+require 'vendor/autoload.php';
 
+require_once(__DIR__ . '/local.php'); # hesla, atd.
 
 require_once(__DIR__ . '/lib/functions/function.getip.php'); # prevod "minuly mesic" na time interval
 require_once(__DIR__ . '/lib/functions/function.parseFloat.php'); # prevod "minuly mesic" na time interval
 require_once(__DIR__ . '/lib/functions/function.pagination.php'); # pagination
-
 
 require_once(__DIR__ . '/lib/class.AppData.php'); # Singleton global vars
 require_once(__DIR__ . '/lib/class.Database.php'); # SQL handler
 require_once(__DIR__ . '/lib/class.Modul.php'); # Base modul
 
 require_once(__DIR__ . '/include/class.Version.php');
-
-# composer autoloader
-require 'vendor/autoload.php';
 
 # *******************************************************************
 # GLOBAL APPDATA

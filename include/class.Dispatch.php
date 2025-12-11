@@ -622,7 +622,7 @@ class Dispatch extends Modul {
 				if (!empty($data['unit_id']) && !empty($vehicle['callsign'])) {
 					$unit_vehicle = $this->DB->getRow($this->DB->query('SELECT uv.* FROM unit_vehicle uv WHERE uv.unit_id = "' . mysqli_real_escape_string($this->DB->db, trim($data['unit_id']))  . '" AND uv.callsign = "' . mysqli_real_escape_string($this->DB->db, trim($vehicle['callsign'])) . '" LIMIT 1', __METHOD__ . ' get Unit vehicle'));
 
-					if (isset($unit_vehicle)) {
+					if (!empty($unit_vehicle) && is_array($unit_vehicle) && is_array ($data['unit_vehicles'][$key])) {
 						$data['unit_vehicles'][$key]['unit_vehicle_id'] = $unit_vehicle['id'];
 						$data['unit_vehicles'][$key]['callsign'] = $unit_vehicle['callsign'];
 						$data['unit_vehicles'][$key]['name'] = $unit_vehicle['name'];
