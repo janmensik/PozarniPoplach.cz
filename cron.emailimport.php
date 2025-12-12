@@ -3,13 +3,9 @@
 # NEEDS
 # *******************************************************************
 
+require_once(__DIR__ . '/inc.startup.php');
+
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
-
-# composer autoloader
-require 'vendor/autoload.php';
-
-require_once(__DIR__ . '/local.php'); # hesla, atd.
-
 
 require_once(__DIR__ . '/lib/functions/function.parseFloat.php'); # prevod "minuly mesic" na time interval
 

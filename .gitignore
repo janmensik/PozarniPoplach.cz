@@ -6,8 +6,6 @@
 /cache/
 
 # sensitive files
-local.php
-local_localhost.php
 .env
 .env.localhost
 data.txt

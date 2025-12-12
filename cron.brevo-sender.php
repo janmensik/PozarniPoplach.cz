@@ -3,7 +3,7 @@
 # NEEDS
 # *******************************************************************
 
-require_once(__DIR__ . '/local.php'); # hesla, atd.
+require_once(__DIR__ . '/inc.startup.php');
 
 
 require_once(__DIR__ . '/lib/class.Database.php'); # SQL handler
@@ -12,9 +12,6 @@ require_once(__DIR__ . '/lib/class.Modul.php'); # Base modul
 require_once(__DIR__ . '/include/class.Reservation.php');
 require_once(__DIR__ . '/include/class.Gatecode.php');
 require_once(__DIR__ . '/include/class.MailSchedule.php');
-
-# composer autoloader
-require 'vendor/autoload.php';
 
 # *******************************************************************
 # DEFINICE, INICIALIZACE

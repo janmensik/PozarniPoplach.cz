@@ -4,10 +4,7 @@
 # NEEDS
 # *******************************************************************
 
-# composer autoloader
-require 'vendor/autoload.php';
-
-require_once(__DIR__ . '/local.php'); # hesla, atd.
+require_once(__DIR__ . '/inc.startup.php');
 
 require_once(__DIR__ . '/lib/functions/function.getip.php'); # prevod "minuly mesic" na time interval
 require_once(__DIR__ . '/lib/functions/function.parseFloat.php'); # prevod "minuly mesic" na time interval
