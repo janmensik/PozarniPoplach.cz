@@ -11,9 +11,10 @@ require_once(__DIR__ . '/lib/functions/function.parseFloat.php'); # prevod "minu
 require_once(__DIR__ . '/lib/functions/function.pagination.php'); # pagination
 
 
-require_once(__DIR__ . '/lib/class.AppData.php'); # Singleton global vars
-require_once(__DIR__ . '/lib/class.Database.php'); # SQL handler
-require_once(__DIR__ . '/lib/class.Modul.php'); # Base modul
+use Janmensik\Jmlib\Database;
+// Alias AppData to global namespace for backward compatibility
+class_alias(\Janmensik\Jmlib\AppData::class, 'AppData');
+class_alias(\Janmensik\Jmlib\Modul::class, 'Modul');
 
 require_once(__DIR__ . '/include/class.Version.php');
 require_once(__DIR__ . '/include/class.User.php');
