@@ -10,7 +10,6 @@ require_once(__DIR__ . '/lib/functions/function.getip.php'); # prevod "minuly me
 require_once(__DIR__ . '/lib/functions/function.parseFloat.php'); # prevod "minuly mesic" na time interval
 require_once(__DIR__ . '/lib/functions/function.pagination.php'); # pagination
 
-
 use Janmensik\Jmlib\Database;
 // Alias AppData to global namespace for backward compatibility
 class_alias(\Janmensik\Jmlib\AppData::class, 'AppData');
@@ -26,6 +25,7 @@ $APPD = AppData::getInstance();
 
 $APPD->setData('BASE_URL', $_ENV['ABSOLUTE_URL']);
 $APPD->setData('APP', $_ENV);
+$APPD->setData('SOURCE', 'alarm');
 
 # ...................................................................
 # version info
@@ -59,30 +59,10 @@ $APPD->setData('DEBUG_MODE', $_ENV['DEBUGGING']);
 $DB = new Database($_ENV['SQL_HOST'], $_ENV['SQL_DATABASE'], $_ENV['SQL_USER'], $_ENV['SQL_PASSWORD']);
 $DB->query('SET CHARACTER SET utf8;');
 
-# Smarty templates
-$smarty_plugins = array(
-    //'czmonth' => 'modifier',
-    //'czday' => 'modifier',
-    'czech_num_items' => 'modifier',
-    'nice_num' => 'modifier',
-    'nl2br' => 'modifier',
-    'agots' => 'function',
-    'ppurl' => 'function',
-    //'nl2p' => 'modifier',
-    //'utf2ascii' => 'modifier',
-    //'thumb' => 'function',
-);
-require_once(__DIR__ . "/lib/functions/class.url_parameters.php");
 require_once(__DIR__ . '/inc.smarty.php');
-
-# Smarty load global config
-$Smarty->config_overwrite = false;
-$Smarty->configLoad(__DIR__ . '/tpl/app.conf', 'pages');
-$APPD->setData('CONFIG', $Smarty->getConfigVars());
 
 # router
 $router = new \Bramus\Router\Router();
-
 
 # CASBIN access policy
 use Casbin\Enforcer;

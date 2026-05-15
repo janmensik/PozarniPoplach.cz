@@ -1,0 +1,28 @@
+<div id="filterbox" class="card card-secondary">
+  <div class="card-header">
+    <h3 class="card-title">Filtr rezervací</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Sbalit">
+        <i class="fas fa-minus"></i>
+      </button>
+      <!-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Zrušit filtry">
+        <i class="fas fa-times"></i>
+      </button> -->
+      <!-- {ppurl cooluri=true key=filter_clear value=1 remove='page&link'} -->
+    </div>
+  </div>
+  <div class="card-body">
+    <form method="get" action="{$BASE_URL}/{#reservations_url#}">
+      <div class="row">
+        {if $daterange}
+        <div class="col-12 col-lg-4 col-md-6">
+          <div class="form-group">
+            <label for="daterange">Datum</label>
+            {include file="inc.daterange.html"}
+          </div>
+        </div>
+        {/if}
+      </div>
+    </form>
+  </div>
+</div>

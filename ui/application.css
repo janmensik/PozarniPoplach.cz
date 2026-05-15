@@ -1,0 +1,315 @@
+/* 
+   PozarniPoplach.cz - AdminLTE Recolor 
+   Based on Kinetic Command / Alarm Dashboard colors 
+*/
+
+:root {
+  /* Core Colors from alarm.dist.css */
+  --pp-surface: #09151a;
+  --pp-on-surface: #d7e4ec;
+  --pp-primary: #F80000; /* Bright Alarm Red */
+  --pp-primary-container: #AF2B1E; /* Darker Header Red */
+  --pp-on-primary-container: #ffffff;
+  --pp-secondary: #FFD400; /* Yellow */
+  --pp-on-secondary: #402d00;
+  --pp-tertiary: #c6c6c7;
+  --pp-surface-container-low: #111d23;
+  --pp-surface-container: #152127;
+  --pp-surface-container-high: #202c32;
+  --pp-surface-container-highest: #2a363d;
+  --pp-outline-variant: #5b403d;
+  --pp-error: #ffb4ab;
+}
+
+/* Base Body & Content Wrapper */
+body {
+  font-family: 'Public Sans', sans-serif !important;
+  background-color: var(--pp-surface) !important;
+  color: var(--pp-on-surface) !important;
+}
+
+.content-wrapper {
+  background-color: var(--pp-surface) !important;
+  color: var(--pp-on-surface) !important;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6, .brand-text, .nav-link, .card-title {
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: uppercase !important;
+}
+
+/* Navbar overrides */
+.main-header {
+  background-color: var(--pp-primary-container) !important;
+  border-bottom: 4px solid var(--pp-secondary) !important;
+}
+
+.main-header .nav-link, .main-header .dropdown-toggle, .main-header .brand-text-top {
+  color: var(--pp-on-primary-container) !important;
+}
+
+.brand-text-top {
+  font-weight: 900 !important;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.main-header .nav-link:hover {
+  color: var(--pp-secondary) !important;
+}
+
+/* Search Box in Navbar */
+.navbar-light .form-control-navbar {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+}
+
+.navbar-light .form-control-navbar:focus {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid var(--pp-secondary) !important;
+}
+
+/* Footer overrides */
+.main-footer {
+  background-color: var(--pp-surface-container-high) !important;
+  border-top: 1px solid rgba(91, 64, 61, 0.15) !important;
+  color: var(--pp-tertiary) !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.main-footer a {
+  color: var(--pp-secondary) !important;
+}
+
+/* Sidebar overrides */
+.main-sidebar {
+  background-color: var(--pp-surface-container) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+  background-color: var(--pp-secondary) !important;
+  color: var(--pp-on-secondary) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 900 !important;
+}
+
+.nav-sidebar .nav-link {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.nav-sidebar .nav-header {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  color: var(--pp-tertiary) !important;
+  font-weight: 900;
+  font-size: 0.7rem;
+  padding: 1rem 1rem 0.5rem !important;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.brand-link {
+  background-color: var(--pp-surface-container-high) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: var(--pp-on-surface) !important;
+}
+
+/* Cards & Info Boxes */
+.card {
+  background-color: var(--pp-surface-container-high) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: var(--pp-on-surface) !important;
+  border-radius: 0 !important;
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.info-box {
+  background-color: var(--pp-surface-container-highest) !important;
+  color: var(--pp-on-surface) !important;
+  border-radius: 0 !important;
+  border-left: 5px solid var(--pp-secondary) !important;
+}
+
+/* Table overrides */
+.table {
+  color: var(--pp-on-surface) !important;
+}
+
+.table thead th {
+  border-bottom: 2px solid var(--pp-outline-variant) !important;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: var(--pp-tertiary);
+}
+
+.table td {
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Buttons & Alerts */
+.btn {
+  border-radius: 0 !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+}
+
+.btn-primary {
+  background-color: var(--pp-primary-container) !important;
+  border-color: var(--pp-primary-container) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--pp-primary) !important;
+  border-color: var(--pp-primary) !important;
+}
+
+.btn-secondary {
+  background-color: var(--pp-surface-container-highest) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--pp-on-surface) !important;
+}
+
+.btn-warning {
+  background-color: var(--pp-secondary) !important;
+  border-color: var(--pp-secondary) !important;
+  color: var(--pp-on-secondary) !important;
+}
+
+/* Status Colors */
+.bg-danger {
+  background-color: var(--pp-primary) !important;
+}
+
+.bg-warning {
+  background-color: var(--pp-secondary) !important;
+  color: var(--pp-on-secondary) !important;
+}
+
+.bg-success {
+  background-color: #2d4a3e !important; /* Muted success green */
+  border-left: 4px solid #4ade80 !important;
+}
+
+.alert-success {
+  background-color: #1b2e25 !important;
+  border: 1px solid #2d4a3e !important;
+  border-left: 5px solid #4ade80 !important;
+  color: #d1fae5 !important;
+}
+
+.alert-warning {
+  background-color: #3e3a1b !important;
+  border: 1px solid #4a452d !important;
+  border-left: 5px solid var(--pp-secondary) !important;
+  color: #fef3c7 !important;
+}
+
+/* Custom Scanline Effect */
+.content-wrapper {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.content-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.05) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.2;
+}
+
+/* Badges */
+.badge {
+  border-radius: 0 !important;
+  padding: 0.35em 0.65em !important;
+  font-weight: 800 !important;
+}
+
+.badge-info {
+  background-color: var(--pp-surface-container-highest) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Inputs */
+.form-control, .input-group-text {
+  background-color: var(--pp-surface-container-highest) !important;
+  border: 1px solid var(--pp-outline-variant) !important;
+  color: var(--pp-on-surface) !important;
+  border-radius: 0 !important;
+}
+
+.form-control:focus {
+  border-color: var(--pp-secondary) !important;
+  box-shadow: none !important;
+}
+
+/* Pagination */
+.page-link {
+  background-color: var(--pp-surface-container) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--pp-on-surface) !important;
+}
+
+.page-item.active .page-link {
+  background-color: var(--pp-secondary) !important;
+  border-color: var(--pp-secondary) !important;
+  color: var(--pp-on-secondary) !important;
+}
+
+/* Tabs overrides */
+.nav-tabs {
+  border-bottom: 2px solid var(--pp-outline-variant) !important;
+}
+
+.nav-tabs .nav-link {
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--pp-tertiary) !important;
+  font-weight: 700 !important;
+  padding: 0.75rem 1.5rem !important;
+  background: transparent !important;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--pp-on-surface) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: var(--pp-surface-container-high) !important;
+  color: var(--pp-secondary) !important;
+  border-bottom: 3px solid var(--pp-secondary) !important;
+  margin-bottom: -2px;
+}
+
+/* Card Tabs */
+.card-tabs .card-header {
+  background-color: var(--pp-surface-container) !important;
+}
+
+.tab-content {
+  background-color: transparent !important;
+  color: var(--pp-on-surface) !important;
+}
+
+.tab-pane {
+  padding-top: 1rem;
+}

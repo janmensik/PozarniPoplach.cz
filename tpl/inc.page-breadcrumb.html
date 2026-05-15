@@ -1,0 +1,19 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>{if $page_icon}<i class="{$page_icon} mr-2"></i>{/if}{if $page_subtitle}{$page_subtitle|escape}: {/if}{if $page_title}<strong>{$page_title}</strong>{/if}{if $page_title_appendix}<em>{$page_title_appendix}</em>{/if}</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{$BASE_URL}/"><i class="{#dashboard_icon#}"></i></a></li>
+          {if $page_b1_title}<li class="breadcrumb-item active">{if $page_b2_title}<a href="{$BASE_URL}/{$page_b1_url}">{$page_b1_title}</a>{else}{$page_b1_title}{/if}</li>{/if}
+          {if $page_b2_title}<li class="breadcrumb-item active">{if $page_b3_title}<a href="{$BASE_URL}/{$page_b2_url}">{$page_b2_title}</a>{else}{$page_b2_title}{/if}</li>{/if}
+          {if $page_b3_title}<li class="breadcrumb-item active">{if $page_b4_title}<a href="{$BASE_URL}/{$page_b3_url}">{$page_b3_title}</a>{else}{$page_b3_title}{/if}</li>{/if}
+        </ol>
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid -->
+</section>

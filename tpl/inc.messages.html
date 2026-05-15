@@ -1,0 +1,48 @@
+<section class="content">
+{if $MESSAGES.error}	
+	<div class="alert alert-danger alert-dismissable mt-3">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h5><i class="icon fa-regular fa-ban"></i> Chyba při ukládání: <strong>data neuložena!</strong></h5>
+		<p>Při pokusu o uložení došlo k následujících chybám:</p>
+		<ul>
+			{foreach from=$MESSAGES.error item=message key=key}
+				{config_load file='messages.conf' section=$key}				
+				{if $message=='wrong' && #wrong#}
+					<li>{#wrong#}</li>
+				{elseif $message=='wrong' && !#wrong#}
+					<li><strong>{#input#|default:$key}:</strong> {#wrong_general#}</li>
+				{elseif $message=='empty' && #empty#}
+					<li>{#empty#}</li>
+				{elseif $message=='empty' && !#empty#}
+					<li><strong>{#input#|default:$key}:</strong> {#empty_general#}</li>
+				{elseif $key == 'status'}
+					<li>Špatný nebo chybějící stav (status).</li>
+				{else}
+					<li>Obecné nespecifická chyba u <strong>{$key}</strong>: {$message}</li>
+				{/if}
+			{{/foreach}}
+		</ul>
+	</div>
+{/if}
+
+{if $MESSAGES.saved}
+	<div class="alert alert-success alert-dismissable mt-3">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h5><i class="icon fa-regular fa-floppy-disk"></i> Data uložena</h5>		
+		<ul>
+			{foreach from=$MESSAGES.saved item=message key=key}
+				{config_load file='messages.conf' section=$key}								
+				{if $key == 'pricelist'}
+					<li>Ceník <a href="{$BASE_URL}/pricelists-edit/{$MESSAGES.saved.id}">{$MESSAGES.saved.title|escape}</a> uložen.</li>
+				{elseif $message=='saved' && #saved#}
+					<li>{#saved#}</li>
+				{elseif $message=='saved' && !#saved# && #input#}
+					<li><strong>{#input#|default:$key}</strong></li>
+				{elseif $key != 'id' && $key != 'title'}
+					<li>Uloženo <strong>{$key}</strong>: {$message}</li>
+				{/if}
+			{/foreach}
+		</ul>
+	</div>
+{/if}
+</section>

@@ -1,0 +1,13 @@
+<div class="input-group date-range-picker">  
+  <input type="text" name="daterange" id="daterange" class="form-control" autocomplete="off" value="{$FILTERS.daterange}" />
+  <!-- <div class="input-group-append"><button type="button" class="btn btn-outline-secondary" id="daterange-clear">
+    <i class="far fa-times"></i>
+  </button></div> -->
+  <div class="input-group-append">
+    <select class="custom-select" id="daterange-type" name="daterange_type">
+      <option value="created" {if $FILTERS.daterange_type=='created' || !$FILTERS.daterange_type}selected="selected"{/if} selected>rezervace</option>
+      <option value="checkin" {if $FILTERS.daterange_type=='checkin'} selected="selected"{/if}>Check in</option>
+      <option value="checkout" {if $FILTERS.daterange_type=='checkout'} selected="selected"{/if}>Check out</option>
+    </select>
+  </div>
+</div>

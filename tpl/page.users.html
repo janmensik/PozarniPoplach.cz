@@ -1,0 +1,71 @@
+{include file="inc.header.html" title=#users_title#}
+
+{include file="inc.page-breadcrumb.html" 
+  page_icon=#users_icon#
+  page_title=#users_title#  
+  page_b1_title=#users_title#   
+}
+
+{if $data}
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- row table -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Uživatelé</h3>
+
+            <div class="card-tools">
+              {if $create_new}<a href="{$BASE_URL}/users/new" class="btn btn-xs btn-primary"><i class="fas fa-plus mr-1"></i> Nový uživatel</a>{/if}
+              <!-- <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                  </div>
+                </div> -->
+            </div>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body table-responsive p-0">
+            <table class="table table-head-fixed text-nowrap">
+              <thead>
+                <tr>
+                  {include file="inc.activetabletitle.html" key=1 value="ID" th_class="text-right"} {include file="inc.activetabletitle.html" key=2 value="Jméno"} {include file="inc.activetabletitle.html" key=3 value="E-mail"} {include file="inc.activetabletitle.html" key=5 value="Status"} {include file="inc.activetabletitle.html" key=7 value="Naposled" th_class="text-right"}
+                </tr>
+              </thead>
+              <tbody>
+                {foreach from=$data item=item}
+                <tr>
+                  <td class="text-right">{$item.id}</td>
+                  <td>
+                    <a href="{$BASE_URL}/{#users_url#}/{$item.id}"><strong>{$item.name|escape}</strong></a>
+                  </td>
+                  <td>{$item.email|escape}</td>
+                  <td>
+                    <span class="badge badge-{$item.status_color|default:'info'}">{$item.status_cs|default:$item.status|escape}</span>
+                  </td>
+                  <td class="text-right">
+                    {if $item.last_login}
+                    <abbr class="timeago" title="před {agots ts=$item.last_login lang='cs2' justone=true}">{$item.last_login|date_format:'j. n. Y H:i:s'}</abbr>
+                    {else}
+                    <em>never</em>
+                    {/if}
+                  </td>
+                </tr>
+                {/foreach}
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+          {include file="inc.pagination.html" pagination=$pagination show_total=true}
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+</section>
+{elseif $ERROR=='403'} {include file="inc.403.html"} {/if} {include file="inc.footer.html"}

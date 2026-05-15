@@ -1,5 +1,7 @@
 <?php
 
+$APPD = AppData::getInstance();
+
 # *******************************************************************
 # routes
 # *******************************************************************
@@ -89,7 +91,7 @@ $router->get('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})', 
 });
 
 # reservation - new
-$router->match('GET|POST','/'.$APPD->data['CONFIG']['reservations_url'].'/new', function () use ($Smarty, $DB, $User) {
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['reservations_url'] . '/new', function () use ($Smarty, $DB, $User) {
     include('./view/page/reservation-new.php');
 });
 
@@ -104,7 +106,7 @@ $router->post('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/m
 });
 
 # reservation -  status change
-$router->match('GET|POST','/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/change', function ($id) use ($Smarty, $DB, $User) {
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/change', function ($id) use ($Smarty, $DB, $User) {
     include('./view/controller/reservation.change.php');
 });
 
@@ -115,15 +117,16 @@ $router->post('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/p
 
 # *******************************************************************
 
-# partners - list
-$router->get('/' . $APPD->data['CONFIG']['partners_url'], function () use ($Smarty, $DB, $User) {
-    include('./view/page/partners.php');
+# units - list
+$router->get('/' . $APPD->data['CONFIG']['units_url'], function () use ($Smarty, $DB, $User) {
+    include('./view/page/units.php');
 });
 
-# partner - detail, edit
-$router->match('GET|POST', '/' . $APPD->data['CONFIG']['partners_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User) {
-    include('./view/page/partner-edit.php');
-});
+# unit - detail, edit
+
+// $router->match('GET|POST', '/' . $APPD->data['CONFIG']['units_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User) {
+//     include('./view/page/unit-edit.php');
+// });
 
 # *******************************************************************
 
@@ -173,10 +176,14 @@ $router->get('/', function () use ($Smarty, $DB, $User) {
 # *******************************************************************
 
 # API
-$router->mount('/api', function () use ($router, $DB, $User) {
+$router->mount('/api', function () use ($router, $DB, $User, $Smarty) {
 
     $router->get('/get-price', function () use ($DB, $User) {
         include('./view/api/get-price.php');
+    });
+
+    $router->get('/alarm', function () use ($DB, $User) {
+        include('./view/api/get-alarm.php');
     });
 });
 
@@ -184,7 +191,18 @@ $router->mount('/api', function () use ($router, $DB, $User) {
 
 # ALARM
 $router->mount('/alarm', function () use ($router, $DB, $Smarty, $APPD) {
+    # ...................................................................
+    # alarm dashboard
     $router->get('/' . $APPD->data['CONFIG']['alarm_url'], function () use ($Smarty, $DB) {
         include('./view/page/alarm-dispatch.php');
+    });
+
+    # ...................................................................
+    # API
+    $router->mount('/api', function () use ($router, $DB) {
+
+        $router->get('/dispatch', function () use ($DB) {
+            include('./view/api/dispatch.php');
+        });
     });
 });

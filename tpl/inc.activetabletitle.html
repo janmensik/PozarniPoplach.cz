@@ -1,0 +1,9 @@
+<th class="{$th_class}{if $data_extra.order == $key} sorted{$data_extra.order_type}{/if}"{if $colspan} colspan="{$colspan}"{/if}>
+	{if $data_extra.order==$key && $data_extra.order_plus}{math assign=order equation="-1*a" a=$key}{elseif $key}{assign var="order" value=$key}{else}{assign var="order" value=null}{/if}
+	
+	{if !$key}
+		<span>{$value}</span>
+	{else}
+		<a href="{ppurl cooluri=true key='order' value=$order remove='page&link&p'}" title="{$title}">{$value}{if $data_extra.order==$key && $data_extra.order_plus}&nbsp;<i class="fas fa-sort-amount-up"></i>{elseif $data_extra.order==$key}&nbsp;<i class="fa fa-sort-amount-down"></i>{/if}</a>
+	{/if}
+</th>

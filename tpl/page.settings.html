@@ -1,0 +1,169 @@
+{include file="inc.header.html" title="`$smarty.config.settings_title` `$data.name` (`$data.email`)"}
+
+{include file="inc.page-breadcrumb.html" 
+  page_icon=#users_icon# 
+  page_subtitle=#settings_title#
+  page_title=$data.name|default:$data.email|escape
+  page_b1_title=#users_title#
+  page_b1_url=#users_url#
+  page_b2_title=$data.name|default:$data.email|escape
+}
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form method="post" action="{$BASE_URL}/users/{$data.id|default:'new'}" class="form-horizontal">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+          <ul class="nav nav-tabs" id="settings-tabs-user-tab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="settings-tabs-personal-tab" data-toggle="pill" href="#settings-tabs-personal" role="tab" aria-controls="settings-tabs-personal" aria-selected="true">Osobní údaje</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="settings-tabs-password-tab" data-toggle="pill" href="#settings-tabs-password" role="tab" aria-controls="settings-tabs-password" aria-selected="true">Heslo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="settings-tabs-preferences-tab" data-toggle="pill" href="#settings-tabs-preferences" role="tab" aria-controls="settings-tabs-preferences" aria-selected="true">Předvolby</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content" id="settings-tabs-user-tabContent">
+            <div class="tab-pane fade show active" id="settings-tabs-personal" role="tabpanel" aria-labelledby="settings-tabs-personal-tab">
+              <fieldset>
+                <legend>Osobní údaje</legend>
+
+                <div class="form-group">
+                  <label for="f_name" class="col-sm-2 control-label">Jméno</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" name="name" id="f_name" value="{$data.name|escape}" autocomplete="name" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="f_email" class="col-sm-2 control-label">E-mail</label>
+                  <div class="col-sm-10">
+                    <input type="email" class="form-control" name="email" id="f_email" value="{$data.email|escape}" autocomplete="email" />
+                    <p class="help-block">Používá se pro přihlášení.</p>
+                  </div>
+                </div>
+              </fieldset>
+
+              <input type="hidden" name="status" value="admin" />
+              {* }
+              <fieldset>
+                <legend>Úroveň přístupu</legend>
+                {if $USER.status=="admin"}
+
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  {foreach from=$user_text.cs.status key=status item=status_cs}
+                  <label class="btn btn-outline-{$user_text.color.status[$status]|default:'secondary'}{if $data.status==$status} active{/if}"> <input type="radio" name="status" value="{$status}" autocomplete="off" {if $data.status==$status} checked{/if} /> {$status_cs|escape} </label>
+                  {/foreach}
+                </div>
+
+                {else}
+                <div class="form-group">
+                  <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input span3 bg-{$user_text.color.status[$data.status]}">{$data.status_cs|default:$data.status|escape}</span>
+                  </div>
+                </div>
+                {/if}
+              </fieldset>
+              { *}
+            </div>
+            <div class="tab-pane fade" id="settings-tabs-password" role="tabpanel" aria-labelledby="settings-tabs-password-tab">
+              <fieldset>
+                <legend>Nastavení hesla</legend>
+
+                {if $USER.status!='admin' || $USER.id==$data.id}
+                <div class="form-group">
+                  <label for="f_password" class="col-sm-2 control-label">Současné heslo</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control" name="old_password" id="f_password" autocomplete="current-password" />
+                    <p class="help-block">Zadejte současné heslo pro nastavení nového hesla.</p>
+                  </div>
+                </div>
+
+                <hr />
+                {/if}
+
+                <div class="form-group">
+                  <label for="f_new_password" class="col-sm-2 control-label">Nové heslo</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control" name="new_password" id="f_new_password" autocomplete="new-password" passwordrules="minlength: 6; maxlength: 255; allowed: upper,lower,digit;" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="f_new_password2" class="col-sm-2 control-label">Nové heslo znovu</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control" name="new_password2" id="f_new_password2" autocomplete="new-password" passwordrules="minlength: 6; maxlength: 255; allowed: upper,lower,digit;" />
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="tab-pane fade" id="settings-tabs-preferences" role="tabpanel" aria-labelledby="settings-tabs-preferences-tab">
+              <fieldset>
+                <legend>Předvolby</legend>
+
+                <div class="form-group">
+                  <div class="col-sm-10">
+                    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#modal_clearPageschema">Resetovat uživatelské preference</button>
+
+                    <div class="modal fade" id="modal_clearPageschema" arial-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4>Vynulovat uživatelské preference?</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Opravdu chcete odstranit všechny předvolby filtrů, řazení atd. u uživatele?</p>
+                            <p><span class="label label-info">Nebojte:</span> Uživatelský účet nebo přístupové údaje zůstanou zachovány.</p>
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Zrušit</button>
+                            <button type="submit" name="reset" value="true" class="btn btn-danger">Resetovat</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {* }
+                <div class="form-group">
+                  <div class="col-sm-10">
+                    <a class="" data-toggle="modal" href="#deleteAccount">Smazat účet</a>
+
+                    <div class="modal hide" id="deleteAccount">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h3>Delete account</h3>
+                      </div>
+                      <div class="modal-body">
+                        <p>Do you really want to delete account?</p>
+                        <p><span class="label label-warning">Warning:</span> If you delete account, you will not be able to login.</p>
+                      </div>
+                      <div class="modal-footer">
+                        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+                        <a href="#" class="btn btn-primary">I'm sure I want to delete account</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                { *}
+              </fieldset>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer"><input type="submit" value="Uložit" class="btn btn-primary" /> nebo <a href="{$BASE_URL}/settings">zrušit editaci</a></div>
+        <!-- /.card -->
+      </div>
+    </form>
+  </div>
+</section>
+<!-- /.content -->
+
+{include file="inc.footer.html"}

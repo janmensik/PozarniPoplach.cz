@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login | {#APP_NAME#}</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/9a1439ba27.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
+
+    <link rel="stylesheet" href="{$BASE_URL}/ui/application.css" />
+
+    <link rel="shortcut icon" href="{$BASE_URL}/favicon.ico" type="image/x-icon" />
+  </head>
+  <body class="hold-transition login-page">
+    <div class="login-box">
+      <div class="card card-outline card-primary">
+        <div class="card-header text-center h1">
+          <img src="{#APP_BRAND_LOGO#}" alt="{#APP_NAME#}" style="width:3em;" /><br />
+          {#APP_NAME#}
+        </div>
+        <div class="card-body">
+          <p class="login-box-msg">Přihlášení do administrace</p>
+
+          {if $MESSAGES.error.login}
+          <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-ban"></i> Chyba při přihlášení</h5>
+            {if $MESSAGES.error.login=='empty'}
+              Zadejte email a heslo pro přihlášení
+            {elseif $MESSAGES.error.login=='wrong'}
+              Chybně zadané heslo nebo emailová adresa
+            {else}
+              {$MESSAGES.error.login}
+            {/if}
+          </div>
+          {/if}
+          <form action="{$BASE_URL}/login" method="post">
+            <div class="input-group mb-3">
+              <input type="email" name="email" id="f_email" class="form-control" placeholder="E-mail" value="{$MESSAGES.form_keep.email|escape}" autocomplete="email" required />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-envelope"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="password" name="password" id="f_password" class="form-control" placeholder="Heslo" autocomplete="current-password" required />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="icheck-primary">
+                  <input type="checkbox" id="permanent" name="permanent"{if $MESSAGES.form_keep.permanent} checked="checked"{/if}>
+                  <label for="permanent">Přihlásit trvale</label>
+                </div>
+              </div>
+              <!-- /.col -->
+              <div class="col-6">
+                <button type="submit" class="btn btn-primary btn-block">Přihlásit</button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- /.login-box -->
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+  </body>
+</html>

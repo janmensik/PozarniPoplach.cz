@@ -74,6 +74,21 @@
             "name": "SQL: holidayparkingcz",
             "username": "root",
             "database": "holidayparkingcz"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "PozarniPoplach.cz",
+            "group": "localhost",
+            "database": "pozarnipoplachcz",
+            "username": "root"
         }
     ],
     "postman.settings.dotenv-detection-notification-visibility": false

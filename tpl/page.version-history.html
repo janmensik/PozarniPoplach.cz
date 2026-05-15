@@ -1,0 +1,51 @@
+{include file="inc.header.html" title="Historie verzí aplikace"}
+
+{include file="inc.page-breadcrumb.html"   
+  page_title="Historie verzí aplikace" 
+  page_b1_title="Historie verzí aplikace" 
+}
+
+<!-- Main content -->
+<section class="content">
+	<div class="container-fluid">
+		<!-- The time line -->
+		<div class="timeline">
+			{foreach from=$data item=item_v}
+				<!-- ********************************************************************* -->
+				<!-- timeline LABEL -->
+				<div class="time-label">
+					<span class="bg-green">v<strong>{$item_v.version|escape}</strong> <span
+							class="badge badge-light ml-2">{$item_v.date_ts|date_format:'j. n. Y'}</span></span>
+				</div>
+				{foreach from=$item_v.data key=vt item=item_t}
+					<!-- timeline {$vt|upper|escape} item -->
+					<div>
+						{if $vt=='new'}
+							<i class="fas fa-plus bg-yellow"></i>
+						{elseif $vt=='change'}
+							<i class="far fa-wrench bg-gray"></i>
+						{elseif $vt=='bugfix'}
+							<i class="far fa-bug bg-blue"></i>
+						{else $vt=='change'}
+							<i class="fas fa-clock bg-gray"></i>
+						{/if}
+						<div class="timeline-item">
+							<div class="timeline-body">
+								<ul>
+									{foreach from=$item_t item=item}
+										<li>{$item|escape}</li>
+									{/foreach}
+								</ul>
+							</div>
+						</div>
+					</div>
+				{/foreach} 
+			{/foreach}
+			<div>
+				<i class="fas fa-clock bg-dark"></i>
+			</div>
+		</div>
+	</div>
+</section>
+
+{include file="inc.footer.html"}
