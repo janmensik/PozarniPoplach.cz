@@ -34,43 +34,32 @@
               <table class="table table-head-fixed text-nowrap">
                 <thead>
                   <tr>
-                    {include file="inc.activetabletitle.html" key=4 value="Kód" th_class="text-right"}
-                    {include file="inc.activetabletitle.html" key=2 value="Název"}
-                    {include file="inc.activetabletitle.html" key=5 value="Adresa" colspan=2 th_class="text-center"}
-                    {include file="inc.activetabletitle.html" key=3 value="Stav"}
-                    {include file="inc.activetabletitle.html" key=9 value="Popis"}
-                    {include file="inc.activetabletitle.html" key=15 value="Hlášení" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=4 value="Ev. číslo" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=3 value="Název"}
+                    {include file="inc.activetabletitle.html" key=6 value="JPO"}
+                    {include file="inc.activetabletitle.html" key=11 value="Kraj"}
+                    {include file="inc.activetabletitle.html" value="Lokalita"}
+                    {include file="inc.activetabletitle.html" key=2 value="Stav"}
                   </tr>
                 </thead>
                 <tbody>
                   {foreach from=$data item=item}
                     <tr>
-                      <td class="text-right monospace"><a href="{$BASE_URL}/{#units_url#}/{$item.pincode}"><code>{$item.pincode}</code></a></td>
+                      <td class="text-right monospace"><code>{$item.registration}</code></td>
                       <td>
-                        <a href="{$BASE_URL}/{#units_url#}/{$item.pincode}"><strong>{$item.title|default:$item.street|default:"Jednotka `$item.pincode`"|escape}</strong></a>
+                        <a href="{$BASE_URL}/{#units_url#}/{$item.fullname}"><strong>{$item.fullname|default:"Jednotka `$item.registration`"|escape}</strong></a>
                       </td>
-                      <td class="text-right">
-                        {if $item.latitude && $item.longitude}
-                        <a href="https://www.google.com/maps/search/?api=1&query={$item.latitude|escape:'url'},{$item.longitude|escape:'url'}" target="_blank" title="Zobrazit na mapě"><i class="fa far fa-map-marked"></i></a>
-                        {elseif $item.street && $item.city}
-                          <a href="https://www.google.com/maps/search/?api=1&query={$item.street|escape:'url'},{$item.city|escape:'url'}" target="_blank" title="Zobrazit na mapě"><i class="fa far fa-map-marked"></i></a>
+                      <td><span class="badge bg-green">{$item.category|escape}</span></td>
+                      <td><small>{$item.region_title|escape}</small></td>
+                      <td>
+                        {if $item.base_latitude && $item.base_longitude}
+                          <a href="https://www.google.com/maps/search/?api=1&query={$item.base_latitude|escape:'url'},{$item.base_longitude|escape:'url'}" target="_blank" title="Zobrazit na mapě"><i class="fa far fa-map-marked"></i></a>
                         {else}
                           &nbsp;
                         {/if}
                       </td>
-                      <td><small>{$item.street|escape}</small></td>
                       <td>
                         <span class="badge badge-info">{$item.status_cs|default:$item.status|escape}</span>
-                      </td>
-                      <td class="small">{$item.description|truncate:50:"..."|escape}</td>
-                      <td class="text-right">
-                        {if $item.report_new}
-                          <span class="badge badge-warning"><strong>{$item.report_new|default:0}</strong><span class="small"> / </span>{$item.report_active|default:0}</span>
-                        {elseif $item.report_active}
-                          <span class="badge badge-info"><strong>{$item.report_new|default:0}</strong><span class="text-light">/</span>{$item.report_active|default:0}</span>
-                        {else}
-                          &nbsp;
-                        {/if}
                       </td>
                     </tr>
                   {/foreach}

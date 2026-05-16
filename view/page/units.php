@@ -16,6 +16,14 @@ if (!$User->hasPermission('units', 'read')) {
 }
 
 # ...................................................................
+# load up
+require_once(__DIR__ . '/../../include/class.Unit.php');
+
+if (!isset($Unit)) {
+	$Unit = new \PozarniPoplach\Unit($DB);
+}
+
+# ...................................................................
 # PageSchema I/O
 $_GET = $User->setPageSchema('units', $_GET);
 
@@ -57,15 +65,15 @@ elseif (isset($_GET['status']) && $_GET['status'] == 'ok')
 # *******************************************************************
 
 # nacteni
-$data = $User->getWithLastLogin($where, (isset($_GET['order']) ? $_GET['order'] : null), $APPD->data['APP']['DEFAULT_ITEMS_PER_PAGE'], (isset($_GET['p']) && intval($_GET['p'])) ? (int) $_GET['p'] : null);
-$group_data = $User->getGroupTotal($where);
+$data = $Unit->get($where, (isset($_GET['order']) ? $_GET['order'] : null), $APPD->data['APP']['DEFAULT_ITEMS_PER_PAGE'], (isset($_GET['p']) && intval($_GET['p'])) ? (int) $_GET['p'] : null);
+$group_data = $Unit->getGroupTotal($where);
 
 $Smarty->assign('data', $data);
-$Smarty->assign('data_total', $User->getTotal($data, array('id' => 'count')));
+$Smarty->assign('data_total', $Unit->getTotal($data, array('id' => 'count')));
 $Smarty->assign('data_group_total', $group_data);
-$Smarty->assign('data_count', $User->getRowsCount());
+$Smarty->assign('data_count', $Unit->getRowsCount());
 if (isset($_GET['order']))
-	$Smarty->assign('data_extra', $User->getExtra($_GET['order']));
+	$Smarty->assign('data_extra', $Unit->getExtra($_GET['order']));
 
 # access to create new?
 $Smarty->assign('create_new', $User->hasPermission('units', 'create'));
