@@ -1,0 +1,86 @@
+{include file="inc.header.html" title=#dispatches_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#dispatches_icon#
+  page_title=#dispatches_title#
+  page_b1_title=#dispatches_title#
+}
+
+{if $data}
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- row table -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">{#dispatches_title#}</h3>
+
+              <div class="card-tools">
+                {if $create_new}<a href="{$BASE_URL}/{#dispatches_url#}/new" class="btn btn-xs btn-primary"><i
+                    class="fas fa-plus mr-1"></i> Nová výjezd</a>{/if}
+                <!-- <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-head-fixed text-nowrap">
+                <thead>
+                  <tr>
+                    <!-- {include file="inc.activetabletitle.html" key=4 value="ID poplachu" th_class="text-right"} -->
+                    {include file="inc.activetabletitle.html" key=34 value="Událost" colspan="2"}
+                    {include file="inc.activetabletitle.html" key=28 value="Vyhlášeno" class="text-right"}
+                    {include file="inc.activetabletitle.html" key=29 value="Jednotka"}
+                    {include file="inc.activetabletitle.html" key=31 value="JPO"}
+                    {include file="inc.activetabletitle.html" key=12 value="Lokalita" colspan="2"}
+                    {include file="inc.activetabletitle.html" key=39 value="Kraj"}
+                  </tr>
+                </thead>
+                <tbody>
+                  {foreach from=$data item=item}
+                    <tr>
+                      <!-- <td class="text-right monospace"><code>{$item.dispatch_identification}</code></td> -->
+                      <td><i class="{$item.icon|default:$item.event_icon|default:'fas fa-info-circle'}"></i></td>
+                      <td>
+                        <a href="{$BASE_URL}/{#dispatches_url#}/{$item.id}"><strong>{$item.event_name|default:"Výjezd"|escape}{if $item.event_subtype_name}: {$item.event_subtype_name|escape}{/if}</strong></a>
+                      </td>
+                      <td class="text-right">
+                        <abbr class="timeago" title="před {agots ts=$item.dispatched_at_ts lang='cs2' justone=true}">{$item.dispatched_at_ts|date_format:'j. n. Y H:i:s'}</abbr>
+                      </td>
+                      <td>{$item.unit_fullname|escape}</td>
+                      <td><span class="badge bg-green">{$item.unit_category|escape}</span></td>
+                      <td>
+                        {if $item.gps_latitude && $item.gps_longitude}
+                          <a href="https://www.google.com/maps/search/?api=1&query={$item.gps_latitude|escape:'url'},{$item.gps_longitude|escape:'url'}" target="_blank" title="Zobrazit na mapě"><i class="fa far fa-map-marked"></i></a>
+                        {else}
+                          &nbsp;
+                        {/if}
+                      </td>
+                      <td><small>{$item.address_city|escape}</small></td>
+                      <td><small><em>{$item.region_title|escape}<em></small></td>
+                    </tr>
+                  {/foreach}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+            {include file="inc.pagination.html" pagination=$pagination show_total=true}
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+      <!-- /.row -->
+    </div>
+  </section>
+{elseif $ERROR=='403'}
+  {include file="inc.403.html"}
+{/if}
+
+{include file="inc.footer.html"}

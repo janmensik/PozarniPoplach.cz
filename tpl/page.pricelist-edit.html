@@ -1,0 +1,173 @@
+{if $data.id}
+  {include file="inc.header.html" title="`$.smarty.config.pricelist_edit_title` `$data.title`"}
+{else}
+{include file="inc.header.html" title=#pricelist_create#}
+{/if}
+
+{if $data.id}
+{include file="inc.page-breadcrumb.html" 
+  page_icon=#pricelists_icon#
+  page_subtitle=#pricelist_edit_title#
+  page_title=$data.title|default:$data.promo|escape
+  page_b1_title=#pricelists_title# 
+  page_b1_url=#pricelists_url# 
+  page_b2_title=$data.title|default:$data.promo|escape
+}
+{else}
+{include file="inc.page-breadcrumb.html" 
+  page_icon=#pricelists_icon#
+  page_subtitle=#pricelist_edit_title# 
+  page_title=#pricelist_create# 
+  page_b1_title=#pricelists_title# 
+  page_b1_url=#pricelists_url#
+  page_b2_title=#pricelist_create# 
+}
+{/if}
+{* }
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1><i class="{#pricelists_icon#} mx-2"></i>{if $data.id}{#pricelist_edit_title#}: <strong>{$data.title|default:$data.promo|escape}</strong>{else}<em>{#pricelist_create#}</em>{/if}</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{$BASE_URL}/">{#APP_NAME_APPENDIX#}</a></li>
+          <li class="breadcrumb-item active"><a href="{$BASE_URL}/{#pricelists_url#}">{#pricelists_title#}</a></li>
+          <li class="breadcrumb-item active">{if $data.id}{$data.title|default:$data.promo|escape}{else}<em>{#pricelist_create#}</em>{/if}</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid -->
+</section>
+{ *}
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form method="post" action="{$BASE_URL}/{#pricelists_url#}/{$data.id|default:'new'}" class="form-horizontal">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <div class="card card-primary card-outline">
+        <div class="card-body">
+          <fieldset>
+            <legend>Základní údaje</legend>
+
+            <div class="form-group row">
+              <label for="f_title" class="col col-form-label">Název:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="title" id="f_title" value="{$data.title|escape}" />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_promo" class="col col-form-label">Promo kód:</label>
+              <div class="col-sm-10">
+                <textarea class="form-control" name="promo" id="f_promo">{$data.promo|escape}</textarea>
+                <p class="help-block"><span class="badge badge-info">Info:</span> Více promo kódů oddělujte čárkou.</p>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_note" class="col col-form-label">Popis (Poznámka):</label>
+              <div class="col-sm-10">
+                <textarea class="form-control" name="note" id="f_note">{$data.note|escape}</textarea>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Kapacity</legend>
+
+            <div class="form-group row">
+              <label for="f_capacity" class="col col-form-label">Max počet aut:</label>
+              <div class="col-sm-10">
+                <input type="number" class="form-control" name="capacity" id="f_capacity" value="{$data.capacity|escape}" />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_dynamic" class="col col-form-label">Dynamický ceník:</label>
+              <div class="col-sm-10">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="f_dynamic" name="dynamic" {if $data.dynamic} checked="checked"{/if}>
+                  <label for="f_dynamic" class="custom-control-label">Dynamický ceník</label>
+                </div>
+                <p class="help-block">Automatické zdražení na termín s velkou obsazeností. Cena postupně roste s tím jak se plní kapacita na konkrétní termín.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset id="f_periods">
+            <legend>Doba platnosti</legend>
+            <span class="badge badge-warning">Pozor:</span> Pokud zadáte nějaké datum platnosti, bude ceník dostupný pouze v tyto termíny. Když není žádný termín zadán, je ceník dostupný neustále. 
+            {foreach from=$data.periods item=period}
+            <div class="callout mt-1">
+              <div class="form-group row">
+                <label class="col col-form-label" for="f_period_{$period.id}_valid_from">Platnost od-do:</label>
+                <div class="col-sm-5">
+                  <input type="date" name="period[{$period.id}][valid_from]" id="f_period_{$period.id}_valid_from" class="form-control" value="{if $period.valid_from}{$period.valid_from|date_format:'Y-m-d'}{/if}" placeholder="DD.MM.YYYY" />
+                </div>
+                <div class="col-sm-5">
+                  <input type="date" name="period[{$period.id}][valid_till]" id="f_period_{$period.id}_valid_till" class="form-control" value="{if $period.valid_till}{$period.valid_till|date_format:'Y-m-d'}{/if}" placeholder="DD.MM.YYYY" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" name="period[{$period.id}][remove]" id="f_period_{$period.id}_remove" />
+                  <label class="form-check-label" for="f_period_{$period.id}_remove">Smazat</label>
+                </div>
+              </div>
+            </div>
+            {/foreach}
+
+            <div class="callout mt-1 callout-info">
+              <div class="form-group row">
+                <label class="col col-form-label" for="f_period_new_valid_from">Přidat novou platnost od-do:</label>
+                <div class="col-sm-5">
+                  <input type="date" name="period_new[valid_from]" id="f_period_new_valid_from" class="form-control" placeholder="DD.MM.YYYY" />
+                </div>
+                <div class="col-sm-5">
+                  <input type="date" name="period_new[valid_till]" id="f_period_new_valid_till" class="form-control" placeholder="DD.MM.YYYY" />
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Ceny</legend>
+
+            {for $day_count=1 to 32} {assign var=dc value="day_`$day_count`"}
+            <div class="form-group row">
+              <label for="f_day_count_{$day_count}" class="col col-form-label">{if $day_count<32}{$day_count} den{else}každý další den{/if}:</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <input type="number" class="form-control" name="day_{$day_count}" id="f_day_count_{$day_count}" value="{$data[$dc]|escape}" />
+                  <div class="input-group-append">
+                    <span class="input-group-text">{#GLOBAL_CURRENCY#}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/for}
+          </fieldset>
+
+          <fieldset>
+            <legend>Status</legend>
+
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+              <label class="btn btn-outline-{$pricelist_text.color.status.ok|default:'secondary'}{if $data.status=='ok'} active{/if}"> <input type="radio" name="status" value="ok" autocomplete="off" {if $data.status=='ok' || !$data.id} checked{/if} /> {$statuses.ok|default:'Ok'} </label>
+              <label class="btn btn-outline-{$pricelist_text.color.status.deleted|default:'secondary'}{if $data.status=='deleted'} active{/if}"> <input type="radio" name="status" value="deleted" autocomplete="off"{if $data.status=='deleted'} checked{/if} /> {$statuses.deleted|default:'Vypnutý'} </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="card-footer"><input type="submit" value="Uložit" class="btn btn-primary" /> nebo <a href="{$BASE_URL}/{#pricelists_url#}">zrušit editaci</a></div>
+        <!-- /.card -->
+      </div>
+    </form>
+  </div>
+</section>
+<!-- /.content -->
+
+{include file="inc.footer.html"}

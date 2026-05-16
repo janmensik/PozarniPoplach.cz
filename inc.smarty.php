@@ -53,4 +53,5 @@ if (is_array($smarty_plugins)) {
 $Smarty->config_overwrite = false;
 $Smarty->configLoad(__DIR__ . '/tpl/app.conf', 'pages');
 
+$APPD = AppData::getInstance();
 $APPD->setData('CONFIG', $Smarty->getConfigVars());

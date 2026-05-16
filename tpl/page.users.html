@@ -1,9 +1,9 @@
 {include file="inc.header.html" title=#users_title#}
 
-{include file="inc.page-breadcrumb.html" 
+{include file="inc.page-breadcrumb.html"
   page_icon=#users_icon#
-  page_title=#users_title#  
-  page_b1_title=#users_title#   
+  page_title=#users_title#
+  page_b1_title=#users_title#
 }
 
 {if $data}
@@ -33,7 +33,11 @@
             <table class="table table-head-fixed text-nowrap">
               <thead>
                 <tr>
-                  {include file="inc.activetabletitle.html" key=1 value="ID" th_class="text-right"} {include file="inc.activetabletitle.html" key=2 value="Jméno"} {include file="inc.activetabletitle.html" key=3 value="E-mail"} {include file="inc.activetabletitle.html" key=5 value="Status"} {include file="inc.activetabletitle.html" key=7 value="Naposled" th_class="text-right"}
+                  {include file="inc.activetabletitle.html" key=1 value="ID" th_class="text-right"}
+                  {include file="inc.activetabletitle.html" key=2 value="Jméno"}
+                  {include file="inc.activetabletitle.html" key=3 value="E-mail"}
+                  {include file="inc.activetabletitle.html" key=5 value="Status"}
+                  {include file="inc.activetabletitle.html" key=7 value="Naposled" th_class="text-right"}
                 </tr>
               </thead>
               <tbody>

@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/460d6aa684.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/3208d26f35.js" crossorigin="anonymous"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,6 +28,7 @@
     <link rel="icon" href="{$BASE_URL}/favicon.svg" type="image/svg+xml" />
 
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
 
   <body class="hold-transition {if $smarty.get.output=='plain'}layout-top-nav{else}sidebar-mini sidebar-collapse layout-fixed{/if} ">
@@ -120,24 +121,25 @@
               </li>
 
               <li class="nav-item">
-                <a href="{$BASE_URL}/{#transfers_url#}" class="nav-link{if $PAGE=='transfers'} active{/if}">
-                  <i class="nav-icon {#transfers_icon#}"></i>
-                  <p>{#transfers_title#}</p>
+                <a href="{$BASE_URL}/{#dispatches_url#}" class="nav-link{if $PAGE=='dispatches'} active{/if}">
+                  <i class="nav-icon {#dispatches_icon#}"></i>
+                  <p>{#dispatches_title#}</p>
                 </a>
               </li>
+
               <li class="nav-item">
-                <a href="{$BASE_URL}/{#reservations_url#}" class="nav-link{if $PAGE=='reservations' || $PAGE=='reservation' || $PAGE=='reservation-edit'} active{/if}">
-                  <i class="nav-icon {#reservations_icon#}"></i>
-                  <p>{#reservations_title#}</p>
+                <a href="{$BASE_URL}/{#units_url#}" class="nav-link{if $PAGE=='units'} active{/if}">
+                  <i class="nav-icon {#units_icon#}"></i>
+                  <p>{#units_title#}</p>
                 </a>
               </li>
 
               <li class="nav-header">Nastavení</li>
 
               <li class="nav-item">
-                <a href="{$BASE_URL}/{#units_url#}" class="nav-link{if $PAGE=='units'} active{/if}">
-                  <i class="nav-icon {#units_icon#}"></i>
-                  <p>{#units_title#}</p>
+                <a href="{$BASE_URL}/{#vehicle_types_url#}" class="nav-link{if $PAGE=='vehicle_types'} active{/if}">
+                  <i class="nav-icon {#vehicle_types_icon#}"></i>
+                  <p>{#vehicle_types_title#}</p>
                 </a>
               </li>
 

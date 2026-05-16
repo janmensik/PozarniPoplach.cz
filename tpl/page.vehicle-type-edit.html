@@ -1,0 +1,64 @@
+{include file="inc.header.html" title=#vehicle_types_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#vehicle_types_icon#
+  page_subtitle=#vehicle_types_edit_title#
+  page_title=$data.type|default:#vehicle_types_create#|escape
+  page_b1_title=#vehicle_types_title#
+  page_b1_url=#vehicle_types_url#
+  page_b2_title=$data.type|default:#vehicle_types_edit_title#|escape
+}
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form method="post" action="{$BASE_URL}/{#vehicle_types_url#}/{$data.id|default:'new'}" class="form-horizontal" x-data="{ iconClass: '{$data.icon|escape}' }">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+
+        </div>
+        <div class="card-body">
+          <fieldset>
+            <legend>Detaily typu vozidla</legend>
+
+            <div class="form-group row">
+              <label for="f_type" class="col-sm-2 col-form-label">Název typu:</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" name="type" id="f_type" value="{$data.type|escape}" placeholder="Např. Cisternová automobilová stříkačka" required />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_code" class="col-sm-2 col-form-label">Kód:</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="code" id="f_code" value="{$data.code|escape}" placeholder="Např. CAS" required />
+                <p class="help-block form-text text-muted">Zkrácený kód používaný v přehledech.</p>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_icon" class="col-sm-2 col-form-label">Ikona:</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="icon" id="f_icon" x-model="iconClass" placeholder="fa-solid fa-truck" />
+                <p class="help-block form-text text-muted">CSS třída FontAwesome ikony.</p>
+              </div>
+              <div class="col-sm-1 d-flex justify-content-center">
+                <i :class="iconClass || 'fa-solid fa-question'" class="fa-2x text-secondary"></i>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="card-footer">
+          <input type="submit" value="Uložit" class="btn btn-primary" /> 
+          nebo <a href="{$BASE_URL}/{#vehicle_types_url#}">zrušit editaci</a>
+        </div>
+        <!-- /.card -->
+      </div>
+    </form>
+  </div>
+</section>
+<!-- /.content -->
+
+{include file="inc.footer.html"}

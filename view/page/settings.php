@@ -31,8 +31,11 @@ if (!isset($User))
 # PROGRAM
 # *******************************************************************
 
+# Initialize ID safely
+$id = $id ?? null;
+
 # data load
-$data = empty($id) ? $User->getUser() : $User->getId($id);
+$data = (empty($id) || $id == 'new') ? $User->getUser() : $User->getId($id);
 if (empty($id))
 	$id = $data['id'];
 
@@ -69,7 +72,16 @@ if (!empty($_POST['reset']) && $data['id']) {
 #  Other changes
 elseif (!empty($_POST)) {
 	$error = false;
-	$form_clean = null;
+
+	# 1. Initialize data (if editing)
+	if ($id != 'new') {
+		$User->fillData($id);
+	}
+
+	# 2. Map from POST (standard fields)
+	$User->mapFromPost($_POST);
+
+	# 3. Custom Logic / Validation
 
 	# editing wrong user (admin)
 	if (!empty($data) && $data['status'] == 'admin' && $User->getUser('status') != 'admin') {
@@ -77,83 +89,59 @@ elseif (!empty($_POST)) {
 		$error = true;
 	}
 
-	# id
-	if (!empty($_POST['id']) && intval($_POST['id']) && $_POST['id'] == $data['id'])
-		$form_clean['id'] = (int) $_POST['id'];
-	elseif ($id != 'new')
+	# ID integrity check (from original view logic)
+	if (!empty($_POST['id']) && intval($_POST['id']) && $_POST['id'] != $data['id']) {
 		$APPD->MESSAGES['error']['settings'] = 'wrong';
-
-	# name
-	if (!empty($_POST['name']))
-		$form_clean['name'] = $User->sanitize($_POST['name']);
-	else {
-		$APPD->MESSAGES['error']['name'] = 'empty';
 		$error = true;
 	}
 
-	# email
-	if (!empty($_POST['email']))
-		$form_clean['email'] = $User->sanitize($_POST['email']);
-	else {
-		$APPD->MESSAGES['error']['email'] = 'empty';
-		$error = true;
-	}
-
-	# note
-	if (isset($_POST['note']) && !empty($_POST['note']))
-		$form_clean['note'] = $User->sanitize($_POST['note']);
-	else
-		$form_clean['note'] = "";
-
-	# status
-	if (isset($_POST['status']) && $User->text['cs']['status'][$_POST['status']])
-		$form_clean['status'] = $User->sanitize($_POST['status']);
-	else {
-		$APPD->MESSAGES['error']['status'] = 'wrong';
-		$error = true;
-	}
-
-	# password
+	# 4. Password Logic (Keep special custom functions)
+	$generated_password = null;
 	if (!empty($_POST['new_password'])) {
 		if ($_POST['new_password'] != $_POST['new_password2']) {
 			$APPD->MESSAGES['error']['new_password'] = 'mismatch';
 			$error = true;
 		}
-		if ($id != 'new' && $User->getUser('status')!='admin' && empty($_POST['old_password'])) {
+
+		# Old password check for non-admins
+		if ($id != 'new' && $User->getUser('status') != 'admin' && empty($_POST['old_password'])) {
 			$APPD->MESSAGES['error']['old_password'] = 'empty';
 			$error = true;
-		} elseif ($id != 'new' && $User->getUser('status')!='admin' && $data['password'] != $User->getPasswordHash($_POST['old_password'])) {
+		} elseif ($id != 'new' && $User->getUser('status') != 'admin' && $data['password'] != $User->getPasswordHash($_POST['old_password'])) {
 			$APPD->MESSAGES['error']['old_password'] = 'wrong';
 			$error = true;
 		}
 
-		$form_clean['password'] = $User->getPasswordHash($User->sanitize($_POST['new_password']));
+		if (!$error) {
+			$User->data['password'] = $User->getPasswordHash($User->sanitize($_POST['new_password']));
+		}
 	} elseif ($id == 'new') {
 		$generated_password = $User->generatePassword();
-		$form_clean['password'] = $User->getPasswordHash($generated_password);
+		$User->data['password'] = $User->getPasswordHash($generated_password);
 		$APPD->MESSAGES['special']['generated_password'] = $generated_password;
+	} else {
+		# Ensure we don't overwrite password with empty string if not provided in POST
+		unset($User->data['password']);
+	}
+
+	# 5. Model Validation
+	$errors = $User->validate($id);
+	if ($errors) {
+		foreach ($errors as $key => $val) {
+			$APPD->MESSAGES['error'][$key] = $val;
+		}
+		$error = true;
 	}
 
 	# -----------------------------------------------------------------
 
-	# if ok, populate to_save and save
-	if (!$error && is_array($form_clean) && ($id == $form_clean['id'] || $id == 'new')) {
-
-		# to_save population
-		if ($form_clean['name'])
-			$to_save['name'] = '"' . $form_clean['name'] . '"';
-		if ($form_clean['email'])
-			$to_save['email'] = '"' . $form_clean['email'] . '"';
-		if ($form_clean['password'])
-			$to_save['password'] = '"' . $form_clean['password'] . '"';
-		$to_save['note'] = '"' . $form_clean['note'] . '"';
-		if ($form_clean['status'])
-			$to_save['status'] = '"' . $form_clean['status'] . '"';
-
+	# if ok, save
+	if (!$error) {
 		# save
-		$user_id = $User->set($to_save, intval($id) ? $id : null);
+		$user_id = $User->setter(intval($id) ? $id : null);
+
 		if ($user_id) {
-			$APPD->MESSAGES['saved']['user'] =  $form_clean['email'];
+			$APPD->MESSAGES['saved']['user'] =  $User->data['email'];
 			$APPD->MESSAGES['saved']['id'] = $user_id;
 			if ($generated_password)
 				$APPD->MESSAGES['saved']['password'] = $generated_password;
@@ -173,11 +161,11 @@ elseif (!empty($_POST)) {
 }
 
 # ...................................................................
-# doslo k chybe pri ukladani - ponecham si post data
-if (isset($form_clean) && is_array($form_clean) && !isset($user_id)) {
+# error handling - keep proposed data for output
+if (!empty($_POST) && !isset($user_id)) {
 	if (!is_array($data))
 		$data = array();
-	foreach ($form_clean as $key => $value)
+	foreach ($User->data as $key => $value)
 		$data[$key] = $value;
 }
 

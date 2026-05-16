@@ -118,15 +118,40 @@ $router->post('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/p
 # *******************************************************************
 
 # units - list
-$router->get('/' . $APPD->data['CONFIG']['units_url'], function () use ($Smarty, $DB, $User) {
+$router->get('/' . $APPD->data['CONFIG']['units_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/units.php');
 });
 
 # unit - detail, edit
 
-// $router->match('GET|POST', '/' . $APPD->data['CONFIG']['units_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User) {
+// $router->match('GET|POST', '/' . $APPD->data['CONFIG']['units_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
 //     include('./view/page/unit-edit.php');
 // });
+
+# *******************************************************************
+
+# dispatches - list
+$router->get('/' . $APPD->data['CONFIG']['dispatches_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/dispatches.php');
+});
+
+# dispatch - detail
+
+// $router->match('GET|POST', '/' . $APPD->data['CONFIG']['dispatches_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
+//     include('./view/page/dispatch-edit.php');
+// });
+
+# *******************************************************************
+
+# vehicle types - list
+$router->get('/' . $APPD->data['CONFIG']['vehicle_types_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/vehicle-types.php');
+});
+
+# vehicle type - detail, edit
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['vehicle_types_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/vehicle-type-edit.php');
+});
 
 # *******************************************************************
 
@@ -184,25 +209,5 @@ $router->mount('/api', function () use ($router, $DB, $User, $Smarty) {
 
     $router->get('/alarm', function () use ($DB, $User) {
         include('./view/api/get-alarm.php');
-    });
-});
-
-# *******************************************************************
-
-# ALARM
-$router->mount('/alarm', function () use ($router, $DB, $Smarty, $APPD) {
-    # ...................................................................
-    # alarm dashboard
-    $router->get('/' . $APPD->data['CONFIG']['alarm_url'], function () use ($Smarty, $DB) {
-        include('./view/page/alarm-dispatch.php');
-    });
-
-    # ...................................................................
-    # API
-    $router->mount('/api', function () use ($router, $DB) {
-
-        $router->get('/dispatch', function () use ($DB) {
-            include('./view/api/dispatch.php');
-        });
     });
 });

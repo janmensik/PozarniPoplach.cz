@@ -13,6 +13,16 @@ class User extends Modul {
     var $fulltext_columns = array('u.name', 'u.email', 'u.note');
     var $limit = -1;
 
+    protected $elements = [
+        'name',
+        'email',
+        'note',
+        'status',
+        'password'
+    ];
+
+    public $data = [];
+
     var $text = array(
         'cs' => array(
             'status' =>
@@ -200,6 +210,81 @@ class User extends Modul {
             unset($this->user);
 
         return ($this->user);
+    }
+
+    # ...................................................................
+    public function fillData($id = null) {
+        if (!$id)
+            return false;
+
+        $item = $this->getId($id);
+
+        if (!$item) return false;
+
+        foreach ($this->elements as $el)
+            if (isset($item[$el]))
+                $this->data[$el] = @$item[$el];
+    }
+
+    # ...................................................................
+    public function mapFromPost(array $post, array $customMap = []) {
+        $map = !empty($customMap) ? $customMap : [
+            'name' => 'name',
+            'email' => 'email',
+            'note' => 'note',
+            'status' => 'status'
+        ];
+
+        foreach ($map as $postKey => $dbKey) {
+            if (isset($post[$postKey])) {
+                $this->data[$dbKey] = $this->sanitize($post[$postKey]);
+            }
+        }
+    }
+
+    # ...................................................................
+    public function validate($id = null) {
+        $errors = [];
+
+        # name
+        if (empty($this->data['name']))
+            $errors['name'] = 'empty';
+
+        # email
+        if (empty($this->data['email']))
+            $errors['email'] = 'empty';
+
+        # status
+        if (empty($this->data['status']) || !isset($this->text['cs']['status'][$this->data['status']]))
+            $errors['status'] = 'wrong';
+
+        return $errors;
+    }
+
+    # ...................................................................
+    public function setter($id = null) {
+        $set = [];
+        foreach ($this->elements as $el) {
+            if (isset($this->data[$el])) {
+                $value = $this->data[$el];
+                if ($value === null) {
+                    $set[$el] = 'NULL';
+                } else {
+                    $set[$el] = '"' . mysqli_real_escape_string($this->DB->db, $value) . '"';
+                }
+            }
+        }
+
+        # vycistim cache
+        unset($this->cache);
+
+        # ulozeni normalnich udaju
+        $temp = parent::set($set, $id);
+        $ids = $temp ? $temp : $id;
+
+        $this->load();
+
+        return ($ids);
     }
 
     # ...................................................................

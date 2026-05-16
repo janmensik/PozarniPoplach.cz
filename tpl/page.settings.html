@@ -12,7 +12,7 @@
 <!-- Main content -->
 <section class="content">
   <div class="container-fluid">
-    <form method="post" action="{$BASE_URL}/users/{$data.id|default:'new'}" class="form-horizontal">
+    <form method="post" action="{$BASE_URL}/{#users_url#}/{$data.id|default:'new'}" class="form-horizontal">
       <input type="hidden" name="id" value="{$data.id}" />
       <div class="card card-primary card-outline card-outline-tabs">
         <div class="card-header p-0 border-bottom-0">
