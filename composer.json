@@ -8,7 +8,8 @@
         "nette/utils": "^4.0",
         "php-imap/php-imap": "^5.0",
         "vlucas/phpdotenv": "^5.6",
-        "janmensik/jmlib": "^1.1"
+        "janmensik/jmlib": "^1.1",
+        "machinateur/roman-numerals": "^1.2"
     },
     "config": {
         "allow-plugins": {

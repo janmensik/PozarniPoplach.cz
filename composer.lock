@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b81260ea9e19ebd2a43d4e7ed3e77c9e",
+    "content-hash": "a3b054eeebf7ac5c250169f5480b508a",
     "packages": [
         {
             "name": "bramus/router",
@@ -775,6 +775,53 @@
                 "source": "https://github.com/janmensik/jmlib/tree/1.5.0"
             },
             "time": "2026-01-30T16:18:53+00:00"
+        },
+        {
+            "name": "machinateur/roman-numerals",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/machinateur/roman-numerals.git",
+                "reference": "ed938036792079ace6da4b0c08875a47b58e9baa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/machinateur/roman-numerals/zipball/ed938036792079ace6da4b0c08875a47b58e9baa",
+                "reference": "ed938036792079ace6da4b0c08875a47b58e9baa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Machinateur\\RomanNumerals\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcel",
+                    "email": "hello@machinateur.dev"
+                }
+            ],
+            "description": "A PHP library to convert ordinary integers to roman numerals (and back). Just like that.",
+            "homepage": "https://github.com/machinateur/roman-numerals",
+            "keywords": [
+                "convert",
+                "latin-alphabet",
+                "numeral-system",
+                "roman-numerals"
+            ],
+            "support": {
+                "issues": "https://github.com/machinateur/roman-numerals/issues",
+                "source": "https://github.com/machinateur/roman-numerals/tree/1.2.0"
+            },
+            "time": "2022-07-27T13:52:29+00:00"
         },
         {
             "name": "nette/utils",

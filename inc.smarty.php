@@ -4,6 +4,7 @@
 $smarty_plugins = array(
     //'czmonth' => 'modifier',
     //'czday' => 'modifier',
+    'roman' => 'modifier',
     'czech_num_items' => 'modifier',
     'nice_num' => 'modifier',
     'nl2br' => 'modifier',
