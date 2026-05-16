@@ -10,6 +10,10 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/460d6aa684.js" crossorigin="anonymous"></script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&display=swap" rel="stylesheet" />
+
     <!-- Theme style -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic" />
@@ -21,7 +25,7 @@
     <meta http-equiv="refresh" content="300;" />
     {/if}
 
-    <link rel="shortcut icon" href="{$BASE_URL}/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="{$BASE_URL}/favicon.svg" type="image/svg+xml" />
 
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
   </head>
@@ -42,12 +46,16 @@
           <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
           </li>
-          <li class="nav-item d-none d-sm-inline-block">
-            <a href="{$BASE_URL}" class="nav-link">{#APP_NAME_APPENDIX#}</a>
+          <li class="nav-item d-flex align-items-center">
+            <a href="{$BASE_URL}" class="nav-link d-flex align-items-center py-0">
+              <!-- <img src="{$BASE_URL}/{#APP_BRAND_LOGO#}" alt="" height="32" class="mr-2" /> -->
+              <span class="brand-text-top">{#APP_NAME#}</span>
+            </a>
           </li>
+
         </ul>
-        
-        
+
+
         <!-- SEARCH FORM -->
         <form action="{$BASE_URL}/{#reservations_url#}" class="form-inline ml-3">
           <div class="input-group input-group-sm">
@@ -60,7 +68,7 @@
             </div>
           </div>
         </form>
-        
+
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
@@ -96,27 +104,27 @@
       <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="{$BASE_URL}" class="brand-link">
-          <img src="{#APP_BRAND_LOGO#}" alt="{#APP_NAME#}" class="brand-image elevation-3" />
-          <span class="brand-text font-weight-light">{#APP_BRAND#}</span>
+          <img src="{$BASE_URL}/{#APP_BRAND_LOGO#}" alt="{#APP_NAME#}" class="brand-image" />
+          <span class="font-weight-light pl-3">{#APP_BRAND#}</span>
         </a>
 
         <!-- Sidebar -->
         <div class="sidebar">
           <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">              
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
               <li class="nav-item">
                 <a href="{$BASE_URL}" class="nav-link{if $PAGE=='dashboard'} active{/if}">
                   <i class="nav-icon {#dashboard_icon#}"></i>
                   <p>{#dashboard_title#}</p>
                 </a>
-              </li>              
+              </li>
 
               <li class="nav-item">
                 <a href="{$BASE_URL}/{#transfers_url#}" class="nav-link{if $PAGE=='transfers'} active{/if}">
                   <i class="nav-icon {#transfers_icon#}"></i>
                   <p>{#transfers_title#}</p>
                 </a>
-              </li>              
+              </li>
               <li class="nav-item">
                 <a href="{$BASE_URL}/{#reservations_url#}" class="nav-link{if $PAGE=='reservations' || $PAGE=='reservation' || $PAGE=='reservation-edit'} active{/if}">
                   <i class="nav-icon {#reservations_icon#}"></i>
@@ -127,9 +135,9 @@
               <li class="nav-header">Nastavení</li>
 
               <li class="nav-item">
-                <a href="{$BASE_URL}/{#pricelists_url#}" class="nav-link{if $PAGE=='pricelists' || $PAGE=='pricelist' || $PAGE=='pricelist-edit'} active{/if}">
-                  <i class="nav-icon {#pricelists_icon#}"></i>
-                  <p>{#pricelists_title#}</p>
+                <a href="{$BASE_URL}/{#units_url#}" class="nav-link{if $PAGE=='units'} active{/if}">
+                  <i class="nav-icon {#units_icon#}"></i>
+                  <p>{#units_title#}</p>
                 </a>
               </li>
 
@@ -169,7 +177,7 @@
                 </a>
               </li>
 
-              
+
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fa-solid fa-screwdriver-wrench"></i>
@@ -184,10 +192,10 @@
                       <i class="nav-icon {#mail_schedule_icon#}"></i>
                       <p>{#mail_schedule_title#}</p>
                     </a>
-                  </li>                  
+                  </li>
                 </ul>
               </li>
-              
+
 
             </ul>
           </nav>
@@ -199,7 +207,7 @@
       <!-- Content Wrapper. Contains page content -->
       <div class="{if $smarty.get.output=='plain'}content-wrapper-plain{else}content-wrapper{/if}" id="main-content">
         {include file="inc.messages.html"}
-        
+
       {if false}</div>
       <!-- /.content-wrapper -->
     </div>

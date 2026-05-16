@@ -1,0 +1,32 @@
+{if $pagination}
+
+<!-- pagination -->
+<div class="card-footer">
+  <div class="row">
+    <div class="col col-sm-2"></div>
+    <div class="col col-sm-10">
+      <ul class="pagination justify-content-end">
+		{if $pagination.previous}
+        <li class="page-item previous{if !$pagination.previous} disabled{/if}">          
+		  	<a href="{if $pagination.previous == 1}{ppurl cooluri=true remove='page&link&p'}{else}{ppurl cooluri=true key=p value=$pagination.previous remove='page&link'}{/if}" class="page-link"><i class="icon fas fa-backward mr-2"></i> {#GLOBAL_PAGINATION_PREV#}</a>
+        </li>
+		{/if}
+        {foreach from=$pagination.pages item=pg}
+			{if $pg}
+				<li class="page-item{if $pg == $pagination.active_page} active{/if} d-none d-sm-inline-block">
+					<a href="{if $pg != 1}{ppurl cooluri=true key=p value=$pg remove='page&link'}{else}{ppurl cooluri=true remove='page&link&p'}{/if}" class="page-link">{$pg}</a>
+				</li>
+			{else}
+				<li class="page-item disabled d-none d-sm-inline-block"><span class="page-link">{#GLOBAL_PAGINATION_DOTS#}</span></li>
+			{/if}
+		{/foreach}
+        {if $pagination.next}
+			<li class="page-item next{if !$pagination.next} disabled{/if}">
+          		<a href="{ppurl cooluri=true key=p value=$pagination.next remove='page&link'}" class="page-link">{#GLOBAL_PAGINATION_NEXT#} <i class="icon fas fa-forward ml-2"></i></a>		
+        	</li>
+		{/if}
+      </ul>
+    </div>
+  </div>
+</div>
+{/if}

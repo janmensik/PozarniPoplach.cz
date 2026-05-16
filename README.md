@@ -1,31 +1,43 @@
 **PozarniPoplach.cz**
 
-- **Description**: : Lightweight PHP web application for alarm dispatch and portal functions, using Smarty templates and a small custom MVC-like structure.
+- **Description**: Lightweight PHP web application for fire alarm dispatch and back-office portal functions. It serves as a real-time dashboard for fire stations and a management system for reservations.
 - **Repository**: `https://github.com/janmensik/PozarniPoplach.cz`
 
-**Requirements**
-- **PHP**: 7.4+ (verify with `php -v`).
-- **Composer**: dependency management (`composer install`).
-- **Web server**: Apache / Nginx or built-in PHP server for development.
-- **Database**: MySQL/MariaDB (used by application models).
+## Key Subsystems
 
-**Development notes & conventions**
-- Models extend `lib/class.Modul.php` for DB access.
-- Authentication and permissions use `include/class.User.php` and Casbin integration as initialized in `index.php`.
-- Templates use Smarty. Assignments are done in PHP and passed to the templates in `tpl/`.
-- Session storage: keep only primitives (user ID) in `$_SESSION`, do not serialize objects with closures/resources.
+### 1. Fire Alarm Dispatch & Dashboard
+- **IMAP Parsing**: Automatically imports dispatch emails from fire stations via `cron.emailimport.php`.
+- **Structured Parsing**: Uses `Dispatch::parseDispatchHtml` to extract structured data (event type, location, GPS, vehicles) from HTML emails.
+- **Real-time Dashboard**: A specialized view (`/alarm/dispatch`) with a countdown timer, automatic content refresh every 10 seconds, and audio alerts for incoming poplachy.
+- **Mapping & Directions**: Integrates with Google Maps and Mapbox to show event locations, calculate driving directions, and provide static street views.
 
-**Testing & CI**
-- No project-wide test harness is included by default. Add PHPUnit or Playwright targets if you wish to add automated tests.
+### 2. Back-Office Reservation System
+- **Management**: Dashboard and tools for managing reservations, partners, pricelists, and gate codes.
+- **Dashboard**: Provides a daily overview of occupancy, check-ins, check-outs, and gate code status.
+- **Integration**: Likely shares infrastructure (DB, auth) with the alarm dispatch system.
 
-**Contributing**
-- Create feature branches from `main`.
-- Do not commit secrets. If you find secrets in the repo history, notify repo admins so the key can be rotated and history cleaned.
+## Technical Architecture
 
-**Contact / Maintainer**
-- Maintainer: `janmensik` (GitHub)
+- **Backend**: Custom MVC-like structure in PHP 7.4+.
+- **Models**: Business logic encapsulated in classes within `include/` (e.g., `Dispatch.php`, `User.php`, `Reservation.php`).
+- **Routing**: Handled by `bramus/router` (defined in `include/routes.php`).
+- **Templating**: Smarty 5 (`tpl/` directory) with custom plugins in `lib/smarty-plugins/`.
+- **Auth & Permissions**: Custom `User` class integrated with **Casbin** for fine-grained access control (`include/acl.model.conf`, `include/acl.policy.csv`).
+- **Database**: MySQL/MariaDB. Schema is managed via models and can be tracked in `changes.sql`.
+- **Environment**: Configuration via `.env` files using `vlucas/phpdotenv`.
 
-**License**
+## Requirements
+- **PHP**: 7.4+
+- **Composer**: For dependency management (`composer install`).
+- **Web server**: Apache (with `.htaccess`) or Nginx.
+- **Database**: MySQL/MariaDB.
+- **External APIs**: Google Maps, Mapbox, Brevo (for emails).
+
+## Development Notes
+- Models extend `lib/class.Modul.php` (aliased from `Janmensik\Jmlib\Modul`).
+- Session storage: Primitives only (user ID), avoid serializing complex objects.
+- Frontend: CSS/JS in `ui/`. Real-time logic for the dashboard is in `ui/alarm.js`.
+
+## License
 - This repository is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license (CC BY-NC-SA 4.0).
-- See the `LICENSE` file in the repository root for the full license deed and notes.
 - SPDX identifier: `CC-BY-NC-SA-4.0`.

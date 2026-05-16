@@ -1,0 +1,30 @@
+{include file="inc.header.html" title="Historie přihlášení do účtu `$edituser.name` (`$edituser.email`)"}
+
+<div class="page-header">
+	<h1>Historie přihlášení do účtu <small>{$data[0].name} ({$data[0].email})</small></h1>
+</div>
+
+<div class="activetable">
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Datum</th>
+				<th class="aright">IP adresa</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach from=$data item=item name=data}
+				<tr>
+					<td>{if $pagination.active_page}{math equation="a+(b-1)*c" a=$smarty.foreach.data.iteration b=$pagination.active_page c=$pagination.onpage}{else}{$smarty.foreach.data.iteration}{/if}.</td>
+					<td>{$item.date|date:'j. n. Y H:i:s'}</td>
+					<td class="aright">{$item.ip}</td>
+				</tr>
+			{/foreach}
+		</tbody>
+	</table>
+
+	{include file="inc.pagination.html" show_total=true}
+</div>
+
+{include file="inc.footer.html"}

@@ -43,12 +43,12 @@ if (empty($_POST['email']) || empty($_POST['password'])) {
 	}
 
 	# set permanent login (30 days)
-	if ($_POST['permanent']) {
-		setcookie("permanent_login", $User->getPermanentHash($User->getUser('id')), time() + 60 * 60 * 24 * 30, '/');	
+	if (!empty($_POST['permanent']) && $_POST['permanent']) {
+		setcookie("permanent_login", $User->getPermanentHash($User->getUser('id')), time() + 60 * 60 * 24 * 30, '/');
 	}
 
-	# verified	
-	$APPD->setData('USER', $User->load($user_id));	
+	# verified
+	$APPD->setData('USER', $User->load($user_id));
 	$_SESSION['user_id'] = $user_id;
 
 	$APPD->MESSAGES['saved']['login'] = 'logged';

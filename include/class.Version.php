@@ -1,8 +1,8 @@
 <?php
 # ěščřžýáíéů
 class Version {
-	var $filename = './version.txt';
-	var $versions;
+	var $filename = './CHANGELOG.md';
+	var $versions = array();
 
 	# ...................................................................
 	# KONSTRUKTOR
@@ -16,76 +16,66 @@ class Version {
 
 	# ...................................................................	
 	function load() {
-		$handle = fopen($this->filename, "r");
-
-		if ($handle) {
-			while (($line = fgets($handle)) !== false) {
-				$this->processLine($line, $version_lines);
-			}
-			fclose($handle);
-
-			$this->processImport($version_lines);
-			krsort($this->versions, SORT_NATURAL);
-		} else {
-			return (false);
+		if (!file_exists($this->filename)) {
+			return false;
 		}
-	}
 
-	# ...................................................................	
-	function processImport($input) {
-		foreach ($input as $item) {
-			$key = key($item);
-			$value = current($item);
-
-			if ($key == 'version')
-				$version = $value;
-			if ($version) {
-				if (in_array($key, array('version', 'date', 'date_ts')))
-					$this->versions[$version][$key] = $value;
-				else
-					$this->versions[$version]['data'][$key][] = $value;
-			}
+		$content = file_get_contents($this->filename);
+		if (!$content) {
+			return false;
 		}
-		return ($this->versions);
-	}
 
-	# ...................................................................	
-	function processLine($line, &$output) {
-		$line = trim($line);
-		preg_match('/^\s*(\S){1}/i', $line, $matches);
-		if ($matches) {
-			switch ($matches[1]) {
-					# doc
-				case '#':
-					return (false);
-					break;
-					# change
-				case '-':
-					preg_match('/^\s*\-\s*(\S+.*)/i', $line, $match);
-					$output[]['change'] = trim($match[1]);
-					break;
-					# new
-				case '+':
-					preg_match('/^\s*\+\s*(\S+.*)/i', $line, $match);
-					$output[]['new'] = trim($match[1]);
-					break;
-					# bugfix
-				case '*':
-					preg_match('/^\s*\*\s*(\S+.*)/i', $line, $match);
-					$output[]['bugfix'] = trim($match[1]);
-					break;
-					# version
-				default:
-					preg_match('/^\s*((\d+\.)*\d+)+\s*\/\s*(\S+.*)/ui', $line, $match);
-					$output[]['version'] = trim($match[1]);
-					$output[]['date'] = trim($match[3]);
-					$output[]['date_ts'] = strtotime($match[3]);
+		// Split by version headers: ## [x.y.z] - YYYY-MM-DD
+		$sections = preg_split('/^##\s*\[/m', $content, -1, PREG_SPLIT_NO_EMPTY);
+		
+		foreach ($sections as $section) {
+			// Extract version and date: 0.2.1] - 2025-12-08
+			if (preg_match('/^(\d+\.\d+\.\d+)\]\s*-\s*(\d{4}-\d{2}-\d{2})/', $section, $matches)) {
+				$version = $matches[1];
+				$date = $matches[2];
+				
+				$this->versions[$version] = array(
+					'version' => $version,
+					'date' => $date,
+					'date_ts' => strtotime($date),
+					'data' => array()
+				);
+
+				// Process subsections (Added, Changed, Fixed, etc.)
+				$subsections = preg_split('/^###\s*/m', $section, -1, PREG_SPLIT_NO_EMPTY);
+				// First element is the header we already parsed
+				array_shift($subsections);
+
+				foreach ($subsections as $sub) {
+					$lines = explode("\n", $sub);
+					$type = strtolower(trim(array_shift($lines)));
+					
+					// Map Markdown types to legacy keys for compatibility
+					$key = 'change';
+					if ($type === 'added') $key = 'new';
+					elseif ($type === 'fixed') $key = 'bugfix';
+					elseif ($type === 'changed') $key = 'change';
+					
+					foreach ($lines as $line) {
+						$line = trim($line);
+						// Match list items starting with -, +, or *
+						if (preg_match('/^[\-\+\*]\s+(.*)/', $line, $itemMatch)) {
+							$this->versions[$version]['data'][$key][] = $itemMatch[1];
+						}
+					}
+				}
 			}
 		}
+
+		krsort($this->versions, SORT_NATURAL);
+		return true;
 	}
 
 	# ...................................................................	
 	function getCurrentVersion() {
+		if (empty($this->versions)) {
+			return '0.0.0';
+		}
 		$temp = reset($this->versions);
 		return ($temp['version']);
 	}

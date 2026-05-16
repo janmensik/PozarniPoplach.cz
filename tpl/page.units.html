@@ -1,0 +1,82 @@
+{include file="inc.header.html" title=#units_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#units_icon#
+  page_title=#units_title#
+  page_b1_title=#units_title#
+}
+
+{if $data}
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- row table -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">{#units_title#}</h3>
+
+              <div class="card-tools">
+                {if $create_new}<a href="{$BASE_URL}/{#units_url#}/new" class="btn btn-xs btn-primary"><i
+                    class="fas fa-plus mr-1"></i> Nová jednotka</a>{/if}
+                <!-- <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-head-fixed text-nowrap">
+                <thead>
+                  <tr>
+                    {include file="inc.activetabletitle.html" key=4 value="Ev. číslo" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=3 value="Název"}
+                    {include file="inc.activetabletitle.html" key=6 value="JPO"}
+                    {include file="inc.activetabletitle.html" key=11 value="Kraj"}
+                    {include file="inc.activetabletitle.html" value="Lokalita"}
+                    {include file="inc.activetabletitle.html" key=2 value="Stav"}
+                  </tr>
+                </thead>
+                <tbody>
+                  {foreach from=$data item=item}
+                    <tr>
+                      <td class="text-right monospace"><code>{$item.registration}</code></td>
+                      <td>
+                        <a href="{$BASE_URL}/{#units_url#}/{$item.fullname}"><strong>{$item.fullname|default:"Jednotka `$item.registration`"|escape}</strong></a>
+                      </td>
+                      <td><span class="badge bg-green">{$item.category|escape}</span></td>
+                      <td><small>{$item.region_title|escape}</small></td>
+                      <td>
+                        {if $item.base_latitude && $item.base_longitude}
+                          <a href="https://www.google.com/maps/search/?api=1&query={$item.base_latitude|escape:'url'},{$item.base_longitude|escape:'url'}" target="_blank" title="Zobrazit na mapě"><i class="fa far fa-map-marked"></i></a>
+                        {else}
+                          &nbsp;
+                        {/if}
+                      </td>
+                      <td>
+                        <span class="badge badge-info">{$item.status_cs|default:$item.status|escape}</span>
+                      </td>
+                    </tr>
+                  {/foreach}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+            {include file="inc.pagination.html" pagination=$pagination show_total=true}
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+      <!-- /.row -->
+    </div>
+  </section>
+{elseif $ERROR=='403'}
+  {include file="inc.403.html"}
+{/if}
+
+{include file="inc.footer.html"}
