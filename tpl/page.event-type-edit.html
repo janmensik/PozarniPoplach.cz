@@ -1,0 +1,72 @@
+{include file="inc.header.html" title=#event_types_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#event_types_icon#
+  page_subtitle=#event_types_edit_title#
+  page_title=$data.name|default:#event_types_create#|escape
+  page_b1_title=#event_types_title#
+  page_b1_url=#event_types_url#
+  page_b2_title=$data.name|default:#event_types_edit_title#|escape
+}
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form method="post" action="{$BASE_URL}/{#event_types_url#}/{$data.id|default:'new'}" class="form-horizontal" x-data="{ iconClass: '{$data.icon|escape}' }">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+
+        </div>
+        <div class="card-body">
+          <fieldset>
+            <legend>Typ události</legend>
+
+            <div class="form-group row">
+              <label for="f_type" class="col-sm-2 col-form-label">Název:</label>
+              <div class="col">
+                <input type="text" class="form-control" name="type" id="f_type" value="{$data.name|escape}" placeholder="Např. Požár" required />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_icon" class="col-sm-2 col-form-label">Ikona:</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" name="icon" id="f_icon" x-model="iconClass" placeholder="fa-solid fa-truck" />
+                <p class="help-block form-text text-muted">CSS třída FontAwesome ikony.</p>
+              </div>
+              <div class="col-sm-1 d-flex justify-content-center">
+                <i :class="iconClass || 'fa-solid fa-question'" class="fa-2x text-secondary"></i>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_parent_id" class="col-sm-2 col-form-label">Nadřazený typ:</label>
+              <div class="col">
+                <select name="parent_id" id="f_parent_id" class="form-control custom-select">
+                  <option value="">-- žádný --</option>
+                  {foreach from=$parent_event_types item=et}
+                    <option value="{$et.id}" {if $data.parent_id == $et.id}selected{/if}>{$et.name|escape}</option>
+                  {/foreach}
+                </select>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="card-footer">
+          <div class="row">
+            <div class="offset-sm-2 col-sm-10">
+              <input type="submit" value="Uložit" class="btn btn-primary mr-2" />
+              <span>nebo <a href="{$BASE_URL}/{#event_types_url#}" class="ml-2">zrušit editaci</a></span>
+            </div>
+          </div>
+        </div>
+        <!-- /.card -->
+      </div>
+    </form>
+  </div>
+</section>
+<!-- /.content -->
+
+{include file="inc.footer.html"}

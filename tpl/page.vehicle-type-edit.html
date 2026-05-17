@@ -51,8 +51,12 @@
         </div>
 
         <div class="card-footer">
-          <input type="submit" value="Uložit" class="btn btn-primary" /> 
-          nebo <a href="{$BASE_URL}/{#vehicle_types_url#}">zrušit editaci</a>
+          <div class="row">
+            <div class="offset-sm-2 col-sm-10">
+              <input type="submit" value="Uložit" class="btn btn-primary mr-2" />
+              <span>nebo <a href="{$BASE_URL}/{#vehicle_types_url#}" class="ml-2">zrušit editaci</a></span>
+            </div>
+          </div>
         </div>
         <!-- /.card -->
       </div>

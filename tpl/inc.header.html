@@ -128,7 +128,7 @@
               </li>
 
               <li class="nav-item">
-                <a href="{$BASE_URL}/{#units_url#}" class="nav-link{if $PAGE=='units'} active{/if}">
+                <a href="{$BASE_URL}/{#units_url#}" class="nav-link{if $PAGE==#units_url# || $PAGE=='unit-edit'} active{/if}">
                   <i class="nav-icon {#units_icon#}"></i>
                   <p>{#units_title#}</p>
                 </a>
@@ -137,9 +137,16 @@
               <li class="nav-header">Nastavení</li>
 
               <li class="nav-item">
-                <a href="{$BASE_URL}/{#vehicle_types_url#}" class="nav-link{if $PAGE=='vehicle_types'} active{/if}">
+                <a href="{$BASE_URL}/{#vehicle_types_url#}" class="nav-link{if $PAGE==#vehicle_types_url# || $PAGE=='vehicle-type-edit'} active{/if}">
                   <i class="nav-icon {#vehicle_types_icon#}"></i>
                   <p>{#vehicle_types_title#}</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{$BASE_URL}/{#event_types_url#}" class="nav-link{if $PAGE==#event_types_url# || $PAGE=='event-type-edit'} active{/if}">
+                  <i class="nav-icon {#event_types_icon#}"></i>
+                  <p>{#event_types_title#}</p>
                 </a>
               </li>
 

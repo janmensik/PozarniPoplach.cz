@@ -155,6 +155,18 @@ $router->match('GET|POST', '/' . $APPD->data['CONFIG']['vehicle_types_url'] . '/
 
 # *******************************************************************
 
+# event types - list
+$router->get('/' . $APPD->data['CONFIG']['event_types_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/event-types.php');
+});
+
+# event type - detail, edit
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['event_types_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/event-type-edit.php');
+});
+
+# *******************************************************************
+
 # pricelists - list
 $router->get('/' . $APPD->data['CONFIG']['pricelists_url'], function () use ($Smarty, $DB, $User) {
     include('./view/page/pricelists.php');
