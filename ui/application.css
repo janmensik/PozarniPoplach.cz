@@ -219,7 +219,7 @@ h1, h2, h3, h4, h5, h6, .brand-text, .nav-link, .card-title {
   color: #fef3c7 !important;
 }
 
-/* Custom Scanline Effect */
+/* Custom Scan line Effect */
 .content-wrapper {
   position: relative;
   overflow-x: hidden;
@@ -332,4 +332,18 @@ select.form-control:focus {
 
 .help-block {
   font-style: italic !important;
+}
+
+/* Fix for sidebar header jumping during hover expansion */
+.sidebar-mini.sidebar-collapse .main-sidebar .nav-sidebar .nav-header {
+  display: block !important;
+  opacity: 0 !important;
+  /* Keep the exact same spacing as when expanded to prevent vertical shift */
+  padding: 1rem 1rem 0.5rem !important;
+  margin-top: 1rem !important;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-header {
+  opacity: 1 !important;
 }

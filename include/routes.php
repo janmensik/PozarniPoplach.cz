@@ -143,6 +143,18 @@ $router->get('/' . $APPD->data['CONFIG']['dispatches_url'], function () use ($Sm
 
 # *******************************************************************
 
+# Devices - list
+$router->get('/' . $APPD->data['CONFIG']['devices_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/devices.php');
+});
+
+# device - detail, edit
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['devices_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/device-edit.php');
+});
+
+# *******************************************************************
+
 # vehicle types - list
 $router->get('/' . $APPD->data['CONFIG']['vehicle_types_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/vehicle-types.php');
@@ -163,6 +175,18 @@ $router->get('/' . $APPD->data['CONFIG']['event_types_url'], function () use ($S
 # event type - detail, edit
 $router->match('GET|POST', '/' . $APPD->data['CONFIG']['event_types_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/event-type-edit.php');
+});
+
+# *******************************************************************
+
+# Advertisers - list
+$router->get('/' . $APPD->data['CONFIG']['advertisers_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/advertisers.php');
+});
+
+# advertiser - detail, edit
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['advertisers_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/advertiser-edit.php');
 });
 
 # *******************************************************************

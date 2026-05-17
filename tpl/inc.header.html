@@ -93,11 +93,6 @@
               <a href="{$BASE_URL}/logout" class="dropdown-item"> <i class="fas fa-sign-out mr-2"></i> Odhlášení </a>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-              <i class="fas fa-expand-arrows-alt"></i>
-            </a>
-          </li>
         </ul>
       </nav>
 
@@ -134,6 +129,31 @@
                 </a>
               </li>
 
+              <li class="nav-item">
+                <a href="{$BASE_URL}/{#devices_url#}" class="nav-link{if $PAGE==#devices_url# || $PAGE=='device-edit'} active{/if}">
+                  <i class="nav-icon {#devices_icon#}"></i>
+                  <p>{#devices_title#}</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fa-solid fa-rectangle-ad"></i>
+                  <p>
+                    Reklamy
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{$BASE_URL}/{#advertisers_url#}" class="nav-link{if $PAGE==#advertisers_url# || $PAGE=='advertiser-edit'} active{/if}">
+                      <i class="nav-icon {#advertisers_icon#}"></i>
+                      <p>{#advertisers_title#}</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
               <li class="nav-header">Nastavení</li>
 
               <li class="nav-item">
@@ -147,27 +167,6 @@
                 <a href="{$BASE_URL}/{#event_types_url#}" class="nav-link{if $PAGE==#event_types_url# || $PAGE=='event-type-edit'} active{/if}">
                   <i class="nav-icon {#event_types_icon#}"></i>
                   <p>{#event_types_title#}</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="{$BASE_URL}/{#closures_url#}" class="nav-link{if $PAGE=='closures'} active{/if}">
-                  <i class="nav-icon {#closures_icon#}"></i>
-                  <p>{#closures_title#}</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="{$BASE_URL}/{#gatecodes_url#}" class="nav-link{if $PAGE=='gatecodes'} active{/if}">
-                  <i class="nav-icon {#gatecodes_icon#}"></i>
-                  <p>{#gatecodes_title#}</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="{$BASE_URL}/{#partners_url#}" class="nav-link{if $PAGE=='partners'} active{/if}">
-                  <i class="nav-icon {#partners_icon#}"></i>
-                  <p>{#partners_title#}</p>
                 </a>
               </li>
 

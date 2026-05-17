@@ -1,0 +1,72 @@
+{include file="inc.header.html" title=#devices_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#devices_icon#
+  page_subtitle=#devices_edit_title#
+  page_title=$data.name|default:#devices_create#|escape
+  page_b1_title=#devices_title#
+  page_b1_url=#devices_url#
+  page_b2_title=$data.name|default:#devices_edit_title#|escape
+}
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form method="post" action="{$BASE_URL}/{#devices_url#}/{$data.id|default:'new'}" class="form-horizontal" x-data="{ iconClass: '{$data.icon|escape}' }">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+
+        </div>
+        <div class="card-body">
+          <fieldset>
+            <legend>Terminál</legend>
+
+            <div class="form-group row">
+              <label for="f_type" class="col-sm-2 col-form-label">ID zařízení:</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" name="device_uuid" id="f_device_uuid" value="{$data.device_uuid|escape}" readonly="readonly" />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_type" class="col-sm-2 col-form-label">Název:</label>
+              <div class="col">
+                <input type="text" class="form-control" name="device_name" id="f_device_name" value="{$data.device_name|escape}" placeholder="Např. TV v garáži" />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_type" class="col-sm-2 col-form-label">Pravděpodobnost reklamy:</label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control" name="ad_probability" id="f_ad_probability" value="{$data.ad_probability|escape}" placeholder="20" required />
+                <p class="help-block form-text text-muted">Pravděpodobnost, že bude zobrazena reklama (v procentech).</p>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_type" class="col-sm-2 col-form-label">Timeout reklamy:</label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control" name="ad_sticky_duration" id="f_ad_sticky_duration" value="{$data.ad_sticky_duration|escape}" placeholder="20" required />
+                <p class="help-block form-text text-muted">Počet minut, kdy je zobrazena reklama (nebo nic).</p>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="card-footer">
+          <div class="row">
+            <div class="offset-sm-2 col-sm-10">
+              <input type="submit" value="Uložit" class="btn btn-primary mr-2" />
+              <span>nebo <a href="{$BASE_URL}/{#devices_url#}" class="ml-2">zrušit editaci</a></span>
+            </div>
+          </div>
+        </div>
+        <!-- /.card -->
+      </div>
+    </form>
+  </div>
+</section>
+<!-- /.content -->
+
+{include file="inc.footer.html"}

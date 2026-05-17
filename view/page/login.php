@@ -17,8 +17,8 @@ $APPD->setData('PAGE', 'login');
 # empty form
 if (empty($_POST['email']) || empty($_POST['password'])) {
 	$APPD->MESSAGES['error']['login'] = 'empty';
-	$APPD->MESSAGES['form_keep']['email'] = $_POST['email'];
-	$APPD->MESSAGES['form_keep']['permanent'] = $_POST['permanent'];
+	$APPD->MESSAGES['form_keep']['email'] = $_POST['email'] ?? '';
+	$APPD->MESSAGES['form_keep']['permanent'] = $_POST['permanent'] ?? false;
 
 	$APPD->hibernateMessages();
 

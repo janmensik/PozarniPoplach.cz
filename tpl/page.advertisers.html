@@ -1,0 +1,68 @@
+{include file="inc.header.html" title=#advertisers_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#advertisers_icon#
+  page_title=#advertisers_title#
+  page_b1_title=#advertisers_title#
+}
+
+{if $data}
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- row table -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">{#advertisers_title#}</h3>
+
+              <div class="card-tools">
+                {if $create_new}<a href="{$BASE_URL}/{#advertisers_url#}/new" class="btn btn-xs btn-primary"><i
+                    class="fas fa-plus mr-1"></i> {#advertisers_create#}</a>{/if}
+                <!-- <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-head-fixed text-nowrap">
+                <thead>
+                  <tr>
+                    {include file="inc.activetabletitle.html" key=2 value="Název"}
+                    {include file="inc.activetabletitle.html" key=3 value="Email"}
+                    {include file="inc.activetabletitle.html" key=4 value="Vytvořen" th_class="text-right"}
+                  </tr>
+                </thead>
+                <tbody>
+                  {foreach from=$data item=item}
+                    <tr>
+                      <td>
+                        <a href="{$BASE_URL}/{#advertisers_url#}/{$item.id}"><strong>{$item.name|default:"Inzerent `$item.id`"|escape}</strong></a>
+                      </td>
+                      <td><span class="badge bg-dark">{$item.contact_email|escape}</span></td>
+                      <td class="text-right"><small>{$item.created_at_ts|date_format:"j. n. Y"|escape}</small></td>
+                    </tr>
+                  {/foreach}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+            {include file="inc.pagination.html" pagination=$pagination show_total=true}
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+      <!-- /.row -->
+    </div>
+  </section>
+{elseif $ERROR=='403'}
+  {include file="inc.403.html"}
+{/if}
+
+{include file="inc.footer.html"}

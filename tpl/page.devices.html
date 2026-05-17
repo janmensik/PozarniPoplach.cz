@@ -1,0 +1,74 @@
+{include file="inc.header.html" title=#devices_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#devices_icon#
+  page_title=#devices_title#
+  page_b1_title=#devices_title#
+}
+
+{if $data}
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- row table -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">{#devices_title#}</h3>
+
+              <div class="card-tools">
+                {if #devices_create#}<a href="{$BASE_URL}/{#devices_url#}/new" class="btn btn-xs btn-primary"><i
+                    class="fas fa-plus mr-1"></i> {#devices_create#}</a>{/if}
+                <!-- <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-head-fixed text-nowrap">
+                <thead>
+                  <tr>
+                    {include file="inc.activetabletitle.html" key=3 value="Název"}
+                    {include file="inc.activetabletitle.html" key=10 value="Jednotka"}
+                    {include file="inc.activetabletitle.html" key=8 value="% reklamy" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=9 value="Timeout reklamy" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=7 value="Registrován" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=5 value="Naposled aktivní" th_class="text-right"}
+                  </tr>
+                </thead>
+                <tbody>
+                  {foreach from=$data item=item}
+                    <tr>
+                      <td>
+                        <a href="{$BASE_URL}/{#devices_url#}/{$item.id}"><strong>{$item.device_name|default:$item.device_uuid|escape}</strong></a>
+                      </td>
+                      <td><span class="badge bg-dark">{$item.unit_fullname|escape}</span></td>
+                      <td class="text-right">{$item.ad_probability|escape}<span class="text-muted">&nbsp;%</span></td>
+                      <td class="text-right">{agots period=60*$item.ad_sticky_duration lang='cs' justone=true}</td>
+                      <td class="text-right"><abbr class="timeago" title="před {agots ts=$item.created_at_ts lang='cs2' justone=true}"><small>{$item.created_at_ts|date_format:"j. n. Y"|escape}</small></abbr></td>
+                      <td class="text-right"><abbr class="timeago" title="před {agots ts=$item.last_seen_ts lang='cs2' justone=true}">{$item.last_seen_ts|date_format:"j. n. Y H:i"|escape}</abbr></td>
+                    </tr>
+                  {/foreach}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+            {include file="inc.pagination.html" pagination=$pagination show_total=true}
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+      <!-- /.row -->
+    </div>
+  </section>
+{elseif $ERROR=='403'}
+  {include file="inc.403.html"}
+{/if}
+
+{include file="inc.footer.html"}

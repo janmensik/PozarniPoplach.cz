@@ -1,0 +1,56 @@
+{include file="inc.header.html" title=#advertisers_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#advertisers_icon#
+  page_subtitle=#advertisers_edit_title#
+  page_title=$data.name|default:#advertisers_create#|escape
+  page_b1_title=#advertisers_title#
+  page_b1_url=#advertisers_url#
+  page_b2_title=$data.name|default:#advertisers_edit_title#|escape
+}
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form method="post" action="{$BASE_URL}/{#advertisers_url#}/{$data.id|default:'new'}" class="form-horizontal" x-data="{ iconClass: '{$data.icon|escape}' }">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+
+        </div>
+        <div class="card-body">
+          <fieldset>
+            <legend>Inzerent</legend>
+
+            <div class="form-group row">
+              <label for="f_type" class="col-sm-2 col-form-label">Název:</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" name="name" id="f_name" value="{$data.name|escape}" placeholder="Např. Reklama s.r.o." required />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_code" class="col-sm-2 col-form-label">Kontaktní email:</label>
+              <div class="col-sm-4">
+                <input type="email" class="form-control" name="contact_email" id="f_code" value="{$data.contact_email|escape}"  />
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="card-footer">
+          <div class="row">
+            <div class="offset-sm-2 col-sm-10">
+              <input type="submit" value="Uložit" class="btn btn-primary mr-2" />
+              <span>nebo <a href="{$BASE_URL}/{#advertisers_url#}" class="ml-2">zrušit editaci</a></span>
+            </div>
+          </div>
+        </div>
+        <!-- /.card -->
+      </div>
+    </form>
+  </div>
+</section>
+<!-- /.content -->
+
+{include file="inc.footer.html"}
