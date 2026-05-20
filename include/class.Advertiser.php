@@ -6,7 +6,7 @@ use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 
 class Advertiser extends Modul {
-    protected $sql_base = 'SELECT SQL_CALC_FOUND_ROWS adc.id, adc.name, adc.contact_email, adc.created_at, UNIX_TIMESTAMP(adc.created_at) AS created_at_ts FROM advertiser adc GROUP BY adc.id'; # zaklad SQL dotazu
+    protected $sql_base = 'SELECT SQL_CALC_FOUND_ROWS adc.id, adc.name, adc.contact_email, adc.created_at, UNIX_TIMESTAMP(adc.created_at) AS created_at_ts, COUNT(advert.id) AS advert_count, COUNT(IF(advert.status = "active", 1, NULL)) AS active_advert_count FROM advertiser adc LEFT JOIN advert ON adc.id = advert.advertiser_id GROUP BY adc.id'; # zaklad SQL dotazu
     protected $sql_update = 'UPDATE advertiser adc'; # zaklad SQL dotazu - UPDATE
     protected $sql_insert = 'INSERT INTO advertiser adc'; # zaklad SQL dotazu - INSERT
     protected $sql_table = 'adc';

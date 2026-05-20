@@ -6,7 +6,7 @@ use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 
 class Ad extends Modul {
-    protected $sql_base = 'SELECT SQL_CALC_FOUND_ROWS ad.id, ad.status, ad.banner_image_url, ad.target_link, ad.ad_text, ad.promo_code, ad.qr_code_svg, adc.name, IFNULL(SUM(adh.display_count), 0) AS display_count_total FROM advert ad JOIN advertiser adc ON ad.advertiser_id=adc.id LEFT JOIN advert_hit adh ON ad.id=adh.advert_id GROUP BY ad.id'; # zaklad SQL dotazu
+    protected $sql_base = 'SELECT SQL_CALC_FOUND_ROWS ad.id, ad.title, ad.status, ad.banner_image_url, ad.target_link, ad.ad_text, ad.promo_code, ad.qr_code_svg, adc.name AS advertiser_name, IFNULL(SUM(adh.display_count), 0) AS display_count_total, IFNULL(SUM(adh.link_count), 0) AS link_count_total FROM advert ad JOIN advertiser adc ON ad.advertiser_id=adc.id LEFT JOIN advert_hit adh ON ad.id=adh.advert_id GROUP BY ad.id'; # zaklad SQL dotazu
     protected $sql_update = 'UPDATE advert ad'; # zaklad SQL dotazu - UPDATE
     protected $sql_insert = 'INSERT INTO advert'; # zaklad SQL dotazu - INSERT
     protected $sql_table = 'ad';
@@ -14,6 +14,13 @@ class Ad extends Modul {
 
     //protected $fulltext_columns = array('hub.id', 'hub.title', 'hub.pincode');
     protected $limit = -1;
+
+    public $text = array(
+        'cs' => array(
+            'status' =>
+            array('active' => 'Aktivní', 'disabled' => 'Pozastavený', 'deleted' => 'Smazaný')
+        )
+    );
 
 
     public $cache;

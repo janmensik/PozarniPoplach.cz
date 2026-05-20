@@ -30,7 +30,7 @@ $APPD->setData('SOURCE', 'alarm');
 # ...................................................................
 # version info
 if (!isset($Version)) {
-    $Version = new Version();
+    $Version = new \PozarniPoplach\Version();
 }
 $APPD->setData('APP_VERSION', $Version->getCurrentVersion());
 

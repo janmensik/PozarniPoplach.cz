@@ -151,6 +151,12 @@
                       <p>{#advertisers_title#}</p>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a href="{$BASE_URL}/{#ads_url#}" class="nav-link{if $PAGE==#ads_url# || $PAGE=='ad-edit'} active{/if}">
+                      <i class="nav-icon {#ads_icon#}"></i>
+                      <p>{#ads_title#}</p>
+                    </a>
+                  </li>
                 </ul>
               </li>
 

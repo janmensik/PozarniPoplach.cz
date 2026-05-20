@@ -1,0 +1,78 @@
+{include file="inc.header.html" title=#ads_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#ads_icon#
+  page_title=#ads_title#
+  page_b1_title=#ads_title#
+}
+
+{if $data}
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- row table -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">{#ads_title#}</h3>
+
+              <div class="card-tools">
+                {if $create_new}<a href="{$BASE_URL}/{#ads_url#}/new" class="btn btn-xs btn-primary"><i
+                    class="fas fa-plus mr-1"></i> {#ads_create#}</a>{/if}
+                <!-- <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-head-fixed text-nowrap">
+                <thead>
+                  <tr>
+                    {include file="inc.activetabletitle.html" key=2 value="Název"}
+                    {include file="inc.activetabletitle.html" key=9 value="Inzerent"}
+                    {include file="inc.activetabletitle.html" key=3 value="Status"}
+                    {include file="inc.activetabletitle.html" key=4 value="Banner"}
+                    {include file="inc.activetabletitle.html" key=6 value="Text"}
+                    {include file="inc.activetabletitle.html" key=7 value="Promo"}
+                    {include file="inc.activetabletitle.html" key=10 value="Zobrazení" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=11 value="Kliků" th_class="text-right"}
+                  </tr>
+                </thead>
+                <tbody>
+                  {foreach from=$data item=item}
+                    <tr>
+                      <td>
+                        <a href="{$BASE_URL}/{#ads_url#}/{$item.id}"><strong>{$item.title|default:"Reklama `$item.id`"|escape}</strong></a>
+                      </td>
+                      <td><small>{$item.advertiser_name|escape}</small></td>
+                      <td><span class="badge bg-dark">{$item.status_cs|default:$item.status|escape}</span></td>
+                      <td title="{$item.target_link|escape}"><a href="{$item.target_link|escape}" target="_blank">{if $item.banner_image_url}<img src="{$item.banner_image_url|escape}" alt="Banner" class="img-fluid" style="max-height: 32px;">{else}<i class="fa-solid fa-arrow-up-right-from-square"></i>{/if}</a></td>
+                      <td><small>{$item.ad_text|escape}</small></td>
+                      <td><small><strong>{$item.promo_code|escape}</strong></small></td>
+                      <td class="text-right">{$item.display_count_total|escape}</td>
+                      <td class="text-right">{$item.link_count_total|escape}</td>
+                    </tr>
+                  {/foreach}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+            {include file="inc.pagination.html" pagination=$pagination show_total=true}
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+      <!-- /.row -->
+    </div>
+  </section>
+{elseif $ERROR=='403'}
+  {include file="inc.403.html"}
+{/if}
+
+{include file="inc.footer.html"}

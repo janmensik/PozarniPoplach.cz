@@ -36,7 +36,9 @@
                   <tr>
                     {include file="inc.activetabletitle.html" key=2 value="Název"}
                     {include file="inc.activetabletitle.html" key=3 value="Email"}
-                    {include file="inc.activetabletitle.html" key=4 value="Vytvořen" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=5 value="Reklam" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=6 value="Aktivní" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=4 value="Založen" th_class="text-right"}
                   </tr>
                 </thead>
                 <tbody>
@@ -46,6 +48,8 @@
                         <a href="{$BASE_URL}/{#advertisers_url#}/{$item.id}"><strong>{$item.name|default:"Inzerent `$item.id`"|escape}</strong></a>
                       </td>
                       <td><span class="badge bg-dark">{$item.contact_email|escape}</span></td>
+                      <td class="text-right">{$item.advert_count|escape}</td>
+                      <td class="text-right">{$item.active_advert_count|escape}</td>
                       <td class="text-right"><small>{$item.created_at_ts|date_format:"j. n. Y"|escape}</small></td>
                     </tr>
                   {/foreach}

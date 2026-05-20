@@ -109,6 +109,7 @@ class User extends Modul {
 
         if (is_array($user)) {
             $this->user = reset($user);
+            $this->processUser();
         } else {
             return (null);
         }
@@ -136,6 +137,7 @@ class User extends Modul {
 
         if (is_array($user)) {
             $this->user = reset($user);
+            $this->processUser();
         } else {
             return (null);
         }
@@ -183,11 +185,22 @@ class User extends Modul {
         $user = $this->getComplete(array($this->sql_table . '.id = "' . ($user_id ? $user_id : $this->user['id']) . '"'), null, 1);
         if (is_array($user)) {
             $this->user = reset($user);
+            $this->processUser();
         } else {
             unset($this->user);
         }
 
         return ($this->user);
+    }
+
+    # ...................................................................
+    private function processUser(): void {
+        if (isset($this->user['page_schema']) && is_string($this->user['page_schema'])) {
+            $this->user['page_schema'] = @unserialize(stripslashes($this->user['page_schema']));
+        }
+        if (!isset($this->user['page_schema']) || !is_array($this->user['page_schema'])) {
+            $this->user['page_schema'] = array('global' => array(), 'pages' => array());
+        }
     }
 
     # ...................................................................
@@ -314,6 +327,11 @@ class User extends Modul {
             return (false);
         }
 
+        # zajisteni pole
+        if (!isset($this->user['page_schema']) || !is_array($this->user['page_schema'])) {
+            $this->processUser();
+        }
+
         foreach ($this->page_schema as $value => $type) {
             if (isset($data[$value])) {
                 # globalni
@@ -357,6 +375,11 @@ class User extends Modul {
     public function getPageSchema(?string $page = null): array|bool|null {
         if (!$page) {
             return (false);
+        }
+
+        # zajisteni pole
+        if (!isset($this->user['page_schema']) || !is_array($this->user['page_schema'])) {
+            $this->processUser();
         }
 
         if (is_array($this->user['page_schema']['global']) && is_array($this->user['page_schema']['pages'])) {

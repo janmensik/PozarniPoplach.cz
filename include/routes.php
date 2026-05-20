@@ -66,39 +66,17 @@ $router->post('/' . $APPD->data['CONFIG']['users_url'] . '/([0-9]{1,8}|new)', fu
 
 # *******************************************************************
 
-# transfer - list
-$router->get('/' . $APPD->data['CONFIG']['transfers_url'], function () use ($Smarty, $DB, $User) {
-    include('./view/page/transfers.php');
-});
-
-# *******************************************************************
-
 # search - quick switch to reservation
 $router->get('/' . $APPD->data['CONFIG']['search_url'], function () use ($Smarty, $DB, $User) {
     include('./view/page/search.php');
 });
 
 # *******************************************************************
-
-# reservations - list
-$router->get('/' . $APPD->data['CONFIG']['reservations_url'], function () use ($Smarty, $DB, $User) {
-    include('./view/page/reservations.php');
-});
-
-# reservation -  detail
-$router->get('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})', function ($id) use ($Smarty, $DB, $User) {
-    include('./view/page/reservation.php');
-});
-
-# reservation - new
-$router->match('GET|POST', '/' . $APPD->data['CONFIG']['reservations_url'] . '/new', function () use ($Smarty, $DB, $User) {
-    include('./view/page/reservation-new.php');
-});
-
+/*
 # reservation - edit
-// $router->match('GET|POST','/'.$APPD->data['CONFIG']['reservations_url'].'/([0-9]{1,8})/edit', function ($pincode) use ($Smarty, $DB, $User) {
-//     include('./view/page/reservation-edit.php');
-// });
+$router->match('GET|POST','/'.$APPD->data['CONFIG']['reservations_url'].'/([0-9]{1,8})/edit', function ($pincode) use ($Smarty, $DB, $User) {
+    include('./view/page/reservation-edit.php');
+});
 
 # reservation -  mailer
 $router->post('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/mailer', function ($id) use ($Smarty, $DB, $User) {
@@ -114,6 +92,7 @@ $router->match('GET|POST', '/' . $APPD->data['CONFIG']['reservations_url'] . '/(
 $router->post('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/pay', function ($id) use ($Smarty, $DB, $User) {
     include('./view/controller/reservation.payment.php');
 });
+*/
 
 # *******************************************************************
 
@@ -184,40 +163,21 @@ $router->get('/' . $APPD->data['CONFIG']['advertisers_url'], function () use ($S
     include('./view/page/advertisers.php');
 });
 
-# advertiser - detail, edit
+# Advertiser - detail, edit
 $router->match('GET|POST', '/' . $APPD->data['CONFIG']['advertisers_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/advertiser-edit.php');
 });
 
 # *******************************************************************
 
-# pricelists - list
-$router->get('/' . $APPD->data['CONFIG']['pricelists_url'], function () use ($Smarty, $DB, $User) {
-    include('./view/page/pricelists.php');
+# Ads - list
+$router->get('/' . $APPD->data['CONFIG']['ads_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/ads.php');
 });
 
-# pricelist - detail, edit
-$router->match('GET|POST', '/' . $APPD->data['CONFIG']['pricelists_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User) {
-    include('./view/page/pricelist-edit.php');
-});
-
-# *******************************************************************
-
-# Gatecodes - list
-$router->get('/' . $APPD->data['CONFIG']['gatecodes_url'], function () use ($Smarty, $DB, $User) {
-    include('./view/page/gatecodes.php');
-});
-
-# Gatecode - detail, edit
-$router->match('GET|POST', '/' . $APPD->data['CONFIG']['gatecodes_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User) {
-    include('./view/page/gatecode-edit.php');
-});
-
-# *******************************************************************
-
-# Park Closures - list + quick edit
-$router->get('/' . $APPD->data['CONFIG']['closures_url'], function () use ($Smarty, $DB, $User) {
-    include('./view/page/closures.php');
+# Ad - detail, edit
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['ads_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/ad-edit.php');
 });
 
 # *******************************************************************
