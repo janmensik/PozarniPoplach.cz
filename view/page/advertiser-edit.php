@@ -73,7 +73,7 @@ if ($_POST) {
 		$item_id = $Advertiser->setter($id == 'new' ? null : $id);
 
 		if ($item_id) {
-			$APPD->MESSAGES['saved']['advertiser'] = $Advertiser->data['type'];
+			$APPD->MESSAGES['saved']['advertiser'] = $Advertiser->data['name'];
 			$APPD->MESSAGES['saved']['id'] = $item_id;
 
 			$APPD->hibernateMessages();
