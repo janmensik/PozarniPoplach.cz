@@ -34,17 +34,17 @@ class User extends Modul {
             'status' =>
             array('admin' => 'Administrátor', 'manager' => 'Správce', 'partner' => 'Partner', 'driver' => 'Řidič', 'disabled' => 'Zmražený', 'deleted' => 'Smazaný')
         ),
-		'color' => array(
-			'status' =>
-			array(
-				'admin' => 'warning',
-				'manager' => 'secondary',
-				'partner' => 'primary',
-				'driver' => 'secondary',
-				'disabled' => 'dark',
-				'deleted' => 'light'
-			)
-		)
+        'color' => array(
+            'status' =>
+            array(
+                'admin' => 'warning',
+                'manager' => 'secondary',
+                'partner' => 'primary',
+                'driver' => 'secondary',
+                'disabled' => 'dark',
+                'deleted' => 'light'
+            )
+        )
     );
 
     # ...................................................................
@@ -76,11 +76,13 @@ class User extends Modul {
 
     # ...................................................................
     public function hasPermission(string|null $page = null, string|null $action = null): bool {
-        if (!isset($this->user['status']))
+        if (!isset($this->user['status'])) {
             return false;
+        }
 
-        if (!isset($page) || !isset($action))
+        if (!isset($page) || !isset($action)) {
             return false;
+        }
 
         return ($this->CASBIN->enforce($this->getUser('status'), $page, $action));
     }
@@ -105,10 +107,11 @@ class User extends Modul {
         $user = $this->getComplete(array($this->sql_table . '.email = "' . mysqli_real_escape_string($this->DB->db, $user) . '"', $this->sql_table . '.status NOT IN( "deleted","disabled")'), null, 1);
 
 
-        if (is_array($user))
+        if (is_array($user)) {
             $this->user = reset($user);
-        else
+        } else {
             return (null);
+        }
 
         if ($this->getPasswordHash($password) != $this->user['password']) {
             unset($this->user);
@@ -131,10 +134,11 @@ class User extends Modul {
     public function verifyPermanent(?string $hash = null): int|bool|null {
         $user = $this->getComplete(array('SHA1(CONCAT(' . $this->sql_table . '.id, ' . $this->sql_table . '.email)) = "' . mysqli_real_escape_string($this->DB->db, $hash) . '"', $this->sql_table . '.status NOT IN("deleted","disabled")'), null, 1);
 
-        if (is_array($user))
+        if (is_array($user)) {
             $this->user = reset($user);
-        else
+        } else {
             return (null);
+        }
 
         # overeni, pak predelat
         if ($this->user['status'] != 'deleted') {
@@ -150,16 +154,18 @@ class User extends Modul {
 
     # ...................................................................
     public function getPermanentHash(?int $user_id = null): string|bool|null {
-        if (!$user_id)
+        if (!$user_id) {
             return (false);
+        }
 
         $user = null;
         $user = $this->getId($user_id);
 
-        if (is_array($user))
+        if (is_array($user)) {
             return (sha1($user['id'] . $user['email']));
-        else
+        } else {
             return (null);
+        }
     }
 
     # ...................................................................
@@ -175,26 +181,32 @@ class User extends Modul {
         unset($this->cache);
 
         $user = $this->getComplete(array($this->sql_table . '.id = "' . ($user_id ? $user_id : $this->user['id']) . '"'), null, 1);
-        if (is_array($user))
+        if (is_array($user)) {
             $this->user = reset($user);
-        else
+        } else {
             unset($this->user);
+        }
 
         return ($this->user);
     }
 
     # ...................................................................
     public function fillData(?int $id = null): bool {
-        if (!$id)
+        if (!$id) {
             return false;
+        }
 
         $item = $this->getId($id);
 
-        if (!$item) return false;
+        if (!$item) {
+            return false;
+        }
 
-        foreach ($this->elements as $el)
-            if (isset($item[$el]))
+        foreach ($this->elements as $el) {
+            if (isset($item[$el])) {
                 $this->data[$el] = @$item[$el];
+            }
+        }
         return true;
     }
 
@@ -219,16 +231,19 @@ class User extends Modul {
         $errors = [];
 
         # name
-        if (empty($this->data['name']))
+        if (empty($this->data['name'])) {
             $errors['name'] = 'empty';
+        }
 
         # email
-        if (empty($this->data['email']))
+        if (empty($this->data['email'])) {
             $errors['email'] = 'empty';
+        }
 
         # status
-        if (empty($this->data['status']) || !isset($this->text['cs']['status'][$this->data['status']]))
+        if (empty($this->data['status']) || !isset($this->text['cs']['status'][$this->data['status']])) {
             $errors['status'] = 'wrong';
+        }
 
         return $errors;
     }
@@ -276,13 +291,15 @@ class User extends Modul {
 
     # ...................................................................
     public function getUser(?string $what = null): array|bool|null {
-        if (isset($this->user) && count($this->user) == 1 && $this->user['page_schema'])
+        if (isset($this->user) && count($this->user) == 1 && $this->user['page_schema']) {
             return (null);
+        }
 
-        if ($what)
+        if ($what) {
             return ($this->user[$what]);
-        else
+        } else {
             return ($this->user);
+        }
     }
 
     # ...................................................................
@@ -293,24 +310,27 @@ class User extends Modul {
 
     # ...................................................................
     public function setPageSchema(?string $page = null, ?array $data = null): array|bool|null {
-        if (!$page)
+        if (!$page) {
             return (false);
+        }
 
         foreach ($this->page_schema as $value => $type) {
-
             if (isset($data[$value])) {
                 # globalni
-                if ($type == 'g')
+                if ($type == 'g') {
                     $this->user['page_schema']['global'][$value] = $data[$value];
+                }
                 # lokalni (pages) 'p'
-                else
+                else {
                     $this->user['page_schema']['pages'][$page][$value] = $data[$value];
+                }
                 $save2sql = true;
             } else {
-                if ($type == 'g' && isset($this->user['page_schema']['global'][$value]))
+                if ($type == 'g' && isset($this->user['page_schema']['global'][$value])) {
                     $data[$value] = $this->user['page_schema']['global'][$value];
-                elseif ($type == 'p' && isset($page) && isset($this->user['page_schema']['pages'][$page][$value]))
+                } elseif ($type == 'p' && isset($page) && isset($this->user['page_schema']['pages'][$page][$value])) {
                     $data[$value] = $this->user['page_schema']['pages'][$page][$value];
+                }
 
                 //$data[$value] = ($type == 'g' ? $this->user['page_schema']['global'][$value] : $this->user['page_schema']['pages'][$page][$value]);
             }
@@ -325,8 +345,9 @@ class User extends Modul {
 
     # ...................................................................
     public function clearPageSchema(?int $user_id = null): bool {
-        if ((int) $user_id && !$this->user['id'])
+        if ((int) $user_id && !$this->user['id']) {
             return (false);
+        }
 
         $this->set(array('page_schema' => 'null'), ((int) $user_id ? (int) $user_id : $this->user['id']));
 
@@ -335,19 +356,22 @@ class User extends Modul {
 
     # ...................................................................
     public function getPageSchema(?string $page = null): array|bool|null {
-        if (!$page)
+        if (!$page) {
             return (false);
+        }
 
         if (is_array($this->user['page_schema']['global']) && is_array($this->user['page_schema']['pages'])) {
-            if (is_array($this->user['page_schema']['pages'][$page]))
+            if (is_array($this->user['page_schema']['pages'][$page])) {
                 return (array_merge($this->user['page_schema']['pages'][$page], $this->user['page_schema']['global']));
-            else
+            } else {
                 return ($this->user['page_schema']['global']);
-        } elseif (is_array($this->user['page_schema']['pages'][$page]))
+            }
+        } elseif (is_array($this->user['page_schema']['pages'][$page])) {
             return ($this->user['page_schema']['pages'][$page]);
-        elseif (is_array($this->user['page_schema']['global']))
+        } elseif (is_array($this->user['page_schema']['global'])) {
             return ($this->user['page_schema']['global']);
-        else
+        } else {
             return (null);
+        }
     }
 }

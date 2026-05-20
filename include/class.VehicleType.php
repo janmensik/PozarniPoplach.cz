@@ -32,14 +32,17 @@ class VehicleType extends Modul {
 
     # ...................................................................
     public function fillData(?int $id = null): bool {
-        if (!$id)
+        if (!$id) {
             return false;
+        }
 
         $item = $this->getId($id);
 
-        foreach ($this->elements as $el)
-            if (isset($item[$el]))
+        foreach ($this->elements as $el) {
+            if (isset($item[$el])) {
                 $this->data[$el] = @$item[$el];
+            }
+        }
 
         return true;
     }
