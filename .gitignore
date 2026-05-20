@@ -4,9 +4,17 @@
 
 # cache files
 /cache/
+/upload/
 
 # sensitive files
 .env
 .env.localhost
 data.txt
 dashboard.html
+
+# custom configurations
+/.gemini/
+/.github/
+/.vscode/
+/.setting/
+GEMINI.md
