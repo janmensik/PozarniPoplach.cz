@@ -31,7 +31,7 @@ class Device extends Modul {
     }
 
     # ...................................................................
-    public function fillData($id = null) {
+    public function fillData(?int $id = null): bool {
         if (!$id)
             return false;
 
@@ -40,6 +40,7 @@ class Device extends Modul {
         foreach ($this->elements as $el)
             if (isset($item[$el]))
                 $this->data[$el] = @$item[$el];
+        return true;
     }
 
     # ...................................................................
@@ -48,7 +49,7 @@ class Device extends Modul {
      * @param array $post $_POST data
      * @param array $customMap Optional custom mapping [postKey => dbKey]
      */
-    public function mapFromPost(array $post, array $customMap = []) {
+    public function mapFromPost(array $post, ?array $customMap = []): void {
         $map = !empty($customMap) ? $customMap : [
             'device_name' => 'device_name',
             'ad_probability' => 'ad_probability',
@@ -63,7 +64,7 @@ class Device extends Modul {
     }
 
     # ...................................................................
-    public function validate($id = null) {
+    public function validate(): array {
         $errors = [];
 
         # device_name
@@ -86,7 +87,7 @@ class Device extends Modul {
 
     # ...................................................................
     # include all this->data into classic Modul set($set)
-    public function setter($id = null) {
+    public function setter(?int $id = null): bool|int {
         $set = [];
         foreach ($this->elements as $el) {
             if (isset($this->data[$el])) {
@@ -100,4 +101,5 @@ class Device extends Modul {
         }
 
         return ($this->set($set, $id));
-    }}
+    }
+}

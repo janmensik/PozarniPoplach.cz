@@ -32,7 +32,7 @@ class EventType extends Modul {
     }
 
     # ...................................................................
-    public function fillData($id = null) {
+    public function fillData(?int $id = null): bool {
         if (!$id)
             return false;
 
@@ -41,6 +41,7 @@ class EventType extends Modul {
         foreach ($this->elements as $el)
             if (isset($item[$el]))
                 $this->data[$el] = @$item[$el];
+        return true;
     }
 
     # ...................................................................
@@ -49,7 +50,7 @@ class EventType extends Modul {
      * @param array $post $_POST data
      * @param array $customMap Optional custom mapping [postKey => dbKey]
      */
-    public function mapFromPost(array $post, array $customMap = []) {
+    public function mapFromPost(array $post, ?array $customMap = []): void {
         $map = !empty($customMap) ? $customMap : [
             'name' => 'name',
             'icon' => 'icon',
@@ -65,7 +66,7 @@ class EventType extends Modul {
     }
 
     # ...................................................................
-    public function validate($id = null) {
+    public function validate(): array {
         $errors = [];
 
         # name
@@ -76,25 +77,23 @@ class EventType extends Modul {
         # level
         if (empty($this->data['level'])) {
             $this->data['level'] = 1;
-        }
-        elseif (!is_numeric($this->data['level']) || $this->data['level'] < 1) {
+        } elseif (!is_numeric($this->data['level']) || $this->data['level'] < 1) {
             $errors['level'] = "Level must be a positive number or empty";
         }
 
         # parent_id
         if (empty($this->data['parent_id'])) {
             $this->data['parent_id'] = null;
-        }
-        elseif (!is_numeric($this->data['parent_id']) || $this->data['parent_id'] < 1) {
+        } elseif (!is_numeric($this->data['parent_id']) || $this->data['parent_id'] < 1) {
             $errors['parent_id'] = "Parent ID must be a positive number or empty";
         }
 
         return $errors;
     }
 
-    # ................................................................... 
+    # ...................................................................
     # include all this->data into classic Modul set($set)
-    public function setter($id = null) {
+    public function setter(?int $id = null): bool|int {
         $set = [];
         foreach ($this->elements as $el) {
             if (isset($this->data[$el])) {
@@ -108,4 +107,5 @@ class EventType extends Modul {
         }
 
         return ($this->set($set, $id));
-    }}
+    }
+}
