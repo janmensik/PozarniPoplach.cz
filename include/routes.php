@@ -103,9 +103,9 @@ $router->get('/' . $APPD->data['CONFIG']['units_url'], function () use ($Smarty,
 
 # unit - detail, edit
 
-// $router->match('GET|POST', '/' . $APPD->data['CONFIG']['units_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
-//     include('./view/page/unit-edit.php');
-// });
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['units_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/unit-edit.php');
+});
 
 # *******************************************************************
 

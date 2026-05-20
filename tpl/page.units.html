@@ -47,7 +47,7 @@
                     <tr>
                       <td class="text-right monospace"><code>{$item.registration}</code></td>
                       <td>
-                        <a href="{$BASE_URL}/{#units_url#}/{$item.fullname}"><strong>{$item.fullname|default:"Jednotka `$item.registration`"|escape}</strong></a>
+                        <a href="{$BASE_URL}/{#units_url#}/{$item.id}"><strong>{$item.fullname|default:"Jednotka `$item.registration`"|escape}</strong></a>
                       </td>
                       <td><span class="badge bg-green">{$item.category|escape}</span></td>
                       <td><small>{$item.region_title|escape}</small></td>
