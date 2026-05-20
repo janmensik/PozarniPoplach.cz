@@ -15,6 +15,19 @@ class Unit extends Modul {
     //protected $fulltext_columns = array('ut.id', 'ut.fullname', 'ut.registration', 'ut.pincode');
     protected $limit = -1;
 
+    protected $elements = [
+        'status',
+        'fullname',
+        'registration',
+        'pincode',
+        'category',
+        'region_id',
+        'base_latitude',
+        'base_longitude'
+    ];
+
+    public $data = [];
+
     public $cache;
 
     # ...................................................................
@@ -126,5 +139,88 @@ class Unit extends Modul {
         }
 
         return null;
+    }
+
+    # ...................................................................
+    public function fillData(?int $id = null): bool {
+        if (!$id)
+            return false;
+
+        $item = $this->getId($id);
+
+        foreach ($this->elements as $el)
+            if (isset($item[$el]))
+                $this->data[$el] = @$item[$el];
+
+        return true;
+    }
+
+    # ...................................................................
+    /**
+     * Map POST data to internal data array
+     * @param array $post $_POST data
+     * @param array $customMap Optional custom mapping [postKey => dbKey]
+     */
+    public function mapFromPost(array $post, ?array $customMap = []): void {
+        $map = !empty($customMap) ? $customMap : [
+            'status' => 'status',
+            'contact_email' => 'contact_email',
+            'fullname' => 'fullname',
+            'registration' => 'registration',
+            'pincode' => 'pincode',
+            'category' => 'category',
+            'region_id' => 'region_id',
+            'base_latitude' => 'base_latitude',
+            'base_longitude' => 'base_longitude'
+        ];
+
+        foreach ($map as $postKey => $dbKey) {
+            if (isset($post[$postKey])) {
+                $this->data[$dbKey] = $this->sanitize($post[$postKey]);
+            }
+        }
+    }
+
+    # ...................................................................
+    public function validate(): array {
+
+        $errors = [];
+
+        # fullname
+        if (empty($this->data['fullname'])) {
+            $errors['fullname'] = "Fullname is required";
+        }
+        # registration
+        if (empty($this->data['registration'])) {
+            $errors['registration'] = "Registration is required";
+        }
+        # pincode
+        if (empty($this->data['pincode'])) {
+            $errors['pincode'] = "Pincode is required";
+        }
+        # category
+        if (empty($this->data['category'])) {
+            $errors['category'] = "Category is required";
+        }
+
+        return $errors;
+    }
+
+    # ...................................................................
+    # include all this->data into classic Modul set($set)
+    public function setter(?int $id = null): bool|int {
+        $set = [];
+        foreach ($this->elements as $el) {
+            if (isset($this->data[$el])) {
+                $value = $this->data[$el];
+                if ($value === null) {
+                    $set[$el] = 'NULL';
+                } else {
+                    $set[$el] = '"' . mysqli_real_escape_string($this->DB->db, $value) . '"';
+                }
+            }
+        }
+
+        return ($this->set($set, $id));
     }
 }
