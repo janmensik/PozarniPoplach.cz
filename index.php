@@ -29,8 +29,9 @@ $APPD->setData('SOURCE', 'alarm');
 
 # ...................................................................
 # version info
-if (!isset($Version))
+if (!isset($Version)) {
     $Version = new Version();
+}
 $APPD->setData('APP_VERSION', $Version->getCurrentVersion());
 
 # *******************************************************************
@@ -51,8 +52,9 @@ date_default_timezone_set('Europe/Prague');
 mb_internal_encoding("UTF-8");
 
 # rucni debug (pouze pokud neni ostry provoz)
-if ($_ENV['DEBUGGING'] == 1 && isset($_GET['debug']))
+if ($_ENV['DEBUGGING'] == 1 && isset($_GET['debug'])) {
     $_ENV['DEBUGGING'] = 2;
+}
 $APPD->setData('DEBUG_MODE', $_ENV['DEBUGGING']);
 
 # spusteni tridy Database
@@ -77,7 +79,6 @@ $CASBIN = new Casbin\Enforcer($_ENV['CASBIN_MODEL'], $_ENV['CASBIN_POLICY']);
 $User = new \Pozarnipoplach\User($DB, $CASBIN);
 if (isset($_SESSION['user_id'])) {
     $User->load($_SESSION['user_id']);
-
 } else {
     # check for permanent login cookie
     if (isset($_COOKIE['permanent_login'])) {
@@ -105,11 +106,11 @@ if ($User->getUser()) {
 
 // /* FILTERS */
 // if (is_array($FILTERS[getContent()]))
-// 	foreach ($FILTERS[getContent()] as $value)
-// 		if ($_GET[$value]) {
-// 			$Smarty->assign('FILTERS_ACTIVE', true);
-// 			break;
-// 		}
+//  foreach ($FILTERS[getContent()] as $value)
+//      if ($_GET[$value]) {
+//          $Smarty->assign('FILTERS_ACTIVE', true);
+//          break;
+//      }
 // $Smarty->assign('FILTERS', $FILTERS);
 
 
@@ -153,16 +154,18 @@ $Smarty->assign('FILTERS', $APPD->getFilters($APPD->getData('PAGE')));
 $Smarty->assign('DEBUG_sql_queries', $DB->messages);
 
 # prefix
-if ($APPD->getData('TYPE') == 'controller')
+if ($APPD->getData('TYPE') == 'controller') {
     $template_prefix = 'ctrl';
-else
+} else {
     $template_prefix = 'page';
+}
 
 if ($APPD->getData('API')) {
-	header('Content-Type: application/json');
-	header('Content-Encoding: UTF-8');
-	header('Content-language: cs');
-} else
+    header('Content-Type: application/json');
+    header('Content-Encoding: UTF-8');
+    header('Content-language: cs');
+} else {
     $Smarty->display($template_prefix . '.' . $APPD->getData('PAGE') . '.html');
+}
 
 $APPD->clearMessages();

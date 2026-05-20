@@ -319,9 +319,8 @@ class User extends Modul {
                 # globalni
                 if ($type == 'g') {
                     $this->user['page_schema']['global'][$value] = $data[$value];
-                }
-                # lokalni (pages) 'p'
-                else {
+                } else {
+                    # lokalni (pages) 'p'
                     $this->user['page_schema']['pages'][$page][$value] = $data[$value];
                 }
                 $save2sql = true;

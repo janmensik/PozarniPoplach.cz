@@ -11,8 +11,9 @@ $APPD->setData('PAGE', 'alarm-dispatch');
 # load up
 require_once(__DIR__ . '/../../include/class.Dispatch.php');
 
-if (!isset($Dispatch))
-	$Dispatch = new Dispatch($DB);
+if (!isset($Dispatch)) {
+    $Dispatch = new Dispatch($DB);
+}
 
 # *******************************************************************
 # PROGRAM
@@ -20,13 +21,14 @@ if (!isset($Dispatch))
 
 # ...................................................................
 # Custom access control - based on unit pincode
-if (!empty($_GET['pincode']))
-	$unit_id = $Dispatch->checkUnitPincode($_GET['pincode'], true); // PINCODE is hashed (SHA1)
+if (!empty($_GET['pincode'])) {
+    $unit_id = $Dispatch->checkUnitPincode($_GET['pincode'], true); // PINCODE is hashed (SHA1)
+}
 
 if (empty($unit_id)) {
-	header('Location: ' . $APPD->getData('BASE_URL') . '/alarm-login');
-	header("Connection: close");
-	exit();
+    header('Location: ' . $APPD->getData('BASE_URL') . '/alarm-login');
+    header("Connection: close");
+    exit();
 }
 
 # *******************************************************************

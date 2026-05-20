@@ -10,9 +10,9 @@ $APPD->setData('PAGE', 'dashboard');
 # ...................................................................
 # Access control READ
 if (!$User->hasPermission('dashboard', 'read')) {
-	header('HTTP/1.1 403 Forbidden');
-	$APPD->setData('ERROR', '403');
-	return;
+    header('HTTP/1.1 403 Forbidden');
+    $APPD->setData('ERROR', '403');
+    return;
 }
 
 # ...................................................................
@@ -22,13 +22,13 @@ if (!$User->hasPermission('dashboard', 'read')) {
 // require_once(__DIR__ . '/../../include/class.Gatecode.php');
 
 // if (!isset($Reservation))
-// 	$Reservation = new Reservation($DB);
+//  $Reservation = new Reservation($DB);
 
 // if (!isset($Pricelist))
-// 	$Pricelist = new Pricelist($DB);
+//  $Pricelist = new Pricelist($DB);
 
 // if (!isset($Gatecode))
-// 	$Gatecode = new Gatecode($DB);
+//  $Gatecode = new Gatecode($DB);
 
 # ...................................................................
 # PageSchema I/O
