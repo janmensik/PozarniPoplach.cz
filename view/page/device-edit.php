@@ -52,6 +52,22 @@ if (!$data && (!empty($id) && $id != 'new')) {
 # FORM Sanitation & Validation
 # *******************************************************************
 
+# ...................................................................
+#  Delete (unregister) device
+if (!empty($_POST['delete']) && $data['id'] && $User->hasPermission('devices', 'delete')) {
+    if ($Device->delete($data['id'])) {
+        $APPD->MESSAGES['deleted']['device'] = $data['device_name'] ?? $data['device_uuid'];
+        header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['devices_url']);
+    } else {
+        $APPD->MESSAGES['stop']['device'] = 'not deleted';
+        header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['devices_url'] . '/' . $data['id']);
+    }
+    header("Connection: close");
+    exit();
+}
+
+# ...................................................................
+
 if ($_POST) {
     # 1. Initialize data (if editing)
     if ($id != 'new') {

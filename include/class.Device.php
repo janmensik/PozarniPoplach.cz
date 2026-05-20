@@ -105,4 +105,12 @@ class Device extends Modul {
 
         return ($this->set($set, $id));
     }
+
+    # ...................................................................
+    public function delete(int $id): bool {
+        if ($this->DB->query('DELETE FROM alarm_device_authorized WHERE id = "' . (int) $id . '";')) {
+            return true;
+        }
+        return false;
+    }
 }
