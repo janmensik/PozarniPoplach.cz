@@ -1,5 +1,10 @@
 <?php
 
+use Janmensik\Jmlib\AppData;
+use Janmensik\Jmlib\Database;
+
+/** @var Database $DB */
+
 # *******************************************************************
 # NEEDS + Global
 # *******************************************************************

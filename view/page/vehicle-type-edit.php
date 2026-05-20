@@ -1,5 +1,10 @@
 <?php
 
+use Janmensik\Jmlib\AppData;
+use Janmensik\Jmlib\Database;
+
+/** @var Database $DB */
+
 # *******************************************************************
 # NEEDS + Global
 # *******************************************************************
@@ -56,7 +61,7 @@ if ($_POST) {
 	$VehicleType->mapFromPost($_POST);
 
 	# 3. Validate
-	$errors = $VehicleType->validate($id);
+	$errors = $VehicleType->validate();
 
 	# error in validation
 	if ($errors) {

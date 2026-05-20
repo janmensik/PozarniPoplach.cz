@@ -1,5 +1,10 @@
 <?php
 
+use Janmensik\Jmlib\AppData;
+use Janmensik\Jmlib\Database;
+
+/** @var Database $DB */
+
 # *******************************************************************
 # NEEDS + Global
 # *******************************************************************
@@ -56,7 +61,7 @@ if ($_POST) {
 	$Advertiser->mapFromPost($_POST);
 
 	# 3. Validate
-	$errors = $Advertiser->validate($id);
+	$errors = $Advertiser->validate();
 
 	# error in validation
 	if ($errors) {

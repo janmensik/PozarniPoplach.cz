@@ -1,5 +1,12 @@
 <?php
 
+use Janmensik\Jmlib\AppData;
+use Janmensik\Jmlib\Database;
+use PozarniPoplach\User;
+
+/** @var Database $DB */
+/** @var User $User */
+
 # *******************************************************************
 # NEEDS + Global
 # *******************************************************************

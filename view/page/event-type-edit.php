@@ -1,5 +1,10 @@
 <?php
 
+use Janmensik\Jmlib\AppData;
+use Janmensik\Jmlib\Database;
+
+/** @var Database $DB */
+
 # *******************************************************************
 # NEEDS + Global
 # *******************************************************************
@@ -56,7 +61,7 @@ if ($_POST) {
 	$EventType->mapFromPost($_POST);
 
 	# 3. Validate
-	$errors = $EventType->validate($id);
+	$errors = $EventType->validate();
 
 	# error in validation
 	if ($errors) {

@@ -1,5 +1,10 @@
 <?php
 
+use Janmensik\Jmlib\AppData;
+use Janmensik\Jmlib\Database;
+
+/** @var Database $DB */
+
 # *******************************************************************
 # NEEDS + Global
 # *******************************************************************
@@ -56,7 +61,7 @@ if ($_POST) {
 	$Device->mapFromPost($_POST);
 
 	# 3. Validate
-	$errors = $Device->validate($id);
+	$errors = $Device->validate();
 
 	# error in validation
 	if ($errors) {
