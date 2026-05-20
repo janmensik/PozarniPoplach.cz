@@ -74,7 +74,7 @@ $CASBIN = new Casbin\Enforcer($_ENV['CASBIN_MODEL'], $_ENV['CASBIN_POLICY']);
 # *******************************************************************
 
 # establish User object
-$User = new User($DB, $CASBIN);
+$User = new \Pozarnipoplach\User($DB, $CASBIN);
 if (isset($_SESSION['user_id'])) {
     $User->load($_SESSION['user_id']);
 

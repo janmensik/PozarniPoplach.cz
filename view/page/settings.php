@@ -25,7 +25,7 @@ if (
 require_once(__DIR__ . '/../../include/class.User.php');
 
 if (!isset($User))
-	$User = new User($DB, $CASBIN);
+	$User = new \Pozarnipoplach\User($DB, $CASBIN);
 
 # *******************************************************************
 # PROGRAM

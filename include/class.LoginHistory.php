@@ -1,36 +1,30 @@
 <?
+
+namespace PozarniPoplach;
+
+use Janmensik\Jmlib\Modul;
+use Janmensik\Jmlib\Database;
+
 class LoginHistory extends Modul {
-	var $sqlbase = 'SELECT SQL_CALC_FOUND_ROWS u.id, UNIX_TIMESTAMP(upr.date) AS date, INET_NTOA(upr.ip) AS ip, u.name, u.email, u.note, u.status FROM userlogin upr JOIN user u ON u.id = upr.user_id'; # zaklad SQL dotazu
-	var $sqlupdate = 'UPDATE userlogin upr'; # zaklad SQL dotazu - UPDATE
-	var $sqlinsert = 'INSERT INTO userlogin'; # zaklad SQL dotazu - INSERT
-	var $sqltable = 'upr';
-	var $order = -2;
-	var $fulltextcolumns = array ('u.name', 'u.email', 'u.note', 'INET_NTOA(upr.ip)');
+	protected $sql_base = 'SELECT SQL_CALC_FOUND_ROWS u.id, UNIX_TIMESTAMP(upr.date) AS date, INET_NTOA(upr.ip) AS ip, u.name, u.email, u.note, u.status FROM user_login upr JOIN user u ON u.id = upr.user_id'; # zaklad SQL dotazu
+	protected $sql_update = 'UPDATE user_login upr'; # zaklad SQL dotazu - UPDATE
+	protected $sql_insert = 'INSERT INTO user_login'; # zaklad SQL dotazu - INSERT
+	protected $sql_table = 'upr';
+	protected $order = -2;
+	protected $fulltext_columns = array ('u.name', 'u.email', 'u.note', 'INET_NTOA(upr.ip)');
+
+    public $text = array(
+        'cs' => array(
+            'status' =>
+            array('admin' => 'Administrátor', 'keeper_admin' => 'Správce', 'keeper_solver' => 'Pracovník', 'disabled' => 'Zmražený', 'deleted' => 'Smazaný')
+        )
+    );
+
 
 	//var $limit = 20;
-		
-	# ...................................................................
-	# KONSTRUKTOR
-	function LoginHistory (& $database) {
-		return ($this->Modul ($database));
-		}
-	
 
 	# ...................................................................
-	function get ($where = null, $order = null, $limit = null, $limit_from = null) {
-		$data = parent::get ($where, $order, $limit, $limit_from);
-		
-		# prepis hodnot statusu na CZ
-		$statusy = array ('admin' => 'administrátor', 'user' => 'hotel manažer', 'disabled' => 'zablokován', 'deleted' => 'smazán');
-		if (is_array ($data))
-			foreach ($data as $key=>$value) {
-				if ($statusy[$value['status']])
-					$data[$key]['status_cs'] = $statusy[$value['status']];
-				else
-					$data[$key]['status_cs'] = $data[$key]['status'];
-				}
-		
-		return ($data);
-		}
-	}
-?>
+    public function __construct(Database &$database) {
+        parent::__construct($database);
+    }
+}
