@@ -1,7 +1,7 @@
 <?php
 
 if (!isset($Version)) {
-    $Version = new Version();
+    $Version = new \PozarniPoplach\Version();
 }
 
 # ...................................................................

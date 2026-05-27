@@ -16,7 +16,7 @@ $router->set404(function () {
 # *******************************************************************
 
 # logout
-$router->get('/logout', function () use ($Smarty, $DB, $User) {
+$router->get('/logout', function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/logout.php');
 });
 
@@ -31,14 +31,14 @@ $router->get('/login', function () use ($Smarty, $DB, $CASBIN) {
 # *******************************************************************
 
 # login
-$router->post('/login', function () use ($Smarty, $DB) {
+$router->post('/login', function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/login.php');
 });
 
 # *******************************************************************
 
 # version history
-$router->get('/version-history', function () use ($Smarty, $DB, $User) {
+$router->get('/version-history', function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/version-history.php');
 });
 
@@ -53,7 +53,7 @@ $router->post('/' . $APPD->data['CONFIG']['settings_url'], function () use ($Sma
 });
 
 # users - list
-$router->get('/' . $APPD->data['CONFIG']['users_url'], function () use ($Smarty, $DB, $User) {
+$router->get('/' . $APPD->data['CONFIG']['users_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/users.php');
 });
 
@@ -67,29 +67,29 @@ $router->post('/' . $APPD->data['CONFIG']['users_url'] . '/([0-9]{1,8}|new)', fu
 # *******************************************************************
 
 # search - quick switch to reservation
-$router->get('/' . $APPD->data['CONFIG']['search_url'], function () use ($Smarty, $DB, $User) {
+$router->get('/' . $APPD->data['CONFIG']['search_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/search.php');
 });
 
 # *******************************************************************
 /*
 # reservation - edit
-$router->match('GET|POST','/'.$APPD->data['CONFIG']['reservations_url'].'/([0-9]{1,8})/edit', function ($pincode) use ($Smarty, $DB, $User) {
+$router->match('GET|POST','/'.$APPD->data['CONFIG']['reservations_url'].'/([0-9]{1,8})/edit', function ($pincode) use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/reservation-edit.php');
 });
 
 # reservation -  mailer
-$router->post('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/mailer', function ($id) use ($Smarty, $DB, $User) {
+$router->post('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/mailer', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/controller/reservation.mailer.php');
 });
 
 # reservation -  status change
-$router->match('GET|POST', '/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/change', function ($id) use ($Smarty, $DB, $User) {
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/change', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/controller/reservation.change.php');
 });
 
 # reservation -  payment
-$router->post('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/pay', function ($id) use ($Smarty, $DB, $User) {
+$router->post('/' . $APPD->data['CONFIG']['reservations_url'] . '/([0-9]{1,8})/pay', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/controller/reservation.payment.php');
 });
 */
@@ -183,14 +183,14 @@ $router->match('GET|POST', '/' . $APPD->data['CONFIG']['ads_url'] . '/([0-9]{1,8
 # *******************************************************************
 
 # mail schedule - list
-$router->get('/' . $APPD->data['CONFIG']['mail_schedule_url'], function () use ($Smarty, $DB, $User) {
+$router->get('/' . $APPD->data['CONFIG']['mail_schedule_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/mail-schedule.php');
 });
 
 # *******************************************************************
 
 # index (dashboard)
-$router->get('/', function () use ($Smarty, $DB, $User) {
+$router->get('/', function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/dashboard.php');
 });
 

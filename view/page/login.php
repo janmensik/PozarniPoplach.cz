@@ -5,7 +5,7 @@
 # *******************************************************************
 
 if (!isset($User)) {
-    $User = new User($DB, $CASBIN);
+    $User = new \PozarniPoplach\User($DB, $CASBIN);
 }
 
 $APPD = AppData::getInstance();

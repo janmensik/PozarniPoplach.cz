@@ -11,12 +11,12 @@ require_once(__DIR__ . '/lib/functions/function.parseFloat.php'); # prevod "minu
 require_once(__DIR__ . '/lib/functions/function.pagination.php'); # pagination
 
 use Janmensik\Jmlib\Database;
+require_once(__DIR__ . '/include/class.Version.php');
+require_once(__DIR__ . '/include/class.User.php');
+
 // Alias AppData to global namespace for backward compatibility
 class_alias(\Janmensik\Jmlib\AppData::class, 'AppData');
 class_alias(\Janmensik\Jmlib\Modul::class, 'Modul');
-
-require_once(__DIR__ . '/include/class.Version.php');
-require_once(__DIR__ . '/include/class.User.php');
 
 # *******************************************************************
 # GLOBAL APPDATA
@@ -76,7 +76,7 @@ $CASBIN = new Casbin\Enforcer($_ENV['CASBIN_MODEL'], $_ENV['CASBIN_POLICY']);
 # *******************************************************************
 
 # establish User object
-$User = new \Pozarnipoplach\User($DB, $CASBIN);
+$User = new \PozarniPoplach\User($DB, $CASBIN);
 if (isset($_SESSION['user_id'])) {
     $User->load($_SESSION['user_id']);
 } else {
