@@ -1,5 +1,6 @@
 {
     "require": {
+        "php": ">=8.2",
         "smarty/smarty": "^5.4",
         "bramus/router": "^1.6",
         "casbin/casbin": "^3.25",
@@ -12,6 +13,9 @@
         "machinateur/roman-numerals": "^1.2"
     },
     "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
