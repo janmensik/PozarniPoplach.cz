@@ -5,12 +5,6 @@
 
 ## Key Subsystems
 
-### 1. Fire Alarm Dispatch & Dashboard
-- **IMAP Parsing**: Automatically imports dispatch emails from fire stations via `cron.emailimport.php`.
-- **Structured Parsing**: Uses `Dispatch::parseDispatchHtml` to extract structured data (event type, location, GPS, vehicles) from HTML emails.
-- **Real-time Dashboard**: A specialized view (`/alarm/dispatch`) with a countdown timer, automatic content refresh every 10 seconds, and audio alerts for incoming poplachy.
-- **Mapping & Directions**: Integrates with Google Maps and Mapbox to show event locations, calculate driving directions, and provide static street views.
-
 ### 2. Back-Office Reservation System
 - **Management**: Dashboard and tools for managing reservations, partners, pricelists, and gate codes.
 - **Dashboard**: Provides a daily overview of occupancy, check-ins, check-outs, and gate code status.

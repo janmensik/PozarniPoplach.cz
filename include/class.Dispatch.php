@@ -986,7 +986,7 @@ class Dispatch extends Modul {
             // Dispatch Meta Information
             'dispatch_id' => '111111', // E.g., The event number '123456789'
             'dispatched_by' => 'PožárníPoplach.cz', // Dispatcher name/ID
-            'dispatched_at' => date('d.m.Y H:i:s', strtotime('+'.$timeout.' seconds')), // Datetime string, e.g., '01.01.2024 12:34:56'
+            'dispatched_at' => date('d.m.Y H:i:s', strtotime('+' . $timeout . ' seconds')), // Datetime string, e.g., '01.01.2024 12:34:56'
 
             // Vehicles of the notified unit
             'unit_vehicles' => [
