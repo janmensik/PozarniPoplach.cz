@@ -32,12 +32,6 @@ class Ad extends Modul {
         'advertiser_id'
     ];
 
-    public array $data = [];
-
-
-
-    public $cache;
-
     # ...................................................................
     public function __construct(Database &$database) {
         parent::__construct($database);
