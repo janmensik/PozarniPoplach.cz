@@ -13,7 +13,7 @@
         "machinateur/roman-numerals": "^1.2"
     },
     "require-dev": {
-        "pestphp/pest": "^4.7"
+        "pestphp/pest": "^3.0"
     },
     "autoload": {
         "classmap": [
@@ -27,7 +27,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.5.0"
+            "php": "8.2.0"
         },
         "allow-plugins": {
             "pestphp/pest-plugin": true
