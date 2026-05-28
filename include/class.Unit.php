@@ -26,10 +26,6 @@ class Unit extends Modul {
         'base_longitude'
     ];
 
-    public array $data = [];
-
-    
-
     # ...................................................................
     public function __construct(Database &$database) {
         parent::__construct($database);

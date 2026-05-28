@@ -21,8 +21,6 @@ class VehicleType extends Modul {
         'icon'
     ];
 
-    public array $data = [];
-
     # ...................................................................
     public function __construct(Database &$database) {
         parent::__construct($database);

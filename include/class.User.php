@@ -27,8 +27,6 @@ class User extends Modul {
         'password'
     ];
 
-    public array $data = [];
-
     public array $text = array(
         'cs' => array(
             'status' =>

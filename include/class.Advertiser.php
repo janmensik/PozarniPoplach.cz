@@ -20,10 +20,6 @@ class Advertiser extends Modul {
         'contact_email'
     ];
 
-    public array $data = [];
-
-    
-
     # ...................................................................
     public function __construct(Database &$database) {
         parent::__construct($database);

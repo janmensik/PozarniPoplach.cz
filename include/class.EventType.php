@@ -22,10 +22,6 @@ class EventType extends Modul {
         'parent_id'
     ];
 
-    public array $data = [];
-
-    
-
     # ...................................................................
     public function __construct(Database &$database) {
         parent::__construct($database);

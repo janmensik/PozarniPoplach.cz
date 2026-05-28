@@ -32,8 +32,6 @@ class Dispatch extends Modul {
 
     protected $email_address_pattern = '/notifikace\.([A-Z0-9]{6})@pozarnipoplach\.cz/i';
 
-    
-
     // Private properties for caching static data
     private $vehicle_types = [];
     private $regions = [];

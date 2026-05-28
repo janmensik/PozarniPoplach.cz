@@ -21,10 +21,6 @@ class Device extends Modul {
         'ad_sticky_duration'
     ];
 
-    public array $data = [];
-
-    
-
     # ...................................................................
     public function __construct(Database &$database) {
         parent::__construct($database);
