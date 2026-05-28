@@ -9,15 +9,15 @@ use DOMXPath;
 use RuntimeException;
 
 class Dispatch extends Modul {
-    protected $sql_base = 'SELECT SQL_CALC_FOUND_ROWS dis.*, UNIX_TIMESTAMP(dis.received) AS received_ts, UNIX_TIMESTAMP(dis.dispatched_at) AS dispatched_at_ts, u.fullname AS unit_fullname, u.registration AS unit_registration, u.category AS unit_category, u.base_latitude, u.base_longitude, et.name AS event_name, et.icon AS event_icon, ets.name AS event_subtype_name, ets.icon AS event_subtype_icon, IF(ets.icon IS NOT NULL, ets.icon, et.icon) AS icon, reg.title AS region_title, reg.rzpk AS region_rzpk FROM dispatch dis LEFT JOIN event_type et ON dis.event_id = et.id LEFT JOIN event_type ets ON dis.event_subtype_id = ets.id LEFT JOIN region reg ON dis.address_region_id = reg.id LEFT JOIN unit u ON dis.unit_id = u.id WHERE 1 GROUP BY dis.id'; # zaklad SQL dotazu
-    protected $sql_update = 'UPDATE dispatch dis'; # zaklad SQL dotazu - UPDATE
-    protected $sql_insert = 'INSERT INTO dispatch'; # zaklad SQL dotazu - INSERT
-    protected $sql_table = 'dis';
-    protected $order = '-2'; // Order by received time descending
-    protected $limit = -1;
-    protected $fulltext_columns = array('dis.event', 'dis.event_subtype', 'dis.address_fulltext', 'dis.situation');
+    protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS dis.*, UNIX_TIMESTAMP(dis.received) AS received_ts, UNIX_TIMESTAMP(dis.dispatched_at) AS dispatched_at_ts, u.fullname AS unit_fullname, u.registration AS unit_registration, u.category AS unit_category, u.base_latitude, u.base_longitude, et.name AS event_name, et.icon AS event_icon, ets.name AS event_subtype_name, ets.icon AS event_subtype_icon, IF(ets.icon IS NOT NULL, ets.icon, et.icon) AS icon, reg.title AS region_title, reg.rzpk AS region_rzpk FROM dispatch dis LEFT JOIN event_type et ON dis.event_id = et.id LEFT JOIN event_type ets ON dis.event_subtype_id = ets.id LEFT JOIN region reg ON dis.address_region_id = reg.id LEFT JOIN unit u ON dis.unit_id = u.id WHERE 1 GROUP BY dis.id'; # zaklad SQL dotazu
+    protected ?string $sql_update = 'UPDATE dispatch dis'; # zaklad SQL dotazu - UPDATE
+    protected ?string $sql_insert = 'INSERT INTO dispatch'; # zaklad SQL dotazu - INSERT
+    protected ?string $sql_table = 'dis';
+    protected int|string $order = '-2'; // Order by received time descending
+    protected int $limit = -1;
+    protected ?array $fulltext_columns = array('dis.event', 'dis.event_subtype', 'dis.address_fulltext', 'dis.situation');
 
-    protected $many_to_many = array(
+    protected array $many_to_many = array(
         'unit_vehicles' => array(
             'table' => 'dispatch_unit_vehicle',
             'main_key' => 'dispatch_id',
@@ -32,7 +32,7 @@ class Dispatch extends Modul {
 
     protected $email_address_pattern = '/notifikace\.([A-Z0-9]{6})@pozarnipoplach\.cz/i';
 
-    public $cache;
+    
 
     // Private properties for caching static data
     private $vehicle_types = [];
@@ -836,86 +836,6 @@ class Dispatch extends Modul {
         }
 
         return $set;
-    }
-
-    # ...................................................................
-    /**
-     * Saves a parsed and linked dispatch record to the database.
-     *
-     * @param array|false|null $set The structured data array to be saved to database.
-     * @param array|int|null $ids The ID(s) of the dispatch to update, or null to insert a new record.
-     * @param string|null $special Special operation mode (e.g., 'IODU' for Insert On Duplicate Update).
-     * @return int|false The ID of the newly inserted dispatch, or false on failure.
-     */
-    public function setOff(array|false|null $set = null, array|int|null $ids = null, string|null $special = null): int|false {
-        if (!is_array($set)) {
-            return (false);
-        }
-
-        $next_id = null;
-
-        # separate other vehicles
-        $other_vehicles = $set['other_vehicles'];
-        unset($set['other_vehicles']);
-
-        # separate unit vehicles
-        $unit_vehicles = $set['unit_vehicles'];
-        unset($set['unit_vehicles']);
-
-        # save regular set data
-        if (is_countable($set) && count($set) >= 1) {
-            $next_id = parent::set($set, $ids, $special);
-        }
-
-        if (!$ids) {
-            $ids = $next_id;
-            // $new = true;
-        }
-
-        # _______________________________________________________________
-        # OTHER VEHICLES
-        if (isset($other_vehicles) && is_array($other_vehicles) && is_numeric($ids)) {
-            # remove existing
-            $this->DB->query('DELETE FROM dispatch_other_vehicle WHERE dispatch_id="' . (int) $ids . '";');
-
-            # save
-            if (count($other_vehicles) > 0) {
-                $sql = array();
-                foreach ($other_vehicles as $key => $value) {
-                    $sql[] = '(' .
-                        (int) $ids . ', ' .
-                        (!empty($value['unit']) ? '"' . mysqli_real_escape_string($this->DB->db, $value['unit']) . '"' : 'null') . ', ' .
-                        (!empty($value['vehicle_type_id']) ? (int)$value['vehicle_type_id'] : 'null') . ', ' .
-                        (!empty($value['vehicle']) ? '"' . mysqli_real_escape_string($this->DB->db, $value['vehicle']) . '"' : 'null') . ', ' .
-                        (!empty($value['callsign']) ? '"' . mysqli_real_escape_string($this->DB->db, $value['callsign']) . '"' : 'null') . ', ' .
-                        (!empty($value['fullname']) ? '"' . mysqli_real_escape_string($this->DB->db, $value['fullname']) . '"' : 'null') . ')';
-                }
-
-                $this->DB->query('INSERT INTO dispatch_other_vehicle (dispatch_id, unit, vehicle_type_id, vehicle, callsign, fullname) VALUES ' . implode(', ', $sql) . ';');
-            }
-        }
-        # _______________________________________________________________
-        # UNIT VEHICLES
-        if (isset($unit_vehicles) && is_array($unit_vehicles) && is_numeric($ids)) {
-            # remove existing
-            $this->DB->query('DELETE FROM dispatch_unit_vehicle WHERE dispatch_id="' . (int) $ids . '";');
-
-            # save
-            if (count($unit_vehicles) > 0) {
-                $sql = array();
-                foreach ($unit_vehicles as $key => $value) {
-                    $sql[] = '(' .
-                        (int) $ids . ', ' .
-                        (!empty($value['unit_vehicle_id']) ? (int)$value['unit_vehicle_id'] : 'null') . ', ' .
-                        (!empty($value['fullname']) ? '"' . mysqli_real_escape_string($this->DB->db, $value['fullname']) . '"' : 'null') . ')';
-                }
-
-                $this->DB->query('INSERT INTO dispatch_unit_vehicle (dispatch_id, unit_vehicle_id, fullname) VALUES ' . implode(', ', $sql) . ';');
-            }
-        }
-        # _______________________________________________________________
-
-        return ($ids);
     }
 
     # ...................................................................

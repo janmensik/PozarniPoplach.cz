@@ -7,19 +7,19 @@ use Janmensik\Jmlib\Database;
 use Casbin\Enforcer;
 
 class User extends Modul {
-    protected $sql_base = 'SELECT SQL_CALC_FOUND_ROWS u.id, u.name, u.email, u.status, u.page_schema, u.password FROM user u GROUP BY u.id'; # zaklad SQL dotazu
-    protected $sql_update = 'UPDATE user u'; # zaklad SQL dotazu - UPDATE
-    protected $sql_insert = 'INSERT INTO user'; # zaklad SQL dotazu - INSERT
-    protected $sql_table = 'u';
-    protected $order = 2;
+    protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS u.id, u.name, u.email, u.status, u.page_schema, u.password FROM user u GROUP BY u.id'; # zaklad SQL dotazu
+    protected ?string $sql_update = 'UPDATE user u'; # zaklad SQL dotazu - UPDATE
+    protected ?string $sql_insert = 'INSERT INTO user'; # zaklad SQL dotazu - INSERT
+    protected ?string $sql_table = 'u';
+    protected int|string $order = 2;
     protected $user = array();
     protected ?Enforcer $CASBIN = null;
     protected $page_schema = array('order' => 'p', 'status' => 'p', 'date_text' => 'g', 'date_range' => 'p', 'date_type' => 'p', 'currency' => 'g', 'history' => 'g', 'filter' => 'g', 'items_per_page' => 'g', 'q' => 'p', 'type' => 'p', 'stats' => 'p', 'newsletter' => 'p', 'important' => 'p', 'smart_status' => 'p'); # seznam co ukladam (hodnota 'g' pro globalni promenou, 'p' pro promenou pro stranku
 
-    protected $fulltext_columns = array('u.name', 'u.email', 'u.note');
-    protected $limit = -1;
+    protected ?array $fulltext_columns = array('u.name', 'u.email', 'u.note');
+    protected int $limit = -1;
 
-    protected $elements = [
+    protected array $elements = [
         'name',
         'email',
         'note',
@@ -27,9 +27,9 @@ class User extends Modul {
         'password'
     ];
 
-    public $data = [];
+    public array $data = [];
 
-    public $text = array(
+    public array $text = array(
         'cs' => array(
             'status' =>
             array('admin' => 'Administrátor', 'manager' => 'Správce', 'partner' => 'Partner', 'driver' => 'Řidič', 'disabled' => 'Zmražený', 'deleted' => 'Smazaný')
@@ -204,42 +204,6 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function fillData(?int $id = null): bool {
-        if (!$id) {
-            return false;
-        }
-
-        $item = $this->getId($id);
-
-        if (!$item) {
-            return false;
-        }
-
-        foreach ($this->elements as $el) {
-            if (isset($item[$el])) {
-                $this->data[$el] = @$item[$el];
-            }
-        }
-        return true;
-    }
-
-    # ...................................................................
-    public function mapFromPost(array $post, array $customMap = []) {
-        $map = !empty($customMap) ? $customMap : [
-            'name' => 'name',
-            'email' => 'email',
-            'note' => 'note',
-            'status' => 'status'
-        ];
-
-        foreach ($map as $postKey => $dbKey) {
-            if (isset($post[$postKey])) {
-                $this->data[$dbKey] = $this->sanitize($post[$postKey]);
-            }
-        }
-    }
-
-    # ...................................................................
     public function validate(?int $id = null): array {
         $errors = [];
 
@@ -259,32 +223,6 @@ class User extends Modul {
         }
 
         return $errors;
-    }
-
-    # ...................................................................
-    public function setter(?int $id = null): int|false {
-        $set = [];
-        foreach ($this->elements as $el) {
-            if (isset($this->data[$el])) {
-                $value = $this->data[$el];
-                if ($value === null) {
-                    $set[$el] = 'NULL';
-                } else {
-                    $set[$el] = '"' . mysqli_real_escape_string($this->DB->db, $value) . '"';
-                }
-            }
-        }
-
-        # vycistim cache
-        unset($this->cache);
-
-        # ulozeni normalnich udaju
-        $temp = parent::set($set, $id);
-        $ids = $temp ? $temp : $id;
-
-        $this->load();
-
-        return ($ids);
     }
 
     # ...................................................................

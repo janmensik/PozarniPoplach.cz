@@ -6,16 +6,16 @@ use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 
 class Unit extends Modul {
-    protected $sql_base = 'SELECT SQL_CALC_FOUND_ROWS ut.id, ut.status, ut.fullname, ut.registration, ut.pincode, ut.category, ut.region_id, ut.base_latitude, ut.base_longitude, reg.RZPK AS region_rzpk, reg.title AS region_title FROM unit ut JOIN region reg ON ut.region_id=reg.id GROUP BY ut.id'; # zaklad SQL dotazu
-    protected $sql_update = 'UPDATE unit ut'; # zaklad SQL dotazu - UPDATE
-    protected $sql_insert = 'INSERT INTO unit'; # zaklad SQL dotazu - INSERT
-    protected $sql_table = 'ut';
-    protected $order = 3;
+    protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS ut.id, ut.status, ut.fullname, ut.registration, ut.pincode, ut.category, ut.region_id, ut.base_latitude, ut.base_longitude, reg.RZPK AS region_rzpk, reg.title AS region_title FROM unit ut JOIN region reg ON ut.region_id=reg.id GROUP BY ut.id'; # zaklad SQL dotazu
+    protected ?string $sql_update = 'UPDATE unit ut'; # zaklad SQL dotazu - UPDATE
+    protected ?string $sql_insert = 'INSERT INTO unit'; # zaklad SQL dotazu - INSERT
+    protected ?string $sql_table = 'ut';
+    protected int|string $order = 3;
 
-    //protected $fulltext_columns = array('ut.id', 'ut.fullname', 'ut.registration', 'ut.pincode');
-    protected $limit = -1;
+    //protected ?array $fulltext_columns = array('ut.id', 'ut.fullname', 'ut.registration', 'ut.pincode');
+    protected int $limit = -1;
 
-    protected $elements = [
+    protected array $elements = [
         'status',
         'fullname',
         'registration',
@@ -26,9 +26,9 @@ class Unit extends Modul {
         'base_longitude'
     ];
 
-    public $data = [];
+    public array $data = [];
 
-    public $cache;
+    
 
     # ...................................................................
     public function __construct(Database &$database) {
@@ -142,49 +142,6 @@ class Unit extends Modul {
     }
 
     # ...................................................................
-    public function fillData(?int $id = null): bool {
-        if (!$id) {
-            return false;
-        }
-
-        $item = $this->getId($id);
-
-        foreach ($this->elements as $el) {
-            if (isset($item[$el])) {
-                $this->data[$el] = @$item[$el];
-            }
-        }
-
-        return true;
-    }
-
-    # ...................................................................
-    /**
-     * Map POST data to internal data array
-     * @param array $post $_POST data
-     * @param array $customMap Optional custom mapping [postKey => dbKey]
-     */
-    public function mapFromPost(array $post, ?array $customMap = []): void {
-        $map = !empty($customMap) ? $customMap : [
-            'status' => 'status',
-            'contact_email' => 'contact_email',
-            'fullname' => 'fullname',
-            'registration' => 'registration',
-            'pincode' => 'pincode',
-            'category' => 'category',
-            'region_id' => 'region_id',
-            'base_latitude' => 'base_latitude',
-            'base_longitude' => 'base_longitude'
-        ];
-
-        foreach ($map as $postKey => $dbKey) {
-            if (isset($post[$postKey])) {
-                $this->data[$dbKey] = $this->sanitize($post[$postKey]);
-            }
-        }
-    }
-
-    # ...................................................................
     public function validate(): array {
 
         $errors = [];
@@ -207,23 +164,5 @@ class Unit extends Modul {
         }
 
         return $errors;
-    }
-
-    # ...................................................................
-    # include all this->data into classic Modul set($set)
-    public function setter(?int $id = null): bool|int {
-        $set = [];
-        foreach ($this->elements as $el) {
-            if (isset($this->data[$el])) {
-                $value = $this->data[$el];
-                if ($value === null) {
-                    $set[$el] = 'NULL';
-                } else {
-                    $set[$el] = '"' . mysqli_real_escape_string($this->DB->db, $value) . '"';
-                }
-            }
-        }
-
-        return ($this->set($set, $id));
     }
 }
