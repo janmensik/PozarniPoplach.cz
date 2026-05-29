@@ -46,9 +46,11 @@ test('advertisers.php assigns data to smarty', function () {
                  ->method('assign');
 
     $advMock = $this->getMockBuilder(Advertiser::class)
-                   ->setConstructorArgs([$this->db])
+                   ->disableOriginalConstructor()
                    ->onlyMethods(['get', 'getGroupTotal', 'getTotal', 'getRowsCount', 'getExtra'])
                    ->getMock();
+
+    $advMock->DB = $this->db;
 
     $advMock->method('get')->willReturn([]);
     $advMock->method('getRowsCount')->willReturn(0);

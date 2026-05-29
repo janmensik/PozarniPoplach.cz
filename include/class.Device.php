@@ -36,12 +36,12 @@ class Device extends Modul {
         }
 
         # ad_probability
-        if (!empty($this->data['ad_probability']) && !is_numeric($this->data['ad_probability']) && ($this->data['ad_probability'] < 0 || $this->data['ad_probability'] > 100)) {
+        if (!empty($this->data['ad_probability']) && (!is_numeric($this->data['ad_probability']) || $this->data['ad_probability'] < 0 || $this->data['ad_probability'] > 100)) {
             $errors['ad_probability'] = "Ad probability must be a number 0-100";
         }
 
         # ad_sticky_duration
-        if (!empty($this->data['ad_sticky_duration']) && !is_numeric($this->data['ad_sticky_duration']) && ($this->data['ad_sticky_duration'] < 0 || $this->data['ad_sticky_duration'] > 9999)) {
+        if (!empty($this->data['ad_sticky_duration']) && (!is_numeric($this->data['ad_sticky_duration']) || $this->data['ad_sticky_duration'] < 0 || $this->data['ad_sticky_duration'] > 9999)) {
             $errors['ad_sticky_duration'] = "Ad sticky duration must be a number 0-9999";
         }
 

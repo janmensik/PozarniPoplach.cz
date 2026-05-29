@@ -2,7 +2,7 @@
 
 use Janmensik\Jmlib\AppData;
 use Janmensik\Jmlib\Database;
-use PozarniPoplach\Ad;
+use PozarniPoplach\Device;
 
 uses(\Tests\TestCase::class);
 
@@ -12,62 +12,58 @@ beforeEach(function () {
                          ->disableOriginalConstructor()
                          ->getMock();
 
-    // Mock AppData
     $this->appd = AppData::getInstance();
     $this->appd->setData('APP', [
         'DEFAULT_ITEMS_PER_PAGE' => 20,
         'DEFAULT_ITEMS_PER_PAGE_DOTS' => 3
     ]);
     $this->appd->setData('CONFIG', [
-        'ads_url' => 'reklamy'
+        'devices_url' => 'zarizeni'
     ]);
 
-    // Mock User
     $this->user = $this->createMock(\PozarniPoplach\User::class);
     $this->user->method('hasPermission')->willReturn(true);
     $this->user->method('setPageSchema')->willReturnArgument(1);
 
-    // Mock Smarty
     $this->smarty = $this->createMock(\Smarty\Smarty::class);
 
-    // Make them global as the page scripts expect them
     $GLOBALS['DB'] = $this->db;
     $GLOBALS['User'] = $this->user;
     $GLOBALS['Smarty'] = $this->smarty;
     $GLOBALS['APPD'] = $this->appd;
     
-    // We need to define some functions that might be called
     if (!function_exists('pagination')) {
         function pagination($a, $b, $c, $d) { return []; }
     }
 });
 
-test('ads.php assigns data to smarty', function () {
+test('devices.php assigns data to smarty', function () {
     $this->smarty->expects($this->atLeastOnce())
                  ->method('assign');
 
-    $adMock = $this->getMockBuilder(Ad::class)
+    $devMock = $this->getMockBuilder(Device::class)
                    ->disableOriginalConstructor()
                    ->onlyMethods(['get', 'getGroupTotal', 'getTotal', 'getRowsCount', 'getExtra'])
                    ->getMock();
     
-    $adMock->DB = $this->db;
+    $devMock->DB = $this->db;
     
-    $adMock->method('get')->willReturn([]);
-    $adMock->method('getRowsCount')->willReturn(0);
-    $adMock->method('getGroupTotal')->willReturn([]);
-    $adMock->method('getTotal')->willReturn([]);
-    $adMock->method('getExtra')->willReturn([]);
+    $devMock->method('get')->willReturn([]);
+    $devMock->method('getRowsCount')->willReturn(0);
+    $devMock->method('getGroupTotal')->willReturn([]);
+    $devMock->method('getTotal')->willReturn([]);
+    $devMock->method('getExtra')->willReturn([]);
     
-    // Set local variables that include will pick up
-    $Ad = $adMock;
+    $Device = $devMock;
     $DB = $this->db;
     $User = $this->user;
     $Smarty = $this->smarty;
     $APPD = $this->appd;
 
     ob_start();
-    include __DIR__ . '/../../view/page/ads.php';
+    (function() use (&$Device, &$DB, &$User, &$Smarty, &$APPD) {
+        include __DIR__ . '/../../view/page/devices.php';
+    })();
     ob_end_clean();
     
     expect(true)->toBeTrue();

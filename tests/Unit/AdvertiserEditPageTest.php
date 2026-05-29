@@ -60,9 +60,11 @@ test('advertiser-edit.php handles POST saving', function () {
     ];
 
     $advMock = $this->getMockBuilder(Advertiser::class)
-                   ->setConstructorArgs([$this->db])
+                   ->disableOriginalConstructor()
                    ->onlyMethods(['setter', 'validate', 'mapFromPost'])
                    ->getMock();
+    
+    $advMock->DB = $this->db;
     
     $advMock->method('validate')->willReturn([]);
     $advMock->method('setter')->willReturn(789);
