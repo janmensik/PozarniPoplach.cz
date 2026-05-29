@@ -53,6 +53,8 @@ if (!$data && (!empty($id) && $id != 'new')) {
 # *******************************************************************
 
 if ($_POST) {
+    $errors = [];
+
     # 1. Initialize data (if editing)
     if ($id != 'new') {
         $Ad->fillData($id);
@@ -61,8 +63,24 @@ if ($_POST) {
     # 2. Map from POST
     $Ad->mapFromPost($_POST);
 
+    # --- File upload handling ---
+    if (!empty($_FILES['banner_image']['name']) && $_FILES['banner_image']['error'] == UPLOAD_ERR_OK) {
+        $uploadDir = __DIR__ . '/../../upload/ads/';
+        $extension = pathinfo($_FILES['banner_image']['name'], PATHINFO_EXTENSION);
+        $filename = uniqid('ad_') . '.' . $extension;
+        $uploadFile = $uploadDir . $filename;
+
+        if (move_uploaded_file($_FILES['banner_image']['tmp_name'], $uploadFile)) {
+            $baseUrl = $APPD->getData('BASE_URL');
+            $Ad->data['banner_image_url'] = $baseUrl . '/upload/ads/' . $filename;
+        } else {
+            $errors['banner_image'] = 'Chyba při nahrávání obrázku.';
+        }
+    }
+    # ----------------------------
+
     # 3. Validate
-    $errors = $Ad->validate();
+    $errors = array_merge($errors, $Ad->validate());
 
     # error in validation
     if ($errors) {
@@ -72,7 +90,7 @@ if ($_POST) {
         $item_id = $Ad->setter($id == 'new' ? null : $id);
 
         if ($item_id) {
-            $APPD->MESSAGES['saved']['ad'] = $Ad->data['type'];
+            $APPD->MESSAGES['saved']['ad'] = $Ad->data['title'] ?? 'ad';
             $APPD->MESSAGES['saved']['id'] = $item_id;
 
             $APPD->hibernateMessages();
@@ -100,6 +118,7 @@ if ($_POST && isset($errors)) {
 }
 
 $Smarty->assign('data', $data);
+$Smarty->assign('Ad', $Ad);
 
 # load all top level event types for parent selection
 require_once(__DIR__ . '/../../include/class.Advertiser.php');

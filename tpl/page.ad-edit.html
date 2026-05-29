@@ -12,7 +12,7 @@
 <!-- Main content -->
 <section class="content">
   <div class="container-fluid">
-    <form method="post" action="{$BASE_URL}/{#ads_url#}/{$data.id|default:'new'}" class="form-horizontal">
+    <form method="post" action="{$BASE_URL}/{#ads_url#}/{$data.id|default:'new'}" class="form-horizontal" enctype="multipart/form-data">
       <input type="hidden" name="id" value="{$data.id}" />
       <div class="card card-primary">
         <div class="card-header p-0 border-bottom-0">
@@ -20,35 +20,161 @@
         </div>
         <div class="card-body">
           <fieldset>
-            <legend>Reklama (banner)</legend>
+            <legend>Identifikace</legend>
 
             <div class="form-group row">
-              <label for="f_type" class="col-sm-2 col-form-label">Název:</label>
+              <label for="f_title" class="col-sm-2 col-form-label">Označení reklamy:</label>
               <div class="col">
-                <input type="text" class="form-control" name="type" id="f_type" value="{$data.name|escape}" placeholder="Např. Požár" required />
-              </div>
-            </div>
-
-            <div class="form-group row">
-              <label for="f_icon" class="col-sm-2 col-form-label">Ikona:</label>
-              <div class="col-sm-6">
-                <input type="text" class="form-control" name="icon" id="f_icon" x-model="iconClass" placeholder="fa-solid fa-truck" />
-                <p class="help-block form-text text-muted">CSS třída FontAwesome ikony.</p>
-              </div>
-              <div class="col-sm-1 d-flex justify-content-center">
-                <i :class="iconClass || 'fa-solid fa-question'" class="fa-2x text-secondary"></i>
+                <input type="text" class="form-control" name="title" id="f_title" value="{$data.title|escape}" placeholder="Např. Zásahové rukavice B3" required />
               </div>
             </div>
 
             <div class="form-group row">
               <label for="f_advertiser_id" class="col-sm-2 col-form-label">Inzerent:</label>
               <div class="col">
-                <select name="advertiser_id" id="f_advertiser_id" class="form-control custom-select">
+                <select name="advertiser_id" id="f_advertiser_id" class="form-control custom-select" required>
                   <option value="">-- vyber --</option>
                   {foreach from=$advertisers item=adc}
                     <option value="{$adc.id}" {if $data.advertiser_id == $adc.id}selected{/if}>{$adc.name|escape}</option>
                   {/foreach}
                 </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_status" class="col-sm-2 col-form-label">Status:</label>
+              <div class="col">
+                <select name="status" id="f_status" class="form-control custom-select" required>
+                  {foreach from=$Ad->text.cs.status key=st_key item=st_label}
+                    <option value="{$st_key}" {if $data.status == $st_key || ($data.status == '' && $st_key == 'active')}selected{/if}>{$st_label|escape}</option>
+                  {/foreach}
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Reklama (banner)</legend>
+
+            <div class="form-group row" x-data="{
+                imageUrl: '{$data.banner_image_url|default:''}',
+                isDragging: false,
+                fileSize: '',
+                dimensions: '',
+                formatBytes(bytes, decimals = 2) {
+                    if (bytes === 0) return '0 Bytes';
+                    const k = 1024;
+                    const dm = decimals < 0 ? 0 : decimals;
+                    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+                },
+                updateMetadata(file) {
+                    this.fileSize = this.formatBytes(file.size);
+                    const img = new Image();
+                    img.onload = () => {
+                        this.dimensions = ' ' + img.naturalWidth + ' × ' + img.naturalHeight + ' px';
+                    };
+                    img.src = URL.createObjectURL(file);
+                },
+                handleFileSelect(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.imageUrl = URL.createObjectURL(file);
+                        this.updateMetadata(file);
+                    }
+                },
+                handleDrop(event) {
+                    const file = event.dataTransfer.files[0];
+                    if (file) {
+                        this.$refs.fileInput.files = event.dataTransfer.files;
+                        this.imageUrl = URL.createObjectURL(file);
+                        this.updateMetadata(file);
+                    }
+                },
+                clearImage() {
+                    this.imageUrl = '';
+                    this.fileSize = '';
+                    this.dimensions = '';
+                    this.$refs.fileInput.value = '';
+                }
+            }">
+              <label class="col-sm-2 col-form-label">Obrázek (banner):</label>
+              <div class="col">
+                <div
+                  class="drop-zone border rounded p-3 text-center position-relative d-flex align-items-center justify-content-center bg-light"
+                  :class="isDragging ? 'border-primary bg-primary-subtle shadow-sm' : 'border-secondary-subtle'"
+                  @dragover.prevent="isDragging = true"
+                  @dragleave.prevent="isDragging = false"
+                  @drop.prevent="isDragging = false; handleDrop($event)"
+                  style="min-height: 150px; cursor: pointer; transition: all 0.2s ease;"
+                  @click="$refs.fileInput.click()"
+                >
+                  <input
+                    type="file"
+                    name="banner_image"
+                    class="d-none"
+                    @change="handleFileSelect($event)"
+                    accept="image/*"
+                    x-ref="fileInput"
+                  >
+
+                  <template x-if="!imageUrl">
+                    <div class="text-secondary">
+                      <i class="fa-solid fa-cloud-arrow-up fa-3x mb-2"></i>
+                      <p class="mb-0">Klikněte nebo přetáhněte obrázek sem</p>
+                    </div>
+                  </template>
+
+                  <template x-if="imageUrl">
+                    <div class="d-inline-block">
+                      <div class="position-relative d-inline-block">
+                        <img :src="imageUrl" class="img-fluid rounded border shadow-sm" style="max-height: 180px;">
+                        <button
+                          type="button"
+                          class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
+                          @click.stop="clearImage()"
+                          title="Odstranit obrázek"
+                        >
+                          <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </div>
+                      <div class="mt-2 text-muted small text-center" x-show="fileSize || dimensions">
+                         <span x-text="fileSize"></span> <span x-show="fileSize && dimensions">|</span> <span x-text="dimensions"></span>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+                <p class="help-block form-text text-muted">Povolené formáty: JPG, PNG, GIF. Max 2MB.</p>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_ad_text" class="col-sm-2 col-form-label">Text sdělení:</label>
+              <div class="col">
+                <input type="text" class="form-control" name="ad_text" id="f_ad_text" value="{$data.ad_text|escape}" placeholder="Např. Zásahové rukavice se slevou 30% jen do 5. června!" />
+                <p class="help-block form-text text-muted">Nepovinná hodnota. Zobrazuje se jako doprovodný obsah k obrázku (banneru).</p>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_promo_code" class="col-sm-2 col-form-label">Promo kód:</label>
+              <div class="col">
+                <input type="text" class="form-control" name="promo_code" id="f_promo_code" value="{$data.promo_code|escape}" placeholder="Např. ZASAH123" />
+                <p class="help-block form-text text-muted">Nepovinná hodnota. Bude zobrazeno jako výrazný badge u inzerátu.</p>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_target_link" class="col-sm-2 col-form-label">Cílový odkaz:</label>
+              <div class="col">
+                <div class="input-group" x-data="{ target_link: '{$data.target_link|escape}' }">
+                  <input type="text" x-model="target_link" class="form-control" name="target_link" id="f_target_link" value="{$data.target_link|escape}" placeholder="Např. https://www.example.com/rukavice-B3" />
+                  <div class="input-group-append">
+                    <a :href="target_link" target="_blank" class="btn btn-outline-secondary" title="Otevřít cílový odkaz"><i class="fa-solid fa-up-right-from-square"></i></a>
+                  </div>
+                </div>
+                <p class="help-block form-text text-muted">Nepovinná hodnota.</p>
               </div>
             </div>
           </fieldset>
