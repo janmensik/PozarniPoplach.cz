@@ -21,10 +21,10 @@
         <div class="card-header p-0 border-bottom-0">
           <ul class="nav nav-tabs" id="unit-tabs-edit-tab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="unit-tabs-basic-tab" data-bs-toggle="pill" href="#unit-tabs-basic" role="tab" aria-controls="unit-tabs-basic" aria-selected="true">Základní údaje</a>
+              <a class="nav-link active" id="unit-tabs-basic-tab" data-toggle="pill" href="#unit-tabs-basic" role="tab" aria-controls="unit-tabs-basic" aria-selected="true">Základní údaje</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="unit-tabs-alarm-tab" data-bs-toggle="pill" href="#unit-tabs-alarm" role="tab" aria-controls="unit-tabs-alarm" aria-selected="true">Test poplachu</a>
+              <a class="nav-link" id="unit-tabs-alarm-tab" data-toggle="pill" href="#unit-tabs-alarm" role="tab" aria-controls="unit-tabs-alarm" aria-selected="true">Test poplachu</a>
             </li>
           </ul>
         </div>
@@ -53,7 +53,7 @@
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Kategorie JPO:</label>
                   <div class="col">
-                    <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
                       <label class="btn btn-outline-success {if $data.category == 2}active{/if}">
                         <input type="radio" name="category" id="f_category_2" value="2" autocomplete="off" {if $data.category == 2}checked{/if} />II</label>
                       <label class="btn btn-outline-success {if $data.category == 3}active{/if}">
@@ -108,20 +108,20 @@
                 <legend>Testovací poplach</legend>
                 <div class="form-group">
                   <div class="col-sm-10">
-                    <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#modal_clearPageschema">Vytvořit testovací poplach</button>
+                    <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#modal_clearPageschema">Vytvořit testovací poplach</button>
 
                     <div class="modal fade" id="modal_clearPageschema" arial-hidden="true">
                       <div class="modal-dialog">
                         <div class="modal-content">
                           <div class="modal-header">
                             <h4 class="modal-title">Opravdu chcete vytvořit testovací poplach?</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                           </div>
                           <div class="modal-body">
                             <p>Dojde k vytvoření testovacího poplachu pro tuto jednotku.</p>
                           </div>
                           <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Zrušit</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Zrušit</button>
                             <button type="submit" name="create_test" value="true" class="btn btn-warning">Vytvořit testovací poplach</button>
                           </div>
                         </div>

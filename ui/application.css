@@ -34,7 +34,7 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6, .brand-text, .nav-link, .card-title {
+h1, h2, h3, h4, h5, h6, .brand-text, .nav-link, .card-title, .modal-title {
   font-weight: 800 !important;
   letter-spacing: -0.02em !important;
   text-transform: uppercase !important;
@@ -334,6 +334,41 @@ select.form-control:focus {
   font-style: italic !important;
 }
 
+/* Modals */
+.modal-content {
+  background-color: var(--pp-surface-container-high) !important;
+  color: var(--pp-on-surface) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+}
+
+.modal-header {
+  background-color: var(--pp-primary-container) !important;
+  border-bottom: 3px solid var(--pp-secondary) !important;
+  color: var(--pp-on-primary-container) !important;
+}
+
+.modal-header .close, .modal-header .btn-close {
+  color: var(--pp-on-primary-container) !important;
+  opacity: 0.8;
+  text-shadow: none !important;
+}
+
+.modal-header .close:hover {
+  opacity: 1;
+  color: var(--pp-secondary) !important;
+}
+
+.modal-footer {
+  background-color: var(--pp-surface-container-highest) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.modal-backdrop.show {
+  opacity: 0.85 !important;
+}
+
 /* Fix for sidebar header jumping during hover expansion */
 .sidebar-mini.sidebar-collapse .main-sidebar .nav-sidebar .nav-header {
   display: block !important;
@@ -346,4 +381,16 @@ select.form-control:focus {
 
 .sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-header {
   opacity: 1 !important;
+}
+
+/* Default button fix for dark theme */
+.btn-default {
+  background-color: var(--pp-surface-container-highest) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--pp-on-surface) !important;
+}
+
+.btn-default:hover {
+  background-color: var(--pp-surface-container) !important;
+  color: #fff !important;
 }
