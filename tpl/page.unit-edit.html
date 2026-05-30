@@ -72,6 +72,16 @@
               <fieldset>
                 <legend>Adresa zbrojnice</legend>
 
+                <div class="form-group row" x-show="latitude && longitude">
+                  <label class="col-sm-2 col-form-label">Mapa:</label>
+                  <div class="col">
+                    <img :src="'https://maps.googleapis.com/maps/api/staticmap?center=' + latitude + ',' + longitude + '&zoom=15&size=600x300&maptype=roadmap&markers=color:red%7C' + latitude + ',' + longitude + '&key={$APPD.APP.GOOGLE_MAPS_API_KEY}'" class="img-fluid rounded border" />
+                    <p class="help-block form-text text-muted">
+                      Lat: <code x-text="latitude"></code>, Lng: <code x-text="longitude"></code>
+                    </p>
+                  </div>
+                </div>
+
                 <div class="form-group row">
                   <label for="address_search" class="col-sm-2 col-form-label">Vyhledat adresu:</label>
                   <div class="col">
@@ -90,16 +100,6 @@
                     </select>
                   </div>
                 </div>
-
-                <div class="form-group row" x-show="latitude && longitude">
-                    <label class="col-sm-2 col-form-label">Náhled:</label>
-                    <div class="col">
-                        <img :src="'https://maps.googleapis.com/maps/api/staticmap?center=' + latitude + ',' + longitude + '&zoom=15&size=600x200&maptype=roadmap&markers=color:red%7C' + latitude + ',' + longitude + '&key={$APPD.APP.GOOGLE_MAPS_API_KEY}'" class="img-fluid rounded border" />
-                        <p class="help-block form-text text-muted">
-                            Lat: <code x-text="latitude"></code>, Lng: <code x-text="longitude"></code>
-                        </p>
-                    </div>
-                </div>
               </fieldset>
             </div>
 
@@ -114,11 +114,13 @@
                       <div class="modal-dialog">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h4 class="modal-title">Opravdu chcete vytvořit testovací poplach?</h4>
+                            <h4 class="modal-title">Opravdu vytvořit testovací poplach?</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                           </div>
                           <div class="modal-body">
-                            <p>Dojde k vytvoření testovacího poplachu pro tuto jednotku.</p>
+                            <p>Jednotce {$data.fullname|escape} bude zobrazen na kiosku PožárníPoplach.cz testovací výjezd s náhodným umístěním.</p>
+                            <p>Poplach se zobrazí pouze v kiosku, nepropisuje se do Port.All, Fireport, Kopis atd.</p>
+                            <p>Testovací poplach se automaticky smaže po 30 minutách, nebo ho můžete smazat ručně.</p>
                           </div>
                           <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Zrušit</button>
@@ -159,6 +161,16 @@ function addressFinder() {
         regions: {$regions_json|default:"[]"},
 
         init() {
+            // Wait for google maps to load
+            const waitForGoogle = setInterval(() => {
+                if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+                    clearInterval(waitForGoogle);
+                    this.setupAutocomplete();
+                }
+            }, 100);
+        },
+
+        setupAutocomplete() {
             const autocomplete = new google.maps.places.Autocomplete(document.getElementById('address_search'), {
                 types: ['address'],
                 componentRestrictions: { country: 'cz' }
@@ -192,7 +204,7 @@ function initGoogleMaps() {
     // This function is called by the Google Maps script, but Alpine.js handles the logic.
 }
 </script>
-<script async src="https://maps.googleapis.com/maps/api/js?key={$APPD.APP.GOOGLE_MAPS_API_KEY}&libraries=places&callback=initGoogleMaps"></script>
+<script async src="https://maps.googleapis.com/maps/api/js?key={$APPD.APP.GOOGLE_MAPS_API_KEY}&libraries=places&callback=initGoogleMaps&loading=async"></script>
 {/capture}
 
 {include file="inc.footer.html" footer_append=$smarty.capture.footer_script}
