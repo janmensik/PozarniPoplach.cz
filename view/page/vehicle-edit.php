@@ -122,7 +122,7 @@ require_once(__DIR__ . '/../../include/class.Unit.php');
 if (!isset($Unit)) {
     $Unit = new \PozarniPoplach\Unit($DB);
 }
-$Smarty->assign('units', $Unit->get(null, 'ut.fullname ASC'));
+$Smarty->assign('units', $Unit->get(null, '3'));
 
 # Vehicle Types for select
 require_once(__DIR__ . '/../../include/class.VehicleType.php');
