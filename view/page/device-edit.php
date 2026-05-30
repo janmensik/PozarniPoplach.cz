@@ -63,7 +63,7 @@ if (!empty($_POST['delete']) && $data['id'] && $User->hasPermission('devices', '
         header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['devices_url'] . '/' . $data['id']);
     }
     header("Connection: close");
-    exit();
+    return;
 }
 
 # ...................................................................
@@ -94,7 +94,7 @@ if ($_POST) {
             $APPD->hibernateMessages();
             header('Location: ' . $APPD->getData('BASE_URL') . '/' . $APPD->data['CONFIG']['devices_url']);
             header("Connection: close");
-            exit();
+            return;
         } else {
             $APPD->MESSAGES['error']['device'] = 'not saved';
         }

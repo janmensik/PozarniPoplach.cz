@@ -74,7 +74,7 @@ if (!empty($_POST['reset']) && $data['id']) {
         header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['users_url'] . '/' . $data['id']);
     }
     header("Connection: close");
-    exit();
+    return;
 }
 
 
@@ -166,7 +166,7 @@ elseif (!empty($_POST)) {
                 header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['users_url'] . '/' . $user_id);
             }
             header("Connection: close");
-            exit();
+            return;
         } else {
             $APPD->MESSAGES['error']['settings'] = 'not saved';
         }

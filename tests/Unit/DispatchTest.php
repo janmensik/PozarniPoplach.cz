@@ -16,10 +16,12 @@ beforeEach(function () {
                          
     $this->dispatch = new Dispatch($this->db);
     $_ENV['GOOGLE_MAPS_API_KEY'] = 'test-key';
+    $_ENV['MAPBOX_API_KEY'] = 'test-key';
 });
 
 afterEach(function () {
     unset($_ENV['GOOGLE_MAPS_API_KEY']);
+    unset($_ENV['MAPBOX_API_KEY']);
 });
 
 test('beautifulLastDispatch returns null for empty input', function () {

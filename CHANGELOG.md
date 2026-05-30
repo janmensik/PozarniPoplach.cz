@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.8.2] - 2026-05-30
 ### Added
-- Unit edit
++ Unit edit
 - Modal improvements
 * Error Messages fixed
++ PHP Unit tests added
 
 ## [0.7.1] - 2026-05-28
 ### Added

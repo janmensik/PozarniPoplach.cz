@@ -25,7 +25,7 @@ if (empty($_POST['email']) || empty($_POST['password'])) {
 
     header('Location: ' . $APPD->getData('BASE_URL') . '/login');
     header("Connection: close");
-    exit();
+    return;
 } else {
     $user_id = null;
     $user_id = $User->verify($_POST['email'], $_POST['password']);
@@ -39,7 +39,7 @@ if (empty($_POST['email']) || empty($_POST['password'])) {
 
         header('Location: ' . $APPD->getData('BASE_URL') . '/login');
         header("Connection: close");
-        exit();
+        return;
     }
 
     # set permanent login (30 days)
@@ -56,7 +56,7 @@ if (empty($_POST['email']) || empty($_POST['password'])) {
 
     header('Location: ' . $APPD->getData('BASE_URL'));
     header("Connection: close");
-    exit();
+    return;
 }
 
 # *******************************************************************

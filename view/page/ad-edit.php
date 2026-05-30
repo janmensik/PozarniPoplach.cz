@@ -96,7 +96,7 @@ if ($_POST) {
             $APPD->hibernateMessages();
             header('Location: ' . $APPD->getData('BASE_URL') . '/' . $APPD->data['CONFIG']['ads_url']);
             header("Connection: close");
-            exit();
+            return;
         } else {
             $APPD->MESSAGES['error']['ad'] = 'not saved';
         }

@@ -28,7 +28,7 @@ if (!empty($_GET['pincode'])) {
 if (empty($unit_id)) {
     header('Location: ' . $APPD->getData('BASE_URL') . '/alarm-login');
     header("Connection: close");
-    exit();
+    return;
 }
 
 # *******************************************************************

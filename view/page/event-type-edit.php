@@ -78,7 +78,7 @@ if ($_POST) {
             $APPD->hibernateMessages();
             header('Location: ' . $APPD->getData('BASE_URL') . '/' . $APPD->data['CONFIG']['event_types_url']);
             header("Connection: close");
-            exit();
+            return;
         } else {
             $APPD->MESSAGES['error']['event_type'] = 'not saved';
         }

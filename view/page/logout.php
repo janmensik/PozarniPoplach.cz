@@ -27,4 +27,4 @@ $APPD->hibernateMessages();
 # redirect to home /
 header('Location: ' . $APPD->getData('BASE_URL'));
 header("Connection: close");
-exit();
+return;

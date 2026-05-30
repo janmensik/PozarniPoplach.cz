@@ -68,7 +68,7 @@ if (!empty($_POST['create_test']) && $data['id'] && $User->hasPermission('dispat
         header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['units_url'] . '/' . $data['id']);
     }
     header("Connection: close");
-    exit();
+    return;
 }
 
 # ...................................................................
@@ -99,7 +99,7 @@ if ($_POST) {
             $APPD->hibernateMessages();
             header('Location: ' . $APPD->getData('BASE_URL') . '/' . $APPD->data['CONFIG']['units_url']);
             header("Connection: close");
-            exit();
+            return;
         } else {
             $APPD->MESSAGES['error']['unit'] = 'not saved';
         }
