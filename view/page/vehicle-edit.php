@@ -54,7 +54,7 @@ if (!$data && (!empty($id) && $id != 'new')) {
 
 # ...................................................................
 #  Delete (unregister) vehicle
-if (!empty($_POST['delete']) && $data['id'] && $User->hasPermission('vehicles', 'delete')) {
+if (!empty($_POST['delete']) && isset($data['id']) && $User->hasPermission('vehicles', 'delete')) {
     if ($Vehicle->delete($data['id'])) {
         $APPD->MESSAGES['deleted']['vehicle'] = $data['name'] ?? $data['callsign'];
         header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['vehicles_url']);

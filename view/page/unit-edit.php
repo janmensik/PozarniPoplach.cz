@@ -54,7 +54,7 @@ if (!$data && (!empty($id) && $id != 'new')) {
 
 # ...................................................................
 #  Create fake Dispatch Alarm (for testing)
-if (!empty($_POST['create_test']) && $data['id'] && $User->hasPermission('dispatches', 'create')) {
+if (!empty($_POST['create_test']) && isset($data['id']) && $User->hasPermission('dispatches', 'create')) {
     require_once(__DIR__ . '/../../include/class.Dispatch.php');
     if (!isset($Dispatch)) {
         $Dispatch = new \PozarniPoplach\Dispatch($DB);

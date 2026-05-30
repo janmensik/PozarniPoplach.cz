@@ -8,17 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.8.2] - 2026-05-30
 ### Added
 + Unit edit
-- Modal improvements
-* Error Messages fixed
 + PHP Unit tests added
 + Unit vehicles list and edit
 
+### Changed
+- Modal improvements
+
+### Fixed
+* Error Messages fixed
+
 ## [0.7.1] - 2026-05-28
-### Added
+### Changed
 - Refactor to JmLib v1.6.1
 
 ## [0.7.0] - 2026-05-27
-### Added
+### Changed
 - Libs update
 
 ## [0.6.0] - 2026-05-15

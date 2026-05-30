@@ -54,7 +54,7 @@ if (!$data && (!empty($id) && $id != 'new')) {
 
 # ...................................................................
 #  Delete (unregister) device
-if (!empty($_POST['delete']) && $data['id'] && $User->hasPermission('devices', 'delete')) {
+if (!empty($_POST['delete']) && isset($data['id']) && $User->hasPermission('devices', 'delete')) {
     if ($Device->delete($data['id'])) {
         $APPD->MESSAGES['deleted']['device'] = $data['device_name'] ?? $data['device_uuid'];
         header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['devices_url']);
