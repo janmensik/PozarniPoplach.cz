@@ -59,7 +59,7 @@ if (!empty($_POST['delete']) && $data['id'] && $User->hasPermission('devices', '
         $APPD->MESSAGES['deleted']['device'] = $data['device_name'] ?? $data['device_uuid'];
         header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['devices_url']);
     } else {
-        $APPD->MESSAGES['stop']['device'] = 'not deleted';
+        $APPD->MESSAGES['error']['device'] = 'not deleted';
         header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['devices_url'] . '/' . $data['id']);
     }
     header("Connection: close");
@@ -82,7 +82,7 @@ if ($_POST) {
 
     # error in validation
     if ($errors) {
-        $APPD->MESSAGES['stop'] = $errors;
+        $APPD->MESSAGES['error'] = $errors;
     } else {
         # 4. Save
         $item_id = $Device->setter($id == 'new' ? null : $id);
@@ -96,7 +96,7 @@ if ($_POST) {
             header("Connection: close");
             exit();
         } else {
-            $APPD->MESSAGES['stop']['device'] = 'not saved';
+            $APPD->MESSAGES['error']['device'] = 'not saved';
         }
     }
 }

@@ -66,7 +66,7 @@ if ($_POST) {
 
     # error in validation
     if ($errors) {
-        $APPD->MESSAGES['stop'] = $errors;
+        $APPD->MESSAGES['error'] = $errors;
     } else {
         # 4. Save
         $item_id = $EventType->setter($id == 'new' ? null : $id);
@@ -80,7 +80,7 @@ if ($_POST) {
             header("Connection: close");
             exit();
         } else {
-            $APPD->MESSAGES['stop']['event_type'] = 'not saved';
+            $APPD->MESSAGES['error']['event_type'] = 'not saved';
         }
     }
 }

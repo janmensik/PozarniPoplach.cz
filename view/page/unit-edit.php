@@ -87,21 +87,21 @@ if ($_POST) {
 
     # error in validation
     if ($errors) {
-        $APPD->MESSAGES['stop'] = $errors;
+        $APPD->MESSAGES['error'] = $errors;
     } else {
         # 4. Save
         $item_id = $Unit->setter($id == 'new' ? null : $id);
 
         if ($item_id) {
-            $APPD->MESSAGES['saved']['ad'] = $Unit->data['type'];
+            $APPD->MESSAGES['saved']['unit'] = $Unit->data['fullname'];
             $APPD->MESSAGES['saved']['id'] = $item_id;
 
             $APPD->hibernateMessages();
-            header('Location: ' . $APPD->getData('BASE_URL') . '/' . $APPD->data['CONFIG']['ads_url']);
+            header('Location: ' . $APPD->getData('BASE_URL') . '/' . $APPD->data['CONFIG']['units_url']);
             header("Connection: close");
             exit();
         } else {
-            $APPD->MESSAGES['stop']['ad'] = 'not saved';
+            $APPD->MESSAGES['error']['unit'] = 'not saved';
         }
     }
 }
@@ -121,6 +121,7 @@ if ($_POST && isset($errors)) {
 }
 
 $Smarty->assign('data', $data);
+$Smarty->assign('Unit', $Unit);
 
 $regions = $Unit->getRegions();
 $Smarty->assign('regions', $regions);

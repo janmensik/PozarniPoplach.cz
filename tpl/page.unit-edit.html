@@ -101,6 +101,21 @@
                   </div>
                 </div>
               </fieldset>
+
+              <fieldset>
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Status:</label>
+                  <div class="col">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                      {foreach from=$Unit->text.cs.status key=st_key item=st_label}
+                        <label class="btn btn-outline-success {if $data.status == $st_key}active{/if}">
+                          <input type="radio" name="status" id="f_status_{$st_key}" value="{$st_key}" autocomplete="off" {if $data.status == $st_key}checked{/if} />{$st_label|default:$st_key|escape}
+                        </label>
+                      {/foreach}
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
             </div>
 
             <div class="tab-pane fade" id="unit-tabs-alarm" role="tabpanel" aria-labelledby="unit-tabs-alarm-tab">

@@ -15,6 +15,13 @@ class Unit extends Modul {
     //protected ?array $fulltext_columns = array('ut.id', 'ut.fullname', 'ut.registration', 'ut.pincode');
     protected int $limit = -1;
 
+    public array $text = array(
+        'cs' => array(
+            'status' =>
+            array('ok' => 'Aktivní', 'paused' => 'Pozastaveno', 'deleted' => 'Smazaná')
+        )
+    );
+
     protected array $elements = [
         'status',
         'fullname',
@@ -140,7 +147,8 @@ class Unit extends Modul {
     # ...................................................................
     public function getRegions(): array|null {
         $regions = $this->DB->getAllRows($this->DB->query(
-            'SELECT id, RZPK, title FROM region ORDER BY title ASC', 'get_regions'
+            'SELECT id, RZPK, title FROM region ORDER BY title ASC',
+            'get_regions'
         ));
 
         return $regions ?: null;
@@ -158,10 +166,6 @@ class Unit extends Modul {
         # registration
         if (empty($this->data['registration'])) {
             $errors['registration'] = "Registration is required";
-        }
-        # pincode
-        if (empty($this->data['pincode'])) {
-            $errors['pincode'] = "Pincode is required";
         }
         # category
         if (empty($this->data['category'])) {

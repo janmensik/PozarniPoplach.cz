@@ -3,10 +3,10 @@
 {include file="inc.page-breadcrumb.html"
   page_icon=#ads_icon#
   page_subtitle=#ads_edit_title#
-  page_title=$data.name|default:#ads_create#|escape
+  page_title=$data.title|default:#ads_create#|escape
   page_b1_title=#ads_title#
   page_b1_url=#ads_url#
-  page_b2_title=$data.name|default:#ads_edit_title#|escape
+  page_b2_title=$data.title|default:#ads_edit_title#|escape
 }
 
 <!-- Main content -->
@@ -36,17 +36,6 @@
                   <option value="">-- vyber --</option>
                   {foreach from=$advertisers item=adc}
                     <option value="{$adc.id}" {if $data.advertiser_id == $adc.id}selected{/if}>{$adc.name|escape}</option>
-                  {/foreach}
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group row">
-              <label for="f_status" class="col-sm-2 col-form-label">Status:</label>
-              <div class="col">
-                <select name="status" id="f_status" class="form-control custom-select" required>
-                  {foreach from=$Ad->text.cs.status key=st_key item=st_label}
-                    <option value="{$st_key}" {if $data.status == $st_key || ($data.status == '' && $st_key == 'active')}selected{/if}>{$st_label|escape}</option>
                   {/foreach}
                 </select>
               </div>
@@ -175,6 +164,21 @@
                   </div>
                 </div>
                 <p class="help-block form-text text-muted">Nepovinná hodnota.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <div class="form-group row">
+              <label for="f_status" class="col-sm-2 col-form-label">Status:</label>
+              <div class="col">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  {foreach from=$Ad->text.cs.status key=st_key item=st_label}
+                    <label class="btn btn-outline-success {if $data.status == $st_key}active{/if}">
+                      <input type="radio" name="status" id="f_status_{$st_key}" value="{$st_key}" autocomplete="off" {if $data.status == $st_key}checked{/if} />{$st_label|default:$st_key|escape}
+                    </label>
+                  {/foreach}
+                </div>
               </div>
             </div>
           </fieldset>
