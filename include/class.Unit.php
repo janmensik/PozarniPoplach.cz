@@ -138,6 +138,15 @@ class Unit extends Modul {
     }
 
     # ...................................................................
+    public function getRegions(): array|null {
+        $regions = $this->DB->getAllRows($this->DB->query(
+            'SELECT id, RZPK, title FROM region ORDER BY title ASC', 'get_regions'
+        ));
+
+        return $regions ?: null;
+    }
+
+    # ...................................................................
     public function validate(): array {
 
         $errors = [];

@@ -121,3 +121,7 @@ if ($_POST && isset($errors)) {
 }
 
 $Smarty->assign('data', $data);
+
+$regions = $Unit->getRegions();
+$Smarty->assign('regions', $regions);
+$Smarty->assign('regions_json', json_encode($regions));
