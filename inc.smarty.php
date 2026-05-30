@@ -24,6 +24,9 @@ $Smarty->setTemplateDir($_ENV['SMARTY_TEMPLATE_DIR']);
 $Smarty->setConfigDir($_ENV['SMARTY_TEMPLATE_DIR']);
 $Smarty->setCompileDir($_ENV['SMARTY_COMPILE_DIR']);
 
+# Custom debug template with increased variable content limits
+$Smarty->debug_tpl = __DIR__ . '/tpl/debug.tpl';
+
 
 $Smarty->compile_check = $_ENV['DEBUGGING'];
 if ($_ENV['DEBUGGING'] === 2) {

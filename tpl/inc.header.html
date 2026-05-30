@@ -130,6 +130,13 @@
               </li>
 
               <li class="nav-item">
+                <a href="{$BASE_URL}/{#vehicles_url#}" class="nav-link{if $PAGE==#vehicles_url# || $PAGE=='vehicle-edit'} active{/if}">
+                  <i class="nav-icon {#vehicles_icon#}"></i>
+                  <p>{#vehicles_title#}</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
                 <a href="{$BASE_URL}/{#devices_url#}" class="nav-link{if $PAGE==#devices_url# || $PAGE=='device-edit'} active{/if}">
                   <i class="nav-icon {#devices_icon#}"></i>
                   <p>{#devices_title#}</p>

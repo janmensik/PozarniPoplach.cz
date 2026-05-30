@@ -109,6 +109,19 @@ $router->match('GET|POST', '/' . $APPD->data['CONFIG']['units_url'] . '/([0-9]{1
 
 # *******************************************************************
 
+# vehicles - list
+$router->get('/' . $APPD->data['CONFIG']['vehicles_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/vehicles.php');
+});
+
+# vehicle - detail, edit
+
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['vehicles_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/vehicle-edit.php');
+});
+
+# *******************************************************************
+
 # dispatches - list
 $router->get('/' . $APPD->data['CONFIG']['dispatches_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/dispatches.php');

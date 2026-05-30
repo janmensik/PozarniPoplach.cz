@@ -1,0 +1,109 @@
+{include file="inc.header.html" title=#vehicles_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#vehicles_icon#
+  page_subtitle=#vehicles_edit_title#
+  page_title=$data.name|default:#vehicles_create#|escape
+  page_b1_title=#vehicles_title#
+  page_b1_url=#vehicles_url#
+  page_b2_title=$data.name|default:#vehicles_edit_title#|escape
+}
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form method="post" action="{$BASE_URL}/{#vehicles_url#}/{$data.id|default:'new'}" class="form-horizontal" x-data="{ iconClass: '{$data.icon|escape}' }">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+
+        </div>
+        <div class="card-body">
+          <fieldset>
+            <legend>Vozidlo</legend>
+
+            <div class="form-group row">
+              <label for="f_name" class="col-sm-2 col-form-label">Označení:</label>
+              <div class="col">
+                <input type="text" class="form-control" name="name" id="f_name" value="{$data.name|escape}" placeholder="Např. CAS 20 Scania P440 CB 4X4" />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_callsign" class="col-sm-2 col-form-label">Volačka:</label>
+              <div class="col">
+                <input type="text" class="form-control" name="callsign" id="f_callsign" value="{$data.callsign|escape}" placeholder="Např. HPZ 123" />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <div class="form-group row">
+              <label for="f_unit_id" class="col-sm-2 col-form-label">Jednotka:</label>
+              <div class="col">
+                <select name="unit_id" id="f_unit_id" class="form-control custom-select" required>
+                  {if !$data.unit_id}<option value="">-- vyber --</option>{/if}
+                  {foreach from=$units item=unit}
+                    <option value="{$unit.id}" {if $data.unit_id == $unit.id}selected{/if}>{$unit.fullname|escape}</option>
+                  {/foreach}
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="f_vehicle_type_id" class="col-sm-2 col-form-label">Typ vozidla:</label>
+              <div class="col">
+                <select name="vehicle_type_id" id="f_vehicle_type_id" class="form-control custom-select" required>
+                  {if !$data.vehicle_type_id}<option value="">-- vyber --</option>{/if}
+                  {foreach from=$vehicle_types item=vt}
+                    <option value="{$vt.id}" {if $data.vehicle_type_id == $vt.id}selected{/if}>{$vt.code|escape} - {$vt.type|escape}</option>
+                  {/foreach}
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Trvalé smazání vozidla</legend>
+            <div class="form-group">
+              <div class="col-sm-10">
+                <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#modal_clearPageschema">Smazat vozidlo</button>
+
+                <div class="modal fade" id="modal_clearPageschema" arial-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4>Opravdu chcete smazat vozidlo?</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Tato akce je nevratná a smaže vozidlo. Následně jej můžete znovu přidat.</p>
+                      </div>
+                      <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Ponechat</button>
+                        <button type="submit" name="delete" value="true" class="btn btn-danger">Smazat</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="card-footer">
+          <div class="row">
+            <div class="offset-sm-2 col-sm-10">
+              <input type="submit" value="Uložit" class="btn btn-primary mr-2" />
+              <span>nebo <a href="{$BASE_URL}/{#vehicles_url#}" class="ml-2">zrušit editaci</a></span>
+            </div>
+          </div>
+        </div>
+        <!-- /.card -->
+      </div>
+    </form>
+  </div>
+</section>
+<!-- /.content -->
+
+{include file="inc.footer.html"}

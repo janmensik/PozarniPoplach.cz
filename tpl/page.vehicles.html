@@ -1,0 +1,71 @@
+{include file="inc.header.html" title=#vehicles_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#vehicles_icon#
+  page_title=#vehicles_title#
+  page_b1_title=#vehicles_title#
+}
+
+{if $data}
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- row table -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">{#vehicles_title#}</h3>
+
+              <div class="card-tools">
+                {if #vehicles_create#}<a href="{$BASE_URL}/{#vehicles_url#}/new" class="btn btn-xs btn-primary"><i
+                    class="fas fa-plus mr-1"></i> {#vehicles_create#}</a>{/if}
+                <!-- <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-head-fixed text-nowrap">
+                <thead>
+                  <tr>
+                    {include file="inc.activetabletitle.html" key=4 value="Volačka"}
+                    {include file="inc.activetabletitle.html" key=5 value="Označení"}
+                    {include file="inc.activetabletitle.html" key=6 value="Jednotka"}
+                    {include file="inc.activetabletitle.html" key=8 value="Typ vozidla" colspan=2}
+                  </tr>
+                </thead>
+                <tbody>
+                  {foreach from=$data item=item}
+                    <tr>
+                      <td>
+                        <a href="{$BASE_URL}/{#vehicles_url#}/{$item.id}"><strong>{$item.callsign|default:'není'|escape}</strong></a>
+                      </td>
+                      <td>{$item.name|escape}</td>
+                      <td><span class="badge bg-dark">{$item.unit_fullname|escape}</span></td>
+                      <td title="{$item.vehicle_type|escape}" class="text-right"><i class="{$item.vehicle_type_icon|escape}"></i></td>
+                      <td title="{$item.vehicle_type|escape}"><strong><small>{$item.vehicle_type_code|escape}</small></strong></td>
+                    </tr>
+                  {/foreach}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+            {include file="inc.pagination.html" pagination=$pagination show_total=true}
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+      <!-- /.row -->
+    </div>
+  </section>
+{elseif $ERROR=='403'}
+  {include file="inc.403.html"}
+{/if}
+
+{include file="inc.footer.html"}
