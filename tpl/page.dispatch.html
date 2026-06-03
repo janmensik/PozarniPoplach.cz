@@ -30,6 +30,9 @@
             <li class="nav-item">
               <a class="nav-link" id="dispatch-tabs-map-tab" data-toggle="pill" href="#dispatch-tabs-map" role="tab" aria-controls="dispatch-tabs-map" aria-selected="true">Mapa</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" id="dispatch-tabs-options-tab" data-toggle="pill" href="#dispatch-tabs-options" role="tab" aria-controls="dispatch-tabs-options" aria-selected="true">Možnosti</a>
+            </li>
           </ul>
         </div>
         <div class="card-body">
@@ -149,7 +152,7 @@
                       <tbody>
                         {foreach from=$data_b.unit_vehicles item=vehicle}
                           <tr>
-                            <td><a href="{$BASE_URL}/{#vehicles_url#}/{$vehicle.id|escape}"><strong>{$vehicle.callsign|escape}</strong></a></td>
+                            <td><a href="{$BASE_URL}/{#vehicles_url#}/{$vehicle.id|escape}"><strong>{$vehicle.callsign|escape|default:"<i>není</i>"}</strong></a></td>
                             <td><small>{$vehicle.name|default:$vehicle.fullname|escape}</small></td>
                             <td><i class="{$vehicle.vehicle_type_icon|escape}"></i></td>
                             <td title="{$vehicle.vehicle_type|escape}"><span class="badge bg-info">{$vehicle.vehicle_type_code|escape}</span></td>
@@ -194,6 +197,69 @@
             </div>
 
             <div class="tab-pane fade" id="dispatch-tabs-map" role="tabpanel" aria-labelledby="dispatch-tabs-map-tab">
+              <div class="row">
+                <div class="col-8">
+                  <img src="{$data_b.directions.static_big_map}" class="img-fluid" alt="Mapa výjezdu" />
+                  <img src="{$data_b.directions.static_streetview}" class="img-fluid mt-3" alt="Náhled místa události" />
+                </div>
+                <div class="col-4">
+                  <fieldset>
+                    <legend>Místo události</legend>
+                    
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Ulice a č.p.:</label>
+                      <div class="col">
+                        <div class="form-control-plaintext text-white">{$data.address_street|escape} {$data.address_house_number|escape}</div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Obec:</label>
+                      <div class="col">
+                        <div class="form-control-plaintext text-white">{$data.address_city|escape}</div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Část obce:</label>
+                      <div class="col">
+                        <div class="form-control-plaintext text-white">{$data.address_city_part|escape}</div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Okres:</label>
+                      <div class="col">
+                        <div class="form-control-plaintext text-white">{$data.address_district|escape}</div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Kraj:</label>
+                      <div class="col">
+                        <div class="form-control-plaintext text-white">{$data.region_title|escape}</div>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <fieldset>
+                    <legend>Navigace</legend>
+                    
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Vzdálenost:</label>
+                      <div class="col">
+                        <div class="form-control-plaintext text-white">{$data_b.directions.distance|escape} km</div>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Doba jízdy:</label>
+                      <div class="col">
+                        <div class="form-control-plaintext text-white">{$data_b.directions.duration|escape} min</div>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="dispatch-tabs-options" role="tabpanel" aria-labelledby="dispatch-tabs-options-tab">
               <fieldset>
                 <legend>Testovací poplach</legend>
                 <div class="form-group">
