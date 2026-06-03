@@ -129,9 +129,9 @@ $router->get('/' . $APPD->data['CONFIG']['dispatches_url'], function () use ($Sm
 
 # dispatch - detail
 
-// $router->match('GET|POST', '/' . $APPD->data['CONFIG']['dispatches_url'] . '/([0-9]{1,8}|new)', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
-//     include('./view/page/dispatch-edit.php');
-// });
+$router->match('GET|POST', '/' . $APPD->data['CONFIG']['dispatches_url'] . '/([0-9]{1,8})', function ($id) use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/dispatch.php');
+});
 
 # *******************************************************************
 

@@ -91,7 +91,7 @@ $Smarty->assign(
     'pagination',
     pagination(
         $APPD->data['APP']['DEFAULT_ITEMS_PER_PAGE'],
-        $User->getRowsCount(),
+        $Unit->getRowsCount(),
         (isset($_GET['p']) && intval($_GET['p'])) ? (int) $_GET['p'] : 1,
         $APPD->data['APP']['DEFAULT_ITEMS_PER_PAGE_DOTS']
     )

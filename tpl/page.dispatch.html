@@ -1,0 +1,245 @@
+{include file="inc.header.html" title=#dispatches_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#dispatches_icon#
+  page_subtitle=#dispatches_edit_title#
+  page_title=$data.id|escape
+  page_b1_title=#dispatches_title#
+  page_b1_url=#dispatches_url#
+  page_b2_title=$data.id|escape
+}
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form method="post" action="{$BASE_URL}/{#dispatches_url#}/{$data.id}" class="form-horizontal">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <div class="card card-primary card-outline card-outline-tabs">
+
+        <div class="card-header p-0 border-bottom-0">
+          <ul class="nav nav-tabs" id="dispatch-tabs-edit-tab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="dispatch-tabs-basic-tab" data-toggle="pill" href="#dispatch-tabs-basic" role="tab" aria-controls="dispatch-tabs-basic" aria-selected="true">Základní údaje</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="dispatch-tabs-alarm-tab" data-toggle="pill" href="#dispatch-tabs-alarm" role="tab" aria-controls="dispatch-tabs-alarm" aria-selected="true">Poplach</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="dispatch-tabs-vehicles-tab" data-toggle="pill" href="#dispatch-tabs-vehicles" role="tab" aria-controls="dispatch-tabs-vehicles" aria-selected="true">Vozidla</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="dispatch-tabs-map-tab" data-toggle="pill" href="#dispatch-tabs-map" role="tab" aria-controls="dispatch-tabs-map" aria-selected="true">Mapa</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content" id="dispatch-tabs-edit-tabContent">
+
+            <div class="tab-pane fade show active" id="dispatch-tabs-basic" role="tabpanel" aria-labelledby="dispatch-tabs-basic-tab">
+              <fieldset>
+                <legend>Základní údaje</legend>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">ID výjezdu:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white">{$data.dispatch_identification|escape}</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Jednotka:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white"><a href="{$BASE_URL}/{#units_url#}/{$data.unit_id}">{$data.unit|escape}</a> (JPO: <span class="badge bg-green">{$data.unit_category|escape}</span>)</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Vyhlášeno:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white">{$data.dispatched_at_ts|date_format:'j. n. Y H:i:s'|escape}</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Přijato:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white">{$data.received_ts|date_format:'j. n. Y H:i:s'|escape}</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">KOPIS Info:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white">{$data.info|escape}</div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="tab-pane fade" id="dispatch-tabs-alarm" role="tabpanel" aria-labelledby="dispatch-tabs-alarm-tab">
+              <fieldset>
+                <legend>Poplach</legend>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Událost:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white"><i class="{$data.event_icon}"></i> {$data.event|escape}</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Detail:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white"><i class="{$data.event_subtype_icon}"></i> {$data.event_subtype|escape}</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Objekt:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white">{$data.object|escape}</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Upřesnění objektu:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white">{$data.object_clarification|escape}</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Situace:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white">{$data.situation|escape}</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Oznamovatel:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white">{$data.notifier|escape}</div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Kontakt na oznamovatele:</label>
+                  <div class="col">
+                    <div class="form-control-plaintext text-white">{$data.notifier_phone|escape}</div>
+                  </div>
+                </div>
+
+              </fieldset>
+            </div>
+
+            <div class="tab-pane fade" id="dispatch-tabs-vehicles" role="tabpanel" aria-labelledby="dispatch-tabs-vehicles-tab">
+              <div class="row">
+                <div class="col">
+                  <fieldset>
+                    <legend>Vozidla jednotky</legend>
+
+                    <table class="table table-head-fixed text-nowrap">
+                      <thead>
+                        <tr>
+                          <th>Volačka</th>
+                          <th>Vozidlo</th>
+                          <th colspan="2">Typ</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {foreach from=$data_b.unit_vehicles item=vehicle}
+                          <tr>
+                            <td><a href="{$BASE_URL}/{#vehicles_url#}/{$vehicle.id|escape}"><strong>{$vehicle.callsign|escape}</strong></a></td>
+                            <td><small>{$vehicle.name|default:$vehicle.fullname|escape}</small></td>
+                            <td><i class="{$vehicle.vehicle_type_icon|escape}"></i></td>
+                            <td title="{$vehicle.vehicle_type|escape}"><span class="badge bg-info">{$vehicle.vehicle_type_code|escape}</span></td>
+                          </tr>
+                        {/foreach}
+                      </tbody>
+                    </table>
+                  </fieldset>
+                </div>
+
+                {if $data_b.other_vehicles}
+                <div class="col">
+                  <fieldset>
+                    <legend>Ostatní jednotky</legend>
+
+                    <table class="table table-head-fixed text-nowrap">
+                      <thead>
+                        <tr>
+                          <th>Volačka</th>
+                          <th colspan="2">Jednotka</th>
+                          <th>Vozidlo</th>
+                          <th colspan="2">Typ</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {foreach from=$data_b.other_vehicles item=vehicle}
+                          <tr>
+                            <td><strong>{$vehicle.callsign|escape}</strong></td>
+                            <td class="text-right" title="{$vehicle.fullname|escape}"><span class="badge bg-dark">{$vehicle.unit_type|escape}</span></td>
+                            <td>{$vehicle.unit|default:$vehicle.fullname|escape}</td>
+                            <td><small>{$vehicle.vehicle|default:$vehicle.fullname|escape}</small></td>
+                            <td><i class="{$vehicle.vehicle_type_icon|escape}"></i></td>
+                            <td title="{$vehicle.vehicle_type|escape}"><span class="badge bg-info">{$vehicle.vehicle_type_code|escape}</span></td>
+                          </tr>
+                        {/foreach}
+                      </tbody>
+                    </table>
+                  </fieldset>
+                </div>
+                {/if}
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="dispatch-tabs-map" role="tabpanel" aria-labelledby="dispatch-tabs-map-tab">
+              <fieldset>
+                <legend>Testovací poplach</legend>
+                <div class="form-group">
+                  <div class="col-sm-10">
+                    <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#modal_clearPageschema">Vytvořit testovací poplach</button>
+
+                    <div class="modal fade" id="modal_clearPageschema" arial-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Opravdu vytvořit testovací poplach?</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Jednotce {$data.fullname|escape} bude zobrazen na kiosku PožárníPoplach.cz testovací výjezd s náhodným umístěním.</p>
+                            <p>Poplach se zobrazí pouze v kiosku, nepropisuje se do Port.All, Fireport, Kopis atd.</p>
+                            <p>Testovací poplach se automaticky smaže po 30 minutách, nebo ho můžete smazat ručně.</p>
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Zrušit</button>
+                            <button type="submit" name="create_test" value="true" class="btn btn-warning">Vytvořit testovací poplach</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <!-- <div class="row">
+            <div class="offset-sm-2 col-sm-10">
+              <input type="submit" value="Uložit" class="btn btn-primary mr-2" />
+              <span>nebo <a href="{$BASE_URL}/{#dispatches_url#}" class="ml-2">zrušit editaci</a></span>
+            </div>
+          </div> -->
+        </div>
+        <!-- /.card -->
+      </div>
+    </form>
+  </div>
+</section>
+<!-- /.content -->
+
+{include file="inc.footer.html" footer_append=$smarty.capture.footer_script}

@@ -61,7 +61,13 @@ class Dispatch extends Modul {
      *
      */
     public function getLastDispatch(int|null $unit_id = null): array|null {
-        $data = $this->get(($unit_id ? 'dis.unit_id = "' . intval($unit_id) . '"' : null), 'dis.dispatched DESC', 1, null, true);
+        # where condition
+        if (!empty($unit_id) && (int) $unit_id) {
+            $where[] = 'dis.unit_id = "' . intval($unit_id) . '"';
+        }
+        $where[] = 'dis.dispatched_at < NOW()'; // only already dispatched, not scheduled for the future
+
+        $data = $this->get($where, '-26', 1, null, true);
 
         if (!empty($data) && is_array($data) && !empty($data[0]) && is_array($data[0]) && !empty($data[0]['id'])) {
             return $this->getDispatch(intval($data[0]['id']));
@@ -368,7 +374,8 @@ class Dispatch extends Modul {
         libxml_use_internal_errors(true);
         $doc = new DOMDocument();
         // Prepending the XML encoding declaration helps DOMDocument handle UTF-8 characters correctly.
-        $doc->loadHTML('<?xml encoding="utf-8" ?>' . $htmlContent);
+        // LIBXML_NONET prevents network access (XXE). (Note: LIBXML_NOENT *enables* entity expansion, so we do not use it).
+        $doc->loadHTML('<?xml encoding="utf-8" ?>' . $htmlContent, LIBXML_NONET);
         libxml_clear_errors();
 
         $xpath = new DOMXPath($doc);

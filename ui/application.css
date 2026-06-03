@@ -1,16 +1,16 @@
-/* 
-   PozarniPoplach.cz - AdminLTE Recolor 
-   Based on Kinetic Command / Alarm Dashboard colors 
+/*
+   PozarniPoplach.cz - AdminLTE Recolor
+   Based on Kinetic Command / Alarm Dashboard colors
 */
 
 :root {
   /* Core Colors from alarm.dist.css */
   --pp-surface: #09151a;
   --pp-on-surface: #d7e4ec;
-  --pp-primary: #F80000; /* Bright Alarm Red */
-  --pp-primary-container: #AF2B1E; /* Darker Header Red */
+  --pp-primary: #f80000; /* Bright Alarm Red */
+  --pp-primary-container: #af2b1e; /* Darker Header Red */
   --pp-on-primary-container: #ffffff;
-  --pp-secondary: #FFD400; /* Yellow */
+  --pp-secondary: #ffd400; /* Yellow */
   --pp-on-secondary: #402d00;
   --pp-tertiary: #c6c6c7;
   --pp-surface-container-low: #111d23;
@@ -23,7 +23,7 @@
 
 /* Base Body & Content Wrapper */
 body {
-  font-family: 'Public Sans', sans-serif !important;
+  font-family: "Public Sans", sans-serif !important;
   background-color: var(--pp-surface) !important;
   color: var(--pp-on-surface) !important;
 }
@@ -34,7 +34,16 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6, .brand-text, .nav-link, .card-title, .modal-title {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.brand-text,
+.nav-link,
+.card-title,
+.modal-title {
   font-weight: 800 !important;
   letter-spacing: -0.02em !important;
   text-transform: uppercase !important;
@@ -46,7 +55,9 @@ h1, h2, h3, h4, h5, h6, .brand-text, .nav-link, .card-title, .modal-title {
   border-bottom: 4px solid var(--pp-secondary) !important;
 }
 
-.main-header .nav-link, .main-header .dropdown-toggle, .main-header .brand-text-top {
+.main-header .nav-link,
+.main-header .dropdown-toggle,
+.main-header .brand-text-top {
   color: var(--pp-on-primary-container) !important;
 }
 
@@ -228,7 +239,10 @@ h1, h2, h3, h4, h5, h6, .brand-text, .nav-link, .card-title, .modal-title {
 .content-wrapper::before {
   content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.05) 50%);
   background-size: 100% 4px;
   pointer-events: none;
@@ -249,7 +263,8 @@ h1, h2, h3, h4, h5, h6, .brand-text, .nav-link, .card-title, .modal-title {
 }
 
 /* Inputs */
-.form-control, .input-group-text {
+.form-control,
+.input-group-text {
   background-color: var(--pp-surface-container-highest) !important;
   border: 1px solid var(--pp-outline-variant) !important;
   color: var(--pp-on-surface) !important;
@@ -349,7 +364,8 @@ select.form-control:focus {
   color: var(--pp-on-primary-container) !important;
 }
 
-.modal-header .close, .modal-header .btn-close {
+.modal-header .close,
+.modal-header .btn-close {
   color: var(--pp-on-primary-container) !important;
   opacity: 0.8;
   text-shadow: none !important;
@@ -393,4 +409,12 @@ select.form-control:focus {
 .btn-default:hover {
   background-color: var(--pp-surface-container) !important;
   color: #fff !important;
+}
+
+.table-head-fixed thead tr th {
+  background-color: var(--pp-surface-container) !important;
+  /* background-color: rgb(215, 228, 236) !important; */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05) !important;
 }
