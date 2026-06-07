@@ -418,3 +418,9 @@ select.form-control:focus {
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     inset 0 -1px 0 rgba(255, 255, 255, 0.05) !important;
 }
+
+.form-horizontal fieldset {
+  border-bottom: 2px dashed rgba(255, 255, 255, 0.05) !important;
+  padding-bottom: 1.5rem !important;
+  margin-bottom: 1.5rem !important;*/
+}

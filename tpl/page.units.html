@@ -39,7 +39,7 @@
                     {include file="inc.activetabletitle.html" key=6 value="JPO"}
                     {include file="inc.activetabletitle.html" key=11 value="Kraj"}
                     {include file="inc.activetabletitle.html" value="Lokalita"}
-                    {include file="inc.activetabletitle.html" key=2 value="Stav"}
+                    {include file="inc.activetabletitle.html" key=2 value="Stav" colspan=2}
                   </tr>
                 </thead>
                 <tbody>
@@ -60,6 +60,13 @@
                       </td>
                       <td>
                         <span class="badge badge-info">{$item.status_cs|default:$item.status|escape}</span>
+                      </td>
+                      <td class="text-right">
+                        {if $item.calendar_url}
+                          <a href="{$item.calendar_url|escape}" target="_blank" title="Zobrazit kalendář"><i class="fa far fa-calendar-days"></i></a>
+                        {else}
+                          &nbsp;
+                        {/if}
                       </td>
                     </tr>
                   {/foreach}

@@ -103,6 +103,18 @@
               </fieldset>
 
               <fieldset>
+                <legend><i class="far fa-calendar-days"></i> Kalendář</legend>
+
+                <div class="form-group row">
+                  <label for="f_calendar_url" class="col-sm-2 col-form-label">iCal URL:</label>
+                  <div class="col">
+                    <input type="text" class="form-control" name="calendar_url" id="f_calendar_url" value="{$data.calendar_url|escape}" placeholder="Např. https://example.com/calendar.ics" />
+                    <p class="help-block form-text text-muted">Vložte URL adresa iCal kalendáře pro tuto jednotku.</p>
+                  </div>
+                </div>              
+              </fieldset>
+
+              <fieldset>
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Status:</label>
                   <div class="col">

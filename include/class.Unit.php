@@ -6,7 +6,7 @@ use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 
 class Unit extends Modul {
-    protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS ut.id, ut.status, ut.fullname, ut.registration, ut.pincode, ut.category, ut.region_id, ut.base_latitude, ut.base_longitude, reg.RZPK AS region_rzpk, reg.title AS region_title FROM unit ut JOIN region reg ON ut.region_id=reg.id GROUP BY ut.id'; # zaklad SQL dotazu
+    protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS ut.id, ut.status, ut.fullname, ut.registration, ut.pincode, ut.category, ut.region_id, ut.base_latitude, ut.base_longitude, reg.RZPK AS region_rzpk, reg.title AS region_title, ut.calendar_url FROM unit ut JOIN region reg ON ut.region_id=reg.id GROUP BY ut.id'; # zaklad SQL dotazu
     protected ?string $sql_update = 'UPDATE unit ut'; # zaklad SQL dotazu - UPDATE
     protected ?string $sql_insert = 'INSERT INTO unit'; # zaklad SQL dotazu - INSERT
     protected ?string $sql_table = 'ut';
@@ -30,7 +30,8 @@ class Unit extends Modul {
         'category',
         'region_id',
         'base_latitude',
-        'base_longitude'
+        'base_longitude',
+        'calendar_url'
     ];
 
     # ...................................................................
