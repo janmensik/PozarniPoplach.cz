@@ -19,7 +19,6 @@ beforeEach(function () {
 
 test('generateUserFriendlyCode returns string of requested length', function () {
     $ref = new ReflectionMethod(DeviceAuth::class, 'generateUserFriendlyCode');
-    $ref->setAccessible(true);
     
     $code = $ref->invoke($this->deviceAuth, 10);
     expect(strlen($code))->toBe(10);
@@ -27,7 +26,6 @@ test('generateUserFriendlyCode returns string of requested length', function () 
 
 test('generateUserFriendlyCode excludes ambiguous characters', function () {
     $ref = new ReflectionMethod(DeviceAuth::class, 'generateUserFriendlyCode');
-    $ref->setAccessible(true);
     
     $excluded = ['0', 'O', '1', 'l', 'I'];
     for ($i = 0; $i < 100; $i++) {
@@ -68,7 +66,6 @@ test('getVerificationUrl uses ABSOLUTE_URL env', function () {
     $_ENV['ABSOLUTE_URL'] = 'https://pp.cz';
     
     $ref = new ReflectionMethod(DeviceAuth::class, 'getVerificationUrl');
-    $ref->setAccessible(true);
     
     $url = $ref->invoke($this->deviceAuth, 'ABC123');
     expect($url)->toBe('https://pp.cz/activate?code=ABC123');

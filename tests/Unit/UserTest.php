@@ -36,7 +36,9 @@ beforeEach(function () {
                          ->disableOriginalConstructor()
                          ->getMock();
                          
-    $this->enforcer = $this->createMock(Enforcer::class);
+    $this->enforcer = $this->getMockBuilder(Enforcer::class)
+                             ->disableOriginalConstructor()
+                             ->getMock();
     
     // Create a concrete instance for testing
     $this->user = new User($this->db, $this->enforcer);
@@ -86,8 +88,7 @@ test('User logout clears user data', function () {
     // We can't easily set the protected 'user' property without reflection 
     // or calling a method that sets it. Let's use reflection but be more careful.
     $ref = new ReflectionProperty(User::class, 'user');
-    $ref->setAccessible(true);
-    $ref->setValue($this->user, ['id' => 123]);
+    $ref->setValue($this->user, ['id' => 123, 'page_schema' => null]);
     
     // Use assertEquals to be less strict about types if it's 123 vs "123"
     expect($this->user->getUser('id'))->toEqual(123);

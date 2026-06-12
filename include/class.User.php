@@ -240,6 +240,10 @@ class User extends Modul {
 
     # ...................................................................
     public function getUser(?string $what = null): array|bool|null {
+        if (!isset($this->user)) {
+            return ($what ? null : []);
+        }
+
         if (isset($this->user) && count($this->user) == 1 && $this->user['page_schema']) {
             return (null);
         }
