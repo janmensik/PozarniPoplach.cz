@@ -9,14 +9,21 @@ function getip() {
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         $ip = $_SERVER['HTTP_CLIENT_IP'];
     }
-  # to check ip is pass from proxy
+    # to check ip is pass from proxy
     elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        // X-Forwarded-For can contain multiple IPs separated by commas
+        $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $ip = trim($ipList[0]);
     }
-  # regular ip
+    # regular ip
     else {
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '';
     }
 
-    return $ip;
+    // Validate the IP address
+    if (filter_var($ip, FILTER_VALIDATE_IP)) {
+        return $ip;
+    }
+
+    return '0.0.0.0'; // Fallback if no valid IP is found
 }
