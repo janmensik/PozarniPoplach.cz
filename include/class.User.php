@@ -170,8 +170,10 @@ class User extends Modul {
 
     # ...................................................................
     public function updateLastLogin(?int $id = null, ?string $ip = null): bool {
+        $ip_address = $ip ? $ip : getip();
+        $safe_ip = mysqli_real_escape_string($this->DB->db, $ip_address);
         # aktualizace posledniho prihlaseni
-        $this->DB->query('INSERT INTO user_login (user_id, date, ip) VALUES (' . ((int) $id ? (int) $id : $this->user['id']) . ', NOW(), INET_ATON("' . ($ip ? $ip : getip()) . '"));');
+        $this->DB->query('INSERT INTO user_login (user_id, date, ip) VALUES (' . ((int) $id ? (int) $id : $this->user['id']) . ', NOW(), INET_ATON("' . $safe_ip . '"));');
 
         return (true);
     }
