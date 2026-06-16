@@ -5,18 +5,6 @@
  * @return      string     Returns "real" IP address of visitor
  */
 function getip() {
-    # check ip from share internet
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    }
-  # to check ip is pass from proxy
-    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    }
-  # regular ip
-    else {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-
-    return $ip;
+    # Only trust REMOTE_ADDR for security reasons as HTTP headers can be spoofed.
+    return $_SERVER['REMOTE_ADDR'] ?? '';
 }
