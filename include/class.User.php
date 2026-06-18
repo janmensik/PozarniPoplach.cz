@@ -171,7 +171,14 @@ class User extends Modul {
     # ...................................................................
     public function updateLastLogin(?int $id = null, ?string $ip = null): bool {
         # aktualizace posledniho prihlaseni
-        $this->DB->query('INSERT INTO user_login (user_id, date, ip) VALUES (' . ((int) $id ? (int) $id : $this->user['id']) . ', NOW(), INET_ATON("' . ($ip ? $ip : getip()) . '"));');
+        $ipToUse = $ip ? $ip : getip();
+
+        // Ensure the IP address is strictly valid before passing to INET_ATON
+        if (!filter_var($ipToUse, FILTER_VALIDATE_IP)) {
+            $ipToUse = '127.0.0.1'; // Fallback for safety
+        }
+
+        $this->DB->query('INSERT INTO user_login (user_id, date, ip) VALUES (' . ((int) $id ? (int) $id : $this->user['id']) . ', NOW(), INET_ATON("' . $ipToUse . '"));');
 
         return (true);
     }
