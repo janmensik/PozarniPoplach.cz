@@ -66,15 +66,22 @@ if ($_POST) {
     # --- File upload handling ---
     if (!empty($_FILES['banner_image']['name']) && $_FILES['banner_image']['error'] == UPLOAD_ERR_OK) {
         $uploadDir = __DIR__ . '/../../upload/ads/';
-        $extension = pathinfo($_FILES['banner_image']['name'], PATHINFO_EXTENSION);
-        $filename = uniqid('ad_') . '.' . $extension;
-        $uploadFile = $uploadDir . $filename;
+        $extension = strtolower(pathinfo($_FILES['banner_image']['name'], PATHINFO_EXTENSION));
 
-        if (move_uploaded_file($_FILES['banner_image']['tmp_name'], $uploadFile)) {
-            $baseUrl = $APPD->getData('BASE_URL');
-            $Ad->data['banner_image_url'] = $baseUrl . '/upload/ads/' . $filename;
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+
+        if (in_array($extension, $allowedExtensions)) {
+            $filename = uniqid('ad_') . '.' . $extension;
+            $uploadFile = $uploadDir . $filename;
+
+            if (move_uploaded_file($_FILES['banner_image']['tmp_name'], $uploadFile)) {
+                $baseUrl = $APPD->getData('BASE_URL');
+                $Ad->data['banner_image_url'] = $baseUrl . '/upload/ads/' . $filename;
+            } else {
+                $errors['banner_image'] = 'Chyba při nahrávání obrázku.';
+            }
         } else {
-            $errors['banner_image'] = 'Chyba při nahrávání obrázku.';
+            $errors['banner_image'] = 'Nepodporovaný formát souboru.';
         }
     }
     # ----------------------------
