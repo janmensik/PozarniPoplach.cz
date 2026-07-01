@@ -6,6 +6,12 @@
 1. Always escape or parameterize any data derived from HTTP headers before including it in a database query.
 2. When parsing IP addresses from HTTP headers, rigorously validate them (e.g., using `filter_var($ip, FILTER_VALIDATE_IP)`) to ensure they are strictly formatted IP addresses before use.
 
+## 2024-06-25 - [Critical] Unrestricted File Upload (RCE)
+**Vulnerability:** A critical Unrestricted File Upload vulnerability was discovered in `view/page/ad-edit.php`. The code relied solely on the extension provided by the user in `$_FILES['banner_image']['name']` to construct the target filename. This allowed an attacker to upload an arbitrary PHP file (e.g., `shell.php`) into `upload/ads/` which resides in the webroot, leading directly to Remote Code Execution (RCE).
+**Learning:** Never trust user-provided file names or extensions. If you need to store files in the webroot, they must undergo strict validation against a whitelist of safe file types, and ideally, they should be stored outside the web root or served through a script that enforces access control.
+**Prevention:**
+1. Always enforce a strict whitelist of safe file extensions (e.g., `['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']`).
+2. Do not execute or interpret files located in upload directories.
 ## 2024-06-26 - Predictable Permanent Login Cookie Hash
 **Vulnerability:** The "Remember Me" functionality generated a persistent login hash using only `sha1(id . email)`. This allowed an attacker to easily forge a valid login cookie for any known user, as user IDs and emails are often public or easily guessable. This is a critical auth bypass risk.
 **Learning:** Never generate authentication tokens or hashes based solely on predictable, non-secret user data. Any hash used for authentication must incorporate a secret piece of data known only to the user or the server.
