@@ -90,7 +90,7 @@ class User extends Modul {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+            $randomString .= $characters[random_int(0, strlen($characters) - 1)];
         }
         return $randomString;
     }
@@ -131,7 +131,7 @@ class User extends Modul {
 
     # ...................................................................
     public function verifyPermanent(?string $hash = null): int|bool|null {
-        $user = $this->getComplete(array('SHA1(CONCAT(' . $this->sql_table . '.id, ' . $this->sql_table . '.email)) = "' . mysqli_real_escape_string($this->DB->db, $hash) . '"', $this->sql_table . '.status NOT IN("deleted","disabled")'), null, 1);
+        $user = $this->getComplete(array('SHA1(CONCAT(' . $this->sql_table . '.id, ' . $this->sql_table . '.email, ' . $this->sql_table . '.password)) = "' . mysqli_real_escape_string($this->DB->db, $hash) . '"', $this->sql_table . '.status NOT IN("deleted","disabled")'), null, 1);
 
         if (is_array($user)) {
             $this->user = reset($user);
@@ -162,7 +162,7 @@ class User extends Modul {
         $user = $this->getId($user_id);
 
         if (is_array($user)) {
-            return (sha1($user['id'] . $user['email']));
+            return (sha1($user['id'] . $user['email'] . $user['password']));
         } else {
             return (null);
         }
