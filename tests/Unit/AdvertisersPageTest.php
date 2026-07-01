@@ -35,9 +35,11 @@ beforeEach(function () {
     $GLOBALS['User'] = $this->user;
     $GLOBALS['Smarty'] = $this->smarty;
     $GLOBALS['APPD'] = $this->appd;
-    
+
     if (!function_exists('pagination')) {
-        function pagination($a, $b, $c, $d) { return []; }
+        function pagination($a, $b, $c, $d) {
+            return [];
+        }
     }
 });
 

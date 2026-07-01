@@ -31,9 +31,11 @@ beforeEach(function () {
     $GLOBALS['User'] = $this->user;
     $GLOBALS['Smarty'] = $this->smarty;
     $GLOBALS['APPD'] = $this->appd;
-    
+
     if (!function_exists('pagination')) {
-        function pagination($a, $b, $c, $d) { return []; }
+        function pagination($a, $b, $c, $d) {
+            return [];
+        }
     }
 });
 
@@ -45,15 +47,15 @@ test('devices.php assigns data to smarty', function () {
                    ->disableOriginalConstructor()
                    ->onlyMethods(['get', 'getGroupTotal', 'getTotal', 'getRowsCount', 'getExtra'])
                    ->getMock();
-    
+
     $devMock->DB = $this->db;
-    
+
     $devMock->method('get')->willReturn([]);
     $devMock->method('getRowsCount')->willReturn(0);
     $devMock->method('getGroupTotal')->willReturn([]);
     $devMock->method('getTotal')->willReturn([]);
     $devMock->method('getExtra')->willReturn([]);
-    
+
     $Device = $devMock;
     $DB = $this->db;
     $User = $this->user;
@@ -61,10 +63,10 @@ test('devices.php assigns data to smarty', function () {
     $APPD = $this->appd;
 
     ob_start();
-    (function() use (&$Device, &$DB, &$User, &$Smarty, &$APPD) {
+    (function () use (&$Device, &$DB, &$User, &$Smarty, &$APPD) {
         include __DIR__ . '/../../view/page/devices.php';
     })();
     ob_end_clean();
-    
+
     expect(true)->toBeTrue();
 });

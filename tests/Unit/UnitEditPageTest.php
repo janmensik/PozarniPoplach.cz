@@ -35,7 +35,7 @@ beforeEach(function () {
 
 test('unit-edit.php handles GET for new unit', function () {
     $id = 'new';
-    
+
     $this->smarty->expects($this->atLeastOnce())
                  ->method('assign');
 
@@ -52,17 +52,17 @@ test('unit-edit.php handles GET for new unit', function () {
     ob_start();
     include __DIR__ . '/../../view/page/unit-edit.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('unit-edit');
 });
 
 test('unit-edit.php handles GET for existing unit', function () {
     $id = 789;
-    
+
     $unitMock = $this->createMock(Unit::class);
     $unitMock->method('getId')->with(789)->willReturn(['id' => 789, 'fullname' => 'Existing Unit']);
     $unitMock->method('getRegions')->willReturn([]);
-    
+
     $Unit = $unitMock;
     $DB = $this->db;
     $User = $this->user;
@@ -72,6 +72,6 @@ test('unit-edit.php handles GET for existing unit', function () {
     ob_start();
     include __DIR__ . '/../../view/page/unit-edit.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('unit-edit');
 });

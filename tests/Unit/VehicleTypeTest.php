@@ -13,14 +13,14 @@ beforeEach(function () {
     $this->db->db = $this->getMockBuilder('mysqli')
                          ->disableOriginalConstructor()
                          ->getMock();
-                         
+
     $this->vehicleType = new VehicleType($this->db);
 });
 
 test('VehicleType validation fails if type is empty', function () {
     $this->vehicleType->data = ['type' => '', 'code' => 'CAS'];
     $errors = $this->vehicleType->validate();
-    
+
     expect($errors)->toHaveKey('type');
     expect($errors['type'])->toBe('Type is required');
 });
@@ -28,7 +28,7 @@ test('VehicleType validation fails if type is empty', function () {
 test('VehicleType validation fails if code is empty', function () {
     $this->vehicleType->data = ['type' => 'Cisternová stříkačka', 'code' => ''];
     $errors = $this->vehicleType->validate();
-    
+
     expect($errors)->toHaveKey('code');
     expect($errors['code'])->toBe('Code is required');
 });

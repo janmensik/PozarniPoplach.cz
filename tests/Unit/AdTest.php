@@ -34,7 +34,7 @@ beforeEach(function () {
     $this->db->db = $this->getMockBuilder('mysqli')
                          ->disableOriginalConstructor()
                          ->getMock();
-                         
+
     $this->ad = new Ad($this->db);
     $this->testableAd = new AdTestable($this->db);
 });
@@ -42,7 +42,7 @@ beforeEach(function () {
 test('Ad validation fails if status is empty', function () {
     $this->ad->data = ['status' => ''];
     $errors = $this->ad->validate();
-    
+
     expect($errors)->toHaveKey('status');
     expect($errors['status'])->toBe('Status is required');
 });
@@ -50,7 +50,7 @@ test('Ad validation fails if status is empty', function () {
 test('Ad validation passes if status is set', function () {
     $this->ad->data = ['status' => 'active'];
     $errors = $this->ad->validate();
-    
+
     expect($errors)->not->toHaveKey('status');
 });
 
@@ -63,9 +63,9 @@ test('Ad maps data from post correctly', function () {
         'target_link' => 'https://example.com',
         'advertiser_id' => 1
     ];
-    
+
     $this->testableAd->mapFromPost($postData);
-    
+
     expect($this->testableAd->data['title'])->toBe('Test Ad');
     expect($this->testableAd->data['status'])->toBe('active');
     expect($this->testableAd->data['ad_text'])->toBe('Some text');
@@ -78,9 +78,9 @@ test('Ad maps banner_image_url correctly', function () {
     $postData = [
         'banner_image_url' => 'https://example.com/image.jpg'
     ];
-    
+
     $this->testableAd->mapFromPost($postData);
-    
+
     expect($this->testableAd->data['banner_image_url'])->toBe('https://example.com/image.jpg');
 });
 
@@ -89,19 +89,19 @@ test('Ad setter includes banner_image_url in SQL', function () {
         'status' => 'active',
         'banner_image_url' => 'https://example.com/image.jpg'
     ];
-    
+
     $this->db->expects($this->once())
              ->method('query')
-             ->with($this->callback(function($sql) {
+             ->with($this->callback(function ($sql) {
                  return str_contains($sql, 'banner_image_url') && str_contains($sql, 'https://example.com/image.jpg');
              }));
-             
+
     $this->db->method('getNumAffected')
              ->willReturn(1);
 
     $this->db->method('getId')
              ->willReturn(123);
-             
+
     $result = $this->testableAd->setter();
     expect($result)->toBe(123);
 });

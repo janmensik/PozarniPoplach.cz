@@ -42,13 +42,13 @@ test('event-types.php assigns data to smarty', function () {
                           ->disableOriginalConstructor()
                           ->onlyMethods(['get', 'getGroupTotal', 'getTotal', 'getRowsCount', 'getExtra'])
                           ->getMock();
-    
+
     $eventTypeMock->method('get')->willReturn([]);
     $eventTypeMock->method('getRowsCount')->willReturn(0);
     $eventTypeMock->method('getGroupTotal')->willReturn([]);
     $eventTypeMock->method('getTotal')->willReturn([]);
     $eventTypeMock->method('getExtra')->willReturn([]);
-    
+
     // Set local variables
     $EventType = $eventTypeMock;
     $DB = $this->db;
@@ -59,6 +59,6 @@ test('event-types.php assigns data to smarty', function () {
     ob_start();
     include __DIR__ . '/../../view/page/event-types.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('event-types');
 });

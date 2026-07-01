@@ -29,7 +29,7 @@ beforeEach(function () {
     $GLOBALS['User'] = $this->user;
     $GLOBALS['Smarty'] = $this->smarty;
     $GLOBALS['APPD'] = $this->appd;
-    
+
     // Clear POST and ID
     $_POST = [];
     $GLOBALS['id'] = 'new';
@@ -49,7 +49,7 @@ test('advertiser-edit.php handles GET for new advertiser', function () {
     ob_start();
     include __DIR__ . '/../../view/page/advertiser-edit.php';
     ob_end_clean();
-    
+
     expect(true)->toBeTrue();
 });
 
@@ -63,13 +63,13 @@ test('advertiser-edit.php handles POST saving', function () {
                    ->disableOriginalConstructor()
                    ->onlyMethods(['setter', 'validate', 'mapFromPost'])
                    ->getMock();
-    
+
     $advMock->DB = $this->db;
-    
+
     $advMock->method('validate')->willReturn([]);
     $advMock->method('setter')->willReturn(789);
     $advMock->data = ['name' => 'Test Advertiser'];
-    
+
     $Advertiser = $advMock;
     $DB = $this->db;
     $User = $this->user;
@@ -85,6 +85,6 @@ test('advertiser-edit.php handles POST saving', function () {
         // header() might throw error
     }
     ob_end_clean();
-    
+
     expect(true)->toBeTrue();
 });

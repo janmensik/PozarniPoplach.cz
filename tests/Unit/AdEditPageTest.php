@@ -39,7 +39,7 @@ beforeEach(function () {
 
 test('ad-edit.php handles GET for new ad', function () {
     $id = 'new';
-    
+
     $this->smarty->expects($this->exactly(3))
                  ->method('assign');
 
@@ -58,18 +58,18 @@ test('ad-edit.php handles GET for new ad', function () {
     ob_start();
     include __DIR__ . '/../../view/page/ad-edit.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('ad-edit');
 });
 
 test('ad-edit.php handles GET for existing ad', function () {
     $id = 123;
-    
+
     $adMock = $this->createMock(Ad::class);
     $adMock->method('getId')->with(123)->willReturn(['id' => 123, 'title' => 'Existing Ad']);
-    
+
     $advertiserMock = $this->createMock(Advertiser::class);
-    
+
     $Ad = $adMock;
     $Advertiser = $advertiserMock;
     $DB = $this->db;
@@ -80,6 +80,6 @@ test('ad-edit.php handles GET for existing ad', function () {
     ob_start();
     include __DIR__ . '/../../view/page/ad-edit.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('ad-edit');
 });

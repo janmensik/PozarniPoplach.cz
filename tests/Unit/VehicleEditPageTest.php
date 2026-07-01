@@ -37,7 +37,7 @@ beforeEach(function () {
 
 test('vehicle-edit.php handles GET for new vehicle', function () {
     $id = 'new';
-    
+
     $this->smarty->expects($this->atLeastOnce())
                  ->method('assign');
 
@@ -60,22 +60,22 @@ test('vehicle-edit.php handles GET for new vehicle', function () {
     ob_start();
     include __DIR__ . '/../../view/page/vehicle-edit.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('vehicle-edit');
 });
 
 test('vehicle-edit.php handles GET for existing vehicle', function () {
     $id = 10;
-    
+
     $vehicleMock = $this->createMock(Vehicle::class);
     $vehicleMock->method('getId')->with(10)->willReturn(['id' => 10, 'name' => 'Existing Vehicle']);
-    
+
     $unitMock = $this->createMock(Unit::class);
     $vehicleTypeMock = $this->createMock(VehicleType::class);
 
     $unitMock->method('get')->willReturn([]);
     $vehicleTypeMock->method('get')->willReturn([]);
-    
+
     $Vehicle = $vehicleMock;
     $Unit = $unitMock;
     $VehicleType = $vehicleTypeMock;
@@ -87,6 +87,6 @@ test('vehicle-edit.php handles GET for existing vehicle', function () {
     ob_start();
     include __DIR__ . '/../../view/page/vehicle-edit.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('vehicle-edit');
 });

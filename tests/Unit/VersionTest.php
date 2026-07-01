@@ -34,11 +34,11 @@ afterEach(function () {
 
 test('Version loads data correctly from file', function () {
     $version = new Version($this->tempChangelog);
-    
+
     expect($version->versions)->toHaveCount(2);
     expect($version->versions)->toHaveKey('1.2.3');
     expect($version->versions)->toHaveKey('1.2.2');
-    
+
     expect($version->versions['1.2.3']['date'])->toBe('2026-05-30');
     expect($version->versions['1.2.3']['data']['new'])->toContain('New feature A');
     expect($version->versions['1.2.3']['data']['bugfix'])->toContain('Bug fix C');

@@ -33,7 +33,7 @@ beforeEach(function () {
 
 test('settings.php handles GET for own settings', function () {
     $id = null;
-    
+
     $this->smarty->expects($this->atLeastOnce())
                  ->method('assign');
 
@@ -46,15 +46,15 @@ test('settings.php handles GET for own settings', function () {
     ob_start();
     include __DIR__ . '/../../view/page/settings.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('settings');
 });
 
 test('settings.php handles GET for other user settings', function () {
     $id = 2;
-    
+
     $this->user->method('getId')->with(2)->willReturn(['id' => 2, 'name' => 'Other User', 'status' => 'manager']);
-    
+
     $DB = $this->db;
     $User = $this->user;
     $Smarty = $this->smarty;
@@ -63,6 +63,6 @@ test('settings.php handles GET for other user settings', function () {
     ob_start();
     include __DIR__ . '/../../view/page/settings.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('settings');
 });

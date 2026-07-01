@@ -35,11 +35,11 @@ beforeEach(function () {
     $this->db->db = $this->getMockBuilder('mysqli')
                          ->disableOriginalConstructor()
                          ->getMock();
-                         
+
     $this->enforcer = $this->getMockBuilder(Enforcer::class)
                              ->disableOriginalConstructor()
                              ->getMock();
-    
+
     // Create a concrete instance for testing
     $this->user = new User($this->db, $this->enforcer);
     $this->testableUser = new UserTestable($this->db, $this->enforcer);
@@ -48,7 +48,7 @@ beforeEach(function () {
 test('User validation fails if name is empty', function () {
     $this->user->data = ['name' => '', 'email' => 'test@example.com', 'status' => 'admin'];
     $errors = $this->user->validate();
-    
+
     expect($errors)->toHaveKey('name');
     expect($errors['name'])->toBe('empty');
 });
@@ -56,7 +56,7 @@ test('User validation fails if name is empty', function () {
 test('User validation fails if email is empty', function () {
     $this->user->data = ['name' => 'John Doe', 'email' => '', 'status' => 'admin'];
     $errors = $this->user->validate();
-    
+
     expect($errors)->toHaveKey('email');
     expect($errors['email'])->toBe('empty');
 });
@@ -64,7 +64,7 @@ test('User validation fails if email is empty', function () {
 test('User validation fails if status is invalid', function () {
     $this->user->data = ['name' => 'John Doe', 'email' => 'test@example.com', 'status' => 'invalid_status'];
     $errors = $this->user->validate();
-    
+
     expect($errors)->toHaveKey('status');
     expect($errors['status'])->toBe('wrong');
 });
@@ -85,16 +85,16 @@ test('User password hash returns sha1', function () {
 });
 
 test('User logout clears user data', function () {
-    // We can't easily set the protected 'user' property without reflection 
+    // We can't easily set the protected 'user' property without reflection
     // or calling a method that sets it. Let's use reflection but be more careful.
     $ref = new ReflectionProperty(User::class, 'user');
     $ref->setValue($this->user, ['id' => 123, 'page_schema' => null]);
-    
+
     // Use assertEquals to be less strict about types if it's 123 vs "123"
     expect($this->user->getUser('id'))->toEqual(123);
-    
+
     $this->user->logout();
-    
+
     expect($this->user->getUser())->toBeEmpty();
 });
 

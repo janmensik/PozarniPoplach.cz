@@ -35,7 +35,7 @@ beforeEach(function () {
 
 test('event-type-edit.php handles GET for new event type', function () {
     $id = 'new';
-    
+
     $this->smarty->expects($this->exactly(2))
                  ->method('assign');
 
@@ -52,17 +52,17 @@ test('event-type-edit.php handles GET for new event type', function () {
     ob_start();
     include __DIR__ . '/../../view/page/event-type-edit.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('event-type-edit');
 });
 
 test('event-type-edit.php handles GET for existing event type', function () {
     $id = 456;
-    
+
     $eventTypeMock = $this->createMock(EventType::class);
     $eventTypeMock->method('getId')->with(456)->willReturn(['id' => 456, 'name' => 'Existing Type']);
     $eventTypeMock->method('get')->willReturn([]);
-    
+
     $EventType = $eventTypeMock;
     $DB = $this->db;
     $User = $this->user;
@@ -72,6 +72,6 @@ test('event-type-edit.php handles GET for existing event type', function () {
     ob_start();
     include __DIR__ . '/../../view/page/event-type-edit.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('event-type-edit');
 });

@@ -42,13 +42,13 @@ test('units.php assigns data to smarty', function () {
                      ->disableOriginalConstructor()
                      ->onlyMethods(['get', 'getGroupTotal', 'getTotal', 'getRowsCount', 'getExtra'])
                      ->getMock();
-    
+
     $unitMock->method('get')->willReturn([]);
     $unitMock->method('getRowsCount')->willReturn(0);
     $unitMock->method('getGroupTotal')->willReturn([]);
     $unitMock->method('getTotal')->willReturn([]);
     $unitMock->method('getExtra')->willReturn([]);
-    
+
     // Set local variables
     $Unit = $unitMock;
     $DB = $this->db;
@@ -59,6 +59,6 @@ test('units.php assigns data to smarty', function () {
     ob_start();
     include __DIR__ . '/../../view/page/units.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('units');
 });

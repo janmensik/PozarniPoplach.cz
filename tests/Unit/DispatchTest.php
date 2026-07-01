@@ -13,7 +13,7 @@ beforeEach(function () {
     $this->db->db = $this->getMockBuilder('mysqli')
                          ->disableOriginalConstructor()
                          ->getMock();
-                         
+
     $this->dispatch = new Dispatch($this->db);
     $_ENV['GOOGLE_MAPS_API_KEY'] = 'test-key';
     $_ENV['MAPBOX_API_KEY'] = 'test-key';
@@ -43,9 +43,9 @@ test('beautifulLastDispatch formats unit and event names correctly', function ()
         'gps_latitude' => 50.1,
         'gps_longitude' => 14.2
     ];
-    
+
     $result = $this->dispatch->beautifulLastDispatch($data);
-    
+
     expect($result['unit'])->toBe('Test Unit Name');
     expect($result['event'])->toBe('Fire');
     expect($result['event_subtype'])->toBe('House Fire');
@@ -61,9 +61,9 @@ test('beautifulLastDispatch handles city_part if same as city', function () {
         'gps_latitude' => 50.1,
         'gps_longitude' => 14.2
     ];
-    
+
     $result = $this->dispatch->beautifulLastDispatch($data);
-    
+
     expect($result['address_city_part'])->toBeNull();
 });
 
@@ -76,8 +76,8 @@ test('beautifulLastDispatch handles city_part if different from city', function 
         'gps_latitude' => 50.1,
         'gps_longitude' => 14.2
     ];
-    
+
     $result = $this->dispatch->beautifulLastDispatch($data);
-    
+
     expect($result['address_city_part'])->toBe('Zizkov');
 });

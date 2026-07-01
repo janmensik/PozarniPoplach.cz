@@ -43,7 +43,7 @@ test('users.php assigns data to smarty', function () {
     $this->user->method('getGroupTotal')->willReturn([]);
     $this->user->method('getTotal')->willReturn([]);
     $this->user->method('getExtra')->willReturn([]);
-    
+
     // Set local variables
     $DB = $this->db;
     $User = $this->user;
@@ -53,6 +53,6 @@ test('users.php assigns data to smarty', function () {
     ob_start();
     include __DIR__ . '/../../view/page/users.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('users');
 });

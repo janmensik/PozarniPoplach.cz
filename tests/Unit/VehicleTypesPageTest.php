@@ -42,13 +42,13 @@ test('vehicle-types.php assigns data to smarty', function () {
                             ->disableOriginalConstructor()
                             ->onlyMethods(['get', 'getGroupTotal', 'getTotal', 'getRowsCount', 'getExtra'])
                             ->getMock();
-    
+
     $vehicleTypeMock->method('get')->willReturn([]);
     $vehicleTypeMock->method('getRowsCount')->willReturn(0);
     $vehicleTypeMock->method('getGroupTotal')->willReturn([]);
     $vehicleTypeMock->method('getTotal')->willReturn([]);
     $vehicleTypeMock->method('getExtra')->willReturn([]);
-    
+
     // Set local variables
     $VehicleType = $vehicleTypeMock;
     $DB = $this->db;
@@ -59,6 +59,6 @@ test('vehicle-types.php assigns data to smarty', function () {
     ob_start();
     include __DIR__ . '/../../view/page/vehicle-types.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('vehicle-types');
 });

@@ -19,6 +19,6 @@ test('LoginHistory instantiates correctly', function () {
 test('LoginHistory has expected SQL base', function () {
     $ref = new ReflectionProperty(LoginHistory::class, 'sql_base');
     $sql = $ref->getValue($this->loginHistory);
-    
+
     expect($sql)->toContain('FROM user_login upr JOIN user u ON u.id = upr.user_id');
 });

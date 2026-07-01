@@ -35,10 +35,12 @@ beforeEach(function () {
     $GLOBALS['User'] = $this->user;
     $GLOBALS['Smarty'] = $this->smarty;
     $GLOBALS['APPD'] = $this->appd;
-    
+
     // We need to define some functions that might be called
     if (!function_exists('pagination')) {
-        function pagination($a, $b, $c, $d) { return []; }
+        function pagination($a, $b, $c, $d) {
+            return [];
+        }
     }
 });
 
@@ -50,15 +52,15 @@ test('ads.php assigns data to smarty', function () {
                    ->disableOriginalConstructor()
                    ->onlyMethods(['get', 'getGroupTotal', 'getTotal', 'getRowsCount', 'getExtra'])
                    ->getMock();
-    
+
     $adMock->DB = $this->db;
-    
+
     $adMock->method('get')->willReturn([]);
     $adMock->method('getRowsCount')->willReturn(0);
     $adMock->method('getGroupTotal')->willReturn([]);
     $adMock->method('getTotal')->willReturn([]);
     $adMock->method('getExtra')->willReturn([]);
-    
+
     // Set local variables that include will pick up
     $Ad = $adMock;
     $DB = $this->db;
@@ -69,6 +71,6 @@ test('ads.php assigns data to smarty', function () {
     ob_start();
     include __DIR__ . '/../../view/page/ads.php';
     ob_end_clean();
-    
+
     expect(true)->toBeTrue();
 });

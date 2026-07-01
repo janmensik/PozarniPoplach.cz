@@ -34,7 +34,7 @@ beforeEach(function () {
     $this->db->db = $this->getMockBuilder('mysqli')
                          ->disableOriginalConstructor()
                          ->getMock();
-                         
+
     $this->device = new Device($this->db);
     $this->testableDevice = new DeviceTestable($this->db);
 });
@@ -42,7 +42,7 @@ beforeEach(function () {
 test('Device validation fails if device_name is empty', function () {
     $this->device->data = ['device_name' => ''];
     $errors = $this->device->validate();
-    
+
     expect($errors)->toHaveKey('device_name');
     expect($errors['device_name'])->toBe('Device name is required');
 });
@@ -52,7 +52,7 @@ test('Device validation fails if ad_probability is out of range', function () {
     $errors = $this->device->validate();
     expect($errors)->toHaveKey('ad_probability');
     expect($errors['ad_probability'])->toBe('Ad probability must be a number 0-100');
-    
+
     $this->device->data = ['device_name' => 'Test', 'ad_probability' => -5];
     $errors = $this->device->validate();
     expect($errors)->toHaveKey('ad_probability');
@@ -81,9 +81,9 @@ test('Device maps data from post correctly', function () {
         'ad_probability' => 25,
         'ad_sticky_duration' => 120
     ];
-    
+
     $this->testableDevice->mapFromPost($postData);
-    
+
     expect($this->testableDevice->data['device_name'])->toBe('My Tablet');
     expect($this->testableDevice->data['ad_probability'])->toBe(25);
     expect($this->testableDevice->data['ad_sticky_duration'])->toBe(120);
@@ -94,7 +94,7 @@ test('Device delete calls DB query', function () {
              ->method('query')
              ->with($this->stringContains('DELETE FROM alarm_device_authorized WHERE id = "123"'))
              ->willReturn(true);
-             
+
     $result = $this->device->delete(123);
     expect($result)->toBeTrue();
 });
@@ -104,11 +104,11 @@ test('Device setter calls set method', function () {
         'device_name' => 'Setter Test',
         'ad_probability' => 10
     ];
-    
+
     $this->db->expects($this->once())->method('query');
     $this->db->method('getNumAffected')->willReturn(1);
     $this->db->method('getId')->willReturn(789);
-    
+
     $result = $this->testableDevice->setter();
     expect($result)->toBe(789);
 });

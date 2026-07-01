@@ -38,6 +38,6 @@ test('version-history.php assigns data to smarty', function () {
     ob_start();
     include __DIR__ . '/../../view/page/version-history.php';
     ob_end_clean();
-    
+
     expect($APPD->getData('PAGE'))->toBe('version-history');
 });
