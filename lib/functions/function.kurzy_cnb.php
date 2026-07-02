@@ -13,7 +13,7 @@ function kurzy_cnb($cacheFile = './cache/kurzy_cnb.txt') {
         # soubor s cache existuje a je ještě platný
         $data = file_get_contents($cacheFile);
         if ($data) {
-            $data = unserialize($data);
+            $data = unserialize($data, ['allowed_classes' => false]);
         }
       # pokud se podařilo soubor přečíst a neni v něm blbost, vratim
         if (is_array($data)) {
@@ -33,7 +33,7 @@ function kurzy_cnb($cacheFile = './cache/kurzy_cnb.txt') {
     } elseif (file_exists($cacheFile)) {
         $data = file_get_contents($cacheFile);
         if ($data) {
-            $data = unserialize($data);
+            $data = unserialize($data, ['allowed_classes' => false]);
         } else {
             $data = null;
         }

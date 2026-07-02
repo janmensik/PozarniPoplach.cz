@@ -201,7 +201,7 @@ class User extends Modul {
     # ...................................................................
     private function processUser(): void {
         if (isset($this->user['page_schema']) && is_string($this->user['page_schema'])) {
-            $this->user['page_schema'] = @unserialize(stripslashes($this->user['page_schema']));
+            $this->user['page_schema'] = @unserialize(stripslashes($this->user['page_schema']), ['allowed_classes' => false]);
         }
         if (!isset($this->user['page_schema']) || !is_array($this->user['page_schema'])) {
             $this->user['page_schema'] = array('global' => array(), 'pages' => array());
