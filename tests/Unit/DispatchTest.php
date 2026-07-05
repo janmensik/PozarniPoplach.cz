@@ -81,3 +81,48 @@ test('beautifulLastDispatch handles city_part if different from city', function 
 
     expect($result['address_city_part'])->toBe('Zizkov');
 });
+
+test('extractUnitRegistration returns null for empty or invalid input', function () {
+    expect($this->dispatch->extractUnitRegistration(null))->toBeNull();
+    expect($this->dispatch->extractUnitRegistration(''))->toBeNull();
+    expect($this->dispatch->extractUnitRegistration([]))->toBeNull();
+    expect($this->dispatch->extractUnitRegistration(['']))->toBeNull();
+});
+
+test('extractUnitRegistration extracts registration from a valid string', function () {
+    expect($this->dispatch->extractUnitRegistration('notifikace.123456@pozarnipoplach.cz'))->toBe('123456');
+    expect($this->dispatch->extractUnitRegistration('NOTIFIKACE.ABCDEF@POZARNIPOPLACH.CZ'))->toBe('ABCDEF');
+});
+
+test('extractUnitRegistration returns null for invalid string format', function () {
+    expect($this->dispatch->extractUnitRegistration('invalid@pozarnipoplach.cz'))->toBeNull();
+    expect($this->dispatch->extractUnitRegistration('notifikace.12345@pozarnipoplach.cz'))->toBeNull(); // Too short
+    expect($this->dispatch->extractUnitRegistration('notifikace.1234567@pozarnipoplach.cz'))->toBeNull(); // Too long
+    expect($this->dispatch->extractUnitRegistration('notifikace.123456@otherdomain.cz'))->toBeNull(); // Wrong domain
+});
+
+test('extractUnitRegistration extracts registration from an array', function () {
+    $emails = [
+        'test@test.com',
+        'notifikace.654321@pozarnipoplach.cz',
+        'another@domain.com'
+    ];
+    expect($this->dispatch->extractUnitRegistration($emails))->toBe('654321');
+});
+
+test('extractUnitRegistration returns null for array with no matching email', function () {
+    $emails = [
+        'test@test.com',
+        'invalid@pozarnipoplach.cz',
+        'another@domain.com'
+    ];
+    expect($this->dispatch->extractUnitRegistration($emails))->toBeNull();
+});
+
+test('extractUnitRegistration extracts the first matching registration from an array', function () {
+    $emails = [
+        'notifikace.111111@pozarnipoplach.cz',
+        'notifikace.222222@pozarnipoplach.cz'
+    ];
+    expect($this->dispatch->extractUnitRegistration($emails))->toBe('111111');
+});
