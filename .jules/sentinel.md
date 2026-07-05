@@ -21,3 +21,10 @@
 **Vulnerability:** The `generatePassword()` function utilized `rand()` for character selection. `rand()` is not cryptographically secure, meaning generated passwords could potentially be predicted if the PRNG state is known or guessed.
 **Learning:** Functions generating secrets (passwords, tokens, keys) must use secure randomness sources. Standard `rand()` or `mt_rand()` are insufficient for security-sensitive operations.
 **Prevention:** Always use `random_int()` in PHP for secure random integer generation within a range, especially when generating passwords or cryptographic material.
+
+## 2024-06-26 - [Critical] Insecure Deserialization (CWE-502)
+**Vulnerability:** A critical insecure deserialization vulnerability was found where `unserialize()` was called on untrusted data without setting `allowed_classes` to `false`. The vulnerability existed in `include/class.User.php` when deserializing user configuration from the database (`page_schema`), and in `lib/functions/function.kurzy_cnb.php` when deserializing cached currency files. If an attacker manages to tamper with this data, PHP Object Injection may lead to Remote Code Execution (RCE) via `__wakeup()`, `__destruct()`, or similar magic methods in loaded classes.
+**Learning:** `unserialize()` is inherently dangerous when applied to untrusted or potentially compromised data. Even data from caches or databases must be treated cautiously, particularly in environments susceptible to other vulnerabilities (like SQL injection or local file inclusion).
+**Prevention:**
+1. Always set `['allowed_classes' => false]` in `unserialize()` calls if objects are not strictly required (e.g., when deserializing arrays or scalars).
+2. Preferably use `json_encode()` and `json_decode()` instead of `serialize()` and `unserialize()` when exchanging data.
