@@ -28,3 +28,7 @@
 **Prevention:**
 1. Always set `['allowed_classes' => false]` in `unserialize()` calls if objects are not strictly required (e.g., when deserializing arrays or scalars).
 2. Preferably use `json_encode()` and `json_decode()` instead of `serialize()` and `unserialize()` when exchanging data.
+## 2024-06-25 - [High] Incomplete File Upload Validation
+**Vulnerability:** An incomplete file upload validation in `view/page/ad-edit.php` allowed files to be uploaded based purely on their extension, leaving the system susceptible to MIME type spoofing and related upload vulnerabilities.
+**Learning:** Checking only the file extension is not sufficient, as it doesn't guarantee the file content matches. Validating the file contents (MIME type) is crucial to defend against malicious uploads.
+**Prevention:** Always use `finfo_file` (or similar file content analysis tools) alongside extension validation to ensure uploaded files genuinely correspond to the expected types, avoiding reliance on user-provided extensions or spoofable HTTP headers like `$_FILES['...']['type']`.

@@ -70,7 +70,13 @@ if ($_POST) {
 
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
 
-        if (in_array($extension, $allowedExtensions)) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $_FILES['banner_image']['tmp_name']);
+        finfo_close($finfo);
+
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+
+        if (in_array($extension, $allowedExtensions) && in_array($mime, $allowedMimeTypes)) {
             $filename = uniqid('ad_') . '.' . $extension;
             $uploadFile = $uploadDir . $filename;
 
