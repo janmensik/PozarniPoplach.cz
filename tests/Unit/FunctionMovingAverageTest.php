@@ -1,10 +1,5 @@
 <?php
 
-// NOTE: movingAverage() has a known off-by-one bug: the loop accesses
-// $nidata[$i + $subsetsize - 1] which goes out of bounds near the end,
-// generating PHP "Undefined array key" notices. These tests pass but surface
-// that latent bug. The function still returns correct results for first element.
-
 require_once __DIR__ . '/../../lib/functions/function.movingAverage.php';
 
 uses(\Tests\TestCase::class);

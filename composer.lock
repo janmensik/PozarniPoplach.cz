@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "459cdbc5cf069cb471a4d39e11b89248",
+    "content-hash": "db28717c5e8e3c7b7cb880b4ae7c83c6",
     "packages": [
         {
             "name": "bramus/router",
@@ -740,16 +740,16 @@
         },
         {
             "name": "janmensik/jmlib",
-            "version": "1.6.3",
+            "version": "1.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janmensik/jmlib.git",
-                "reference": "d2b0e85a695513adbde98fbcebd498d5780e3c73"
+                "reference": "17059ac0a4633f29c8942a338767e1fdcdad7432"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janmensik/jmlib/zipball/d2b0e85a695513adbde98fbcebd498d5780e3c73",
-                "reference": "d2b0e85a695513adbde98fbcebd498d5780e3c73",
+                "url": "https://api.github.com/repos/janmensik/jmlib/zipball/17059ac0a4633f29c8942a338767e1fdcdad7432",
+                "reference": "17059ac0a4633f29c8942a338767e1fdcdad7432",
                 "shasum": ""
             },
             "require": {
@@ -777,9 +777,9 @@
             "description": "PHP objects and functions for base app",
             "support": {
                 "issues": "https://github.com/janmensik/jmlib/issues",
-                "source": "https://github.com/janmensik/jmlib/tree/1.6.3"
+                "source": "https://github.com/janmensik/jmlib/tree/1.6.5"
             },
-            "time": "2026-06-12T12:18:37+00:00"
+            "time": "2026-07-10T16:14:30+00:00"
         },
         {
             "name": "machinateur/roman-numerals",

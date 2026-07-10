@@ -77,8 +77,6 @@ if ($_POST) {
     # 2. Map from POST — cast boolean fields to int before mapping
     $_POST['calendar_show'] = isset($_POST['calendar_show']) ? (int) $_POST['calendar_show'] : 0;
     $Device->mapFromPost($_POST);
-    # sanitize() returns "" for falsy values (0), so force-set the int after mapping
-    $Device->data['calendar_show'] = isset($_POST['calendar_show']) ? (int) $_POST['calendar_show'] : 0;
 
     # 3. Validate
     $errors = $Device->validate();

@@ -18,14 +18,24 @@ function movingAverage($data, $subsetsize = 5, $samecount = true) {
     # change tu numeric index array
     $nidata = array_values($data);
 
-    $prev = 0;
-    $output = array ();
+    $output = [];
 
-    # first element
-    $output[0] = $prev = array_sum(array_slice($nidata, 0, $subsetsize)) / $subsetsize;
-    $i = 0;
-    for ($i = 1; $i < count($nidata); $i++) {
-        $output[$i] = $prev = $prev - $nidata[$i - 1] / $subsetsize + $nidata[$i + $subsetsize - 1] / $subsetsize;
+    # Compute averages only for positions where a full window fits
+    # Valid indices: 0 .. count($nidata) - $subsetsize
+    $max = count($nidata) - $subsetsize;
+    $prev = array_sum(array_slice($nidata, 0, $subsetsize)) / $subsetsize;
+    $output[0] = $prev;
+    for ($i = 1; $i <= $max; $i++) {
+        $prev = $prev - $nidata[$i - 1] / $subsetsize + $nidata[$i + $subsetsize - 1] / $subsetsize;
+        $output[$i] = $prev;
+    }
+
+    # If samecount=true, pad the output to the original length with the last average
+    if ($samecount && count($output) < count($nidata)) {
+        $last = end($output);
+        while (count($output) < count($nidata)) {
+            $output[] = $last;
+        }
     }
 
     return ($output);
