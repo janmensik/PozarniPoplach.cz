@@ -35,6 +35,10 @@
                 <input type="text" class="form-control" name="device_name" id="f_device_name" value="{$data.device_name|escape}" placeholder="Např. TV v garáži" />
               </div>
             </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Reklama</legend>
 
             <div class="form-group row">
               <label for="f_ad_probability" class="col-sm-2 col-form-label">Pravděpodobnost reklamy:</label>
@@ -54,7 +58,23 @@
           </fieldset>
 
           <fieldset>
+            <legend>Kalendář jednotky</legend>
+
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label" for="f_calendar_show">Zobrazit na terminálu:</label>
+              <div class="col-sm-10 d-flex align-items-center">
+                <input type="hidden" name="calendar_show" value="0" />
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" name="calendar_show" id="f_calendar_show" value="1" {if $data.calendar_show == 1}checked{/if} />
+                  <label class="custom-control-label" for="f_calendar_show">Ano</label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
             <legend>Smazat terminál</legend>
+
             <div class="form-group">
               <div class="col-sm-10">
                 <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#modal_clearPageschema">Odstranit zařízení</button>

@@ -51,7 +51,6 @@ if (is_array($smarty_plugins)) {
     }
 }
 
-
 # Smarty load global config
 $Smarty->config_overwrite = false;
 $Smarty->configLoad(__DIR__ . '/tpl/app.conf', 'pages');

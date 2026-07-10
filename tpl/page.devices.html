@@ -38,6 +38,7 @@
                     {include file="inc.activetabletitle.html" key=10 value="Jednotka"}
                     {include file="inc.activetabletitle.html" key=8 value="% reklamy" th_class="text-right"}
                     {include file="inc.activetabletitle.html" key=9 value="Timeout reklamy" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=7 value="Kalendář?" th_class="text-center"}
                     {include file="inc.activetabletitle.html" key=7 value="Registrován" th_class="text-right"}
                     {include file="inc.activetabletitle.html" key=5 value="Naposled aktivní" th_class="text-right"}
                   </tr>
@@ -51,6 +52,15 @@
                       <td><span class="badge bg-dark">{$item.unit_fullname|escape}</span></td>
                       <td class="text-right">{$item.ad_probability|escape}<span class="text-muted">&nbsp;%</span></td>
                       <td class="text-right">{agots period=60*$item.ad_sticky_duration lang='cs' justone=true}</td>
+                      <td class="text-center">
+                        {if $item.unit_calendar_url && $item.calendar_show}
+                            <i class="fa-regular fa-calendar-days" title="Zobrazovat kalendář při klidu."></i>
+                        {elseif $item.unit_calendar_url}
+                            <i class="fa-regular fa-calendar-circle-minus" title="Kalendář je dostupný, ale na zařízení nebude zobrazen."></i>
+                        {else}
+                            &nbsp;
+                        {/if}
+                      </td>
                       <td class="text-right"><abbr class="timeago" title="před {agots ts=$item.created_at_ts lang='cs2' justone=true}"><small>{$item.created_at_ts|date_format:"j. n. Y"|escape}</small></abbr></td>
                       <td class="text-right"><abbr class="timeago" title="před {agots ts=$item.last_seen_ts lang='cs2' justone=true}">{$item.last_seen_ts|date_format:"j. n. Y H:i"|escape}</abbr></td>
                     </tr>
