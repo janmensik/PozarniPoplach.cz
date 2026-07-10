@@ -1,578 +1,322 @@
-{include file="inc.header.html" title=#dashboard_title# google_chart=true} {include file="inc.page-breadcrumb.html"
-page_icon=#dashboard_icon# page_title=#dashboard_title# }
+{include file="inc.header.html" title=#dashboard_title#}
+{include file="inc.page-breadcrumb.html" page_icon=#dashboard_icon# page_title=#dashboard_title#}
 
 <!-- Main content -->
 <div class="content">
   <div class="container-fluid">
-    <!-- quick icons -->
+    
+    <!-- Top Statistics Row -->
     <div class="row">
+      <!-- Total Dispatches Box -->
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box bg-gradient-danger">
+          <span class="info-box-icon"><i class="fa-solid fa-truck-arrow-right fa-2x"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-text">Celkem výjezdů</span>
+            <span class="info-box-number">{$dispatch_stats.total}</span>
+            <div class="progress">
+              <div class="progress-bar" style="width: 100%"></div>
+            </div>
+            <span class="progress-description text-sm">
+              7 dní: <strong>{$dispatch_stats.last_7d}</strong> &nbsp;|&nbsp; 30 dní: <strong>{$dispatch_stats.last_30d}</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ingestion / Import Box -->
       <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box bg-gradient-info">
-          <span class="info-box-icon"><i class="fa-regular fa-square-parking fa-2x"></i></span>
+          <span class="info-box-icon"><i class="fa-regular fa-mailbox-flag-up fa-2x"></i></span>
           <div class="info-box-content">
-            <span class="info-box-text">Aktuálně parkuje</span>
-            <span class="info-box-number">{$capacity.used|nice_num:'&nbsp;'}</span>
+            <span class="info-box-text">Úspěšnost importů</span>
+            <span class="info-box-number">
+              {if $import_stats.total_runs > 0}
+                {math equation="(x / y) * 100" x=$import_stats.success_runs y=$import_stats.total_runs format="%.1f"}%
+              {else}
+                100%
+              {/if}
+            </span>
             <div class="progress">
-              <div class="progress-bar" style="width: {$capacity.used_percent|nice_num:'&nbsp;'}%"></div>
+              <div class="progress-bar" style="width: {if $import_stats.total_runs > 0}{math equation='(x / y) * 100' x=$import_stats.success_runs y=$import_stats.total_runs}{else}100{/if}%"></div>
             </div>
-            <span class="progress-description">{$capacity.used_percent|nice_num:'&nbsp;'}% obsazenost parkoviště</span>
+            <span class="progress-description text-sm">
+              Celkem: <strong>{$import_stats.total_runs}</strong> &nbsp;|&nbsp; Chyby: <strong class="text-warning">{$import_stats.error_runs}</strong>
+            </span>
           </div>
         </div>
       </div>
 
+      <!-- Unregistered Vehicles Alert Box -->
       <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box bg-gradient-{$gatecode_next.bg_color|default:'secondary'}">
-          <span class="info-box-icon"><i class="{#gatecodes_icon#} fa-2x"></i></span>
+        <div class="info-box bg-gradient-warning text-dark">
+          <span class="info-box-icon"><i class="fa-solid fa-triangle-exclamation fa-2x"></i></span>
           <div class="info-box-content">
-            <span class="info-box-text">Aktuální kód závory</span>
-            <span class="info-box-number"><span class="badge badge-dark text-monospace">{$gatecode|escape}</span></span>
+            <span class="info-box-text">Neregistrovaná vozidla</span>
+            <span class="info-box-number">{$unregistered_vehicles|@count}</span>
             <div class="progress">
-              <div class="progress-bar" style="width: {$gatecode_next.pending_percent|nice_num:'&nbsp;'}%"></div>
+              <div class="progress-bar bg-dark" style="width: {if $unregistered_vehicles|@count > 0}100{else}0{/if}%"></div>
             </div>
-            <span class="progress-description">{agots ts=$gatecode_next.startdate_ts lang='cs' justone=true} do změny</span>
+            <span class="progress-description text-sm">
+              {if $unregistered_vehicles|@count > 0}Vyžaduje registraci v administraci{else}Všechna vozidla v pořádku{/if}
+            </span>
           </div>
         </div>
       </div>
 
-      <div class="OFFcol-md-9 OFFcol-sm-6 col-12">
-        <div class="chart" style="max-height: 200px">
-          <canvas id="chart_dashboard_inout"></canvas>
-
-          {capture name="chart_dashboard_inout"}
-          <script>
-            new Chart(document.getElementById("chart_dashboard_inout"), {
-              type: "bar",
-              data: {
-                labels: [
-                  {foreach from=$occupancyOutlook item=item}"{$item.date_ts|date_format:'j. n.'}",{/foreach}
-                ],
-                datasets: [
-                  {
-                    label: "Check In",
-                    data: [{foreach from=$occupancyOutlook item=item}{$item.checkin},{/foreach}],
-                    fill: true,
-                    borderWidth: 0,
-                    backgroundColor: "rgba(249,38,16,1)",
-                    borderColor: "rgba(249,38,16,1)",
-                    pointBorderWidth: 0,
-                    pointHitRadius: 2,
-                    pointRadius: 1,
-                    cubicInterpolationMode: "monotone",
-                    yAxisID: "auta",
-                  },
-                  {
-                    label: "Check Out",
-                    data: [{foreach from=$occupancyOutlook item=item}{$item.checkout},{/foreach}],
-                    fill: true,
-                    borderWidth: 0,
-                    backgroundColor: "rgba(71,0,252,1)",
-                    borderColor: "rgba(71,0,252,1)",
-                    pointBorderWidth: 0,
-                    pointHitRadius: 2,
-                    pointRadius: 1,
-                    cubicInterpolationMode: "monotone",
-                    yAxisID: "auta",
-                  },
-                  {
-                    label: "Parkuje",
-                    data: [{foreach from=$occupancyOutlook item=item}{$item.amount},{/foreach}],
-                    fill: true,
-                    borderWidth: 2,
-                    backgroundColor: "rgba(36,44,77,0.5)",
-                    borderColor: "rgba(36,44,77,1)",
-                    pointBorderWidth: 0,
-                    pointHitRadius: 2,
-                    pointRadius: 1,
-                    cubicInterpolationMode: "monotone",
-                    type: 'line',
-                    yAxisID: "occupancy",
-                  },                       
-                ],
-              },
-              options: {
-                responsive: true,
-                animation: false,
-                maintainAspectRatio: false,
-                scales: {
-                  auta: {
-                    stacked: true,
-                    position: "right",
-                    grid: { display: false },
-                  },
-                  occupancy: {
-                    stacked: true,
-                    position: "left",                    
-                    grid: { display: true },
-                  },
-                  x: {
-                    stacked: true,
-                    drawOnChartArea: false,
-                    grid: { display: false, drawOnChartArea: false },
-                    /*ticks: {
-                      callback: function(val, index) {
-                        // Hide every 2nd tick label
-                        return index % 2 === 0 ? this.getLabelForValue(val) : '';
-                      }
-                    },*/
-                  },
-                },
-                layout: {
-                  autoPadding: false,
-                },
-                plugins: {
-                  filler: {
-                    propagate: true,
-                  },
-                  title: {
-                    display: false,
-                    text: "Obsazenost, příjezdy a odjezdy",
-                  },
-                  legend: {
-                    position: "right",
-                    display: true,
-                  },
-                },
-              },
-            });
-          </script>
-          {/capture}
-        </div>
-      </div>
-    </div>
-    <!-- quick icons -->
-
-    <!-- main tabs -->
-    <div class="card card-outline card-secondary mt-3">
-      <div class="card-header p-2">
-        <ul class="nav nav-pills flex-column flex-sm-row">
-          <li class="nav-item">
-            <a class="nav-link" href="#recent" data-toggle="tab"
-              >Nové <span class="badge badge-light ml-1">{$recent_count}</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="flex-sm-fill nav-link active" href="#checkins" data-toggle="tab"
-              ><i class="fa-regular fa-car-side"></i> Příjezdy
-              <span class="badge badge-light ml-1">{$checkins_count}</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="flex-sm-fill nav-link" href="#parked" data-toggle="tab"
-              ><i class="fa-regular fa-square-parking"></i> Zaparkované
-              <span class="badge badge-light ml-1">{$parked_count}</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="flex-sm-fill nav-link" href="#noshows" data-toggle="tab"
-              ><i class="fa-regular fa-hourglass-end"></i> Propadlé
-              <span class="badge badge-light ml-1">{$noshows_count}</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#checkouts" data-toggle="tab"
-              ><i class="fa-regular fa-plane-arrival"></i> Přílety
-              <span class="badge badge-light ml-1">{$checkouts_count}</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#closed" data-toggle="tab"
-              ><i class="fa-regular fa-square-check"></i> Uzavřené
-              <span class="badge badge-light ml-1">{$closed_count}</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#canceled" data-toggle="tab"
-              ><i class="fa-regular fa-ban"></i> Storna <span class="badge badge-light ml-1">{$canceled_count}</span></a
-            >
-          </li>
-        </ul>
-      </div>
-
-      <div class="card-body">
-        <div class="tab-content" id="open_reservation">
-          <!-- Actions & Controls -->
-          <div class="tab-pane" id="recent">
-            <h2>Nové <span class="badge badge-secondary ml-1">{$recent_count}</span></h2>
-            <p>Dnes vytvořené rezervace.</p>
-            {if $recent}
-            <table class="table table-hover table-responsive-sm">
-              <thead>
-                <tr>
-                  <th class="text-right" colspan="2">ID</th>
-                  <th>Klient</th>
-                  <th class="text-right" title="Datum rezervace">Rezervováno</th>
-                  <th class="text-right" title="Datum příjezdu na parkoviště">
-                    <i class="fa-regular fa-car-side"></i>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {foreach from=$recent item=item}
-                <tr data-id="{$item.id}">
-                  <td>
-                    {if $item.partner_id}<i class="fa-solid fa-handshake" title="Partner: {$item.partner_shortcut|escape}"></i>{/if}
-                  </td>
-                  <td class="text-right monospace">
-                    <a href="{$BASE_URL}/{#reservations_url#}/{$item.id}"><code>{$item.id}</code></a>
-                  </td>
-                  <td>
-                    <strong>{$item.name|default:$item.email|default:"Rezervace `$item.id`"|escape}</strong>
-                    {if $item.partner_id && $item.partner_reservation_code} <span class="badge badge-info text-small" title="ID partnerské rezervace {$item.partner_shortcut|escape}">{$item.partner_reservation_code|escape}</span>{/if}
-                  </td>
-                  <td class="text-right" title="{$item.created|date_format:'j. n. Y H:i'}">
-                    {$item.created|date_format:'j. n. Y'} <small>{$item.created|date_format:'H:i'}</small>
-                  </td>
-                  <td class="text-right" title="{$item.checkin|date_format:'j. n. Y H:i'}">
-                    {$item.checkin|date_format:'j. n. Y'} <small>{$item.checkin|date_format:'H:i'}</small>
-                  </td>
-                </tr>
-                {/foreach}
-              </tbody>
-            </table>
-            {/if}
-          </div>
-
-          <div class="tab-pane active" id="checkins">
-            <h2>
-              <i class="fa-regular fa-car-side"></i> Příjezdy na parkoviště
-              <span class="badge badge-secondary ml-1">{$checkins_count}</span>
-            </h2>
-            <p>
-              Rezervace, které dnes přijíždí na parkoviště.<br />Pokud nepřijede do 6 hodin od původního termínu
-              příjezdu, bude rezervace převedena do stavu
-              <span class="badge badge-{$reservation_texts.color.status.noshow}"
-                >{$reservation_texts.cs.status.noshow}</span
-              >.
-            </p>
-            {if $checkins}
-            <table class="table table-hover table-responsive-sm">
-              <thead>
-                <tr>
-                  <th class="text-right" colspan="2">ID</th>
-                  <th>Klient</th>
-                  <th class="text-right" title="Datum příjezdu na parkoviště">
-                    <i class="fa-regular fa-car-side"></i>
-                  </th>
-                  <th class="text-right" title="Osob"><i class="fa-solid fa-people"></i></th>
-                  <th class="text-right">K zaplacení</th>
-                </tr>
-              </thead>
-              <tbody>
-                {foreach from=$checkins item=item}
-                <tr data-id="{$item.id}">
-                  <td>
-                    {if $item.partner_id}<i class="fa-solid fa-handshake" title="Partner: {$item.partner_shortcut|escape}"></i>{/if}
-                  </td>
-                  <td class="text-right monospace">
-                    <a href="{$BASE_URL}/{#reservations_url#}/{$item.id}"><code>{$item.id}</code></a>
-                  </td>
-                  <td>
-                    <strong>{$item.name|default:$item.email|default:"Rezervace `$item.id`"|escape}</strong>
-                    {if $item.partner_id && $item.partner_reservation_code} <span class="badge badge-info text-small" title="ID partnerské rezervace {$item.partner_shortcut|escape}">{$item.partner_reservation_code|escape}</span>{/if}
-                  </td>
-                  <td class="text-right" title="{$item.checkin|date_format:'j. n. Y H:i'}">
-                    <small
-                      >{$item.checkin|date_format:'j. n. Y'} <strong>{$item.checkin|date_format:'H:i'}</strong></small
-                    >
-                  </td>
-                  <td class="text-right">
-                    {$item.persons|nice_num:'&nbsp;'}{if $item.child_seat} ({$item.child_seat|nice_num:'&nbsp;'}
-                    <i
-                      class="fa-regular fa-baby"
-                      title="{$item.child_seat|nice_num:'&nbsp;'} {$item.child_seat|czech_num_items:'dítě':'děti':'dětí'}"></i
-                    >){/if}
-                  </td>
-                  <td class="text-right">
-                    <strong>{$item.price_remaining|nice_num:'&nbsp;'}</strong>&nbsp;{#GLOBAL_CURRENCY#}
-                  </td>
-                </tr>
-                {/foreach}
-              </tbody>
-            </table>
-            {/if}
-          </div>
-
-          <div class="tab-pane" id="parked">
-            <h2>
-              <i class="fa-regular fa-square-parking"></i> Zaparkované
-              <span class="badge badge-secondary ml-1">{$parked_count}</span>
-            </h2>
-            <p>Dnes zaparkované rezervace.<br />Rezervace klientů, kteří přijeli dnes a byli převezeni na letiště.</p>
-            {if $checkins}
-            <table class="table table-hover table-responsive-sm">
-              <thead>
-                <tr>
-                  <th class="text-right" colspan="2">ID</th>
-                  <th>Klient</th>
-                  <th class="text-right" title="Datum příjezdu na parkoviště">
-                    <i class="fa-regular fa-car-side"></i>
-                  </th>
-                  <th class="text-right" title="Osob"><i class="fa-solid fa-people"></i></th>
-                  <th class="text-right">K zaplacení</th>
-                </tr>
-              </thead>
-              <tbody>
-                {foreach from=$parked item=item}
-                <tr data-id="{$item.id}">
-                  <td>
-                    {if $item.partner_id}<i class="fa-solid fa-handshake" title="Partner: {$item.partner_shortcut|escape}"></i>{/if}
-                  </td>
-                  <td class="text-right monospace">
-                    <a href="{$BASE_URL}/{#reservations_url#}/{$item.id}"><code>{$item.id}</code></a>
-                  </td>
-                  <td>
-                    <strong>{$item.name|default:$item.email|default:"Rezervace `$item.id`"|escape}</strong>
-                    {if $item.partner_id && $item.partner_reservation_code} <span class="badge badge-info text-small" title="ID partnerské rezervace {$item.partner_shortcut|escape}">{$item.partner_reservation_code|escape}</span>{/if}
-                  </td>
-                  <td class="text-right" title="{$item.checkin|date_format:'j. n. Y H:i'}">
-                    <small
-                      >{$item.checkin|date_format:'j. n. Y'} <strong>{$item.checkin|date_format:'H:i'}</strong></small
-                    >
-                  </td>
-                  <td class="text-right">
-                    {$item.persons|nice_num:'&nbsp;'}{if $item.child_seat} ({$item.child_seat|nice_num:'&nbsp;'}
-                    <i
-                      class="fa-regular fa-baby"
-                      title="{$item.child_seat|nice_num:'&nbsp;'} {$item.child_seat|czech_num_items:'dítě':'děti':'dětí'}"></i
-                    >){/if}
-                  </td>
-                  <td class="text-right">
-                    <strong>{$item.price_remaining|nice_num:'&nbsp;'}</strong>&nbsp;{#GLOBAL_CURRENCY#}
-                  </td>
-                </tr>
-                {/foreach}
-              </tbody>
-            </table>
-            {/if}
-          </div>
-
-          <div class="tab-pane" id="noshows">
-            <h2>
-              <i class="fa-regular fa-hourglass-end"></i> Propadlé rezervace
-              <span class="badge badge-secondary ml-1">{$noshows_count}</span>
-            </h2>
-            <p>
-              Rezervace, které mají datum příjezdu na parkoviště před více jak 6 hodinami.
-              <!-- <br />
-                Po 24 hodinách od původního termínu příjezdu budou rezervace změněny na stav <span class="badge badge-{$reservation_texts.color.status.canceled}">{$reservation_texts.cs.status.canceled}</span>, pokud jsou nezaplacené. -->
-            </p>
-            {if $noshows}
-            <table class="table table-hover table-responsive-sm">
-              <thead>
-                <tr>
-                  <th class="text-right" colspan="2">ID</th>
-                  <th>Klient</th>
-                  <th class="text-right" title="Datum příjezdu na parkoviště">
-                    <i class="fa-regular fa-car-side"></i>
-                  </th>
-                  <th class="text-right" title="Osob"><i class="fa-solid fa-people"></i></th>
-                  <th class="text-right">K zaplacení</th>
-                </tr>
-              </thead>
-              <tbody>
-                {foreach from=$noshows item=item}
-                <tr data-id="{$item.id}">
-                  <td>
-                    {if $item.partner_id}<i class="fa-solid fa-handshake" title="Partner: {$item.partner_shortcut|escape}"></i>{/if}
-                  </td>
-                  <td class="text-right monospace">
-                    <a href="{$BASE_URL}/{#reservations_url#}/{$item.id}"><code>{$item.id}</code></a>
-                  </td>
-                  <td>
-                    <strong>{$item.name|default:$item.email|default:"Rezervace `$item.id`"|escape}</strong>
-                    {if $item.partner_id && $item.partner_reservation_code} <span class="badge badge-info text-small" title="ID partnerské rezervace {$item.partner_shortcut|escape}">{$item.partner_reservation_code|escape}</span>{/if}
-                  </td>
-                  <td class="text-right" title="{$item.checkin|date_format:'j. n. Y H:i'}">
-                    <small>{$item.checkin|date_format:'j. n. Y H:i'}</small>
-                  </td>
-                  <td class="text-right">
-                    {$item.persons|nice_num:'&nbsp;'}{if $item.child_seat} ({$item.child_seat|nice_num:'&nbsp;'}
-                    <i
-                      class="fa-regular fa-baby"
-                      title="{$item.child_seat|nice_num:'&nbsp;'} {$item.child_seat|czech_num_items:'dítě':'děti':'dětí'}"></i
-                    >){/if}
-                  </td>
-                  <td class="text-right">
-                    <strong>{$item.price_remaining|nice_num:'&nbsp;'}</strong>&nbsp;{#GLOBAL_CURRENCY#}
-                  </td>
-                </tr>
-                {/foreach}
-              </tbody>
-            </table>
-            {/if}
-          </div>
-
-          <div class="tab-pane" id="checkouts">
-            <h2>
-              <i class="fa-regular fa-plane-arrival"></i> Přílety
-              <span class="badge badge-secondary ml-1">{$checkouts_count}</span>
-            </h2>
-            <p>Rezervace, které nejpozději dnes odjíždí z parkoviště (datum příletu).</p>
-            {if $checkouts}
-            <table class="table table-hover table-responsive-sm">
-              <thead>
-                <tr>
-                  <th class="text-right" colspan="2">ID</th>
-                  <th>Klient</th>
-                  <th class="text-right" title="Datum odjezdu z parkoviště">
-                    <i class="fa-regular fa-plane-arrival"></i>
-                  </th>
-                  <th class="text-right" title="Osob"><i class="fa-solid fa-people"></i></th>
-                  <th class="text-right">K zaplacení</th>
-                </tr>
-              </thead>
-              <tbody>
-                {foreach from=$checkouts item=item}
-                <tr data-id="{$item.id}">
-                  <td>
-                    {if $item.partner_id}<i class="fa-solid fa-handshake" title="Partner: {$item.partner_shortcut|escape}"></i>{/if}
-                  </td>
-                  <td class="text-right monospace">
-                    <a href="{$BASE_URL}/{#reservations_url#}/{$item.id}"><code>{$item.id}</code></a>
-                  </td>
-                  <td>
-                    <strong>{$item.name|default:$item.email|default:"Rezervace `$item.id`"|escape}</strong>
-                    {if $item.partner_id && $item.partner_reservation_code} <span class="badge badge-info text-small" title="ID partnerské rezervace {$item.partner_shortcut|escape}">{$item.partner_reservation_code|escape}</span>{/if}
-                  </td>
-                  <td class="text-right" title="{$item.checkout|date_format:'j. n. Y H:i'}">
-                    <small>{$item.checkout|date_format:'j. n. Y H:i'}</small>
-                  </td>
-                  <td class="text-right">
-                    {$item.persons|nice_num:'&nbsp;'}{if $item.child_seat} ({$item.child_seat|nice_num:'&nbsp;'}
-                    <i
-                      class="fa-regular fa-baby"
-                      title="{$item.child_seat|nice_num:'&nbsp;'} {$item.child_seat|czech_num_items:'dítě':'děti':'dětí'}"></i
-                    >){/if}
-                  </td>
-                  <td class="text-right">
-                    <strong>{$item.price_remaining|nice_num:'&nbsp;'}</strong>&nbsp;{#GLOBAL_CURRENCY#}
-                  </td>
-                </tr>
-                {/foreach}
-              </tbody>
-            </table>
-            {/if}
-          </div>
-
-          <div class="tab-pane" id="closed">
-            <h2>
-              <i class="fa-regular fa-square-check"></i> Uzavřené rezervace
-              <span class="badge badge-secondary ml-1">{$closed_count}</span>
-            </h2>
-            <p>Dnes dokončené rezervace (klient přiletěl, byl převezen na parkoviště a odjel).</p>
-            {if $closed}
-            <table class="table table-hover table-responsive-sm">
-              <thead>
-                <tr>
-                  <th class="text-right">ID</th>
-                  <th>Klient</th>
-                  <th class="text-right" title="Datum příjezdu na parkoviště">
-                    <i class="fa-regular fa-car-side"></i>
-                  </th>
-                  <th class="text-right" title="Osob"><i class="fa-solid fa-people"></i></th>
-                </tr>
-              </thead>
-              <tbody>
-                {foreach from=$closed item=item}
-                <tr data-id="{$item.id}">
-                  <td class="text-right monospace">
-                    <a href="{$BASE_URL}/{#reservations_url#}/{$item.id}"><code>{$item.id}</code></a>
-                  </td>
-                  <td>
-                    <strong>{$item.name|default:$item.email|default:"Rezervace `$item.id`"|escape}</strong>
-                  </td>
-                  <td class="text-right" title="{$item.checkin|date_format:'j. n. Y H:i'}">
-                    <small
-                      >{$item.checkin|date_format:'j. n. Y'} <strong>{$item.checkin|date_format:'H:i'}</strong></small
-                    >
-                  </td>
-                  <td class="text-right">
-                    {$item.persons|nice_num:'&nbsp;'}{if $item.child_seat} ({$item.child_seat|nice_num:'&nbsp;'}
-                    <i
-                      class="fa-regular fa-baby"
-                      title="{$item.child_seat|nice_num:'&nbsp;'} {$item.child_seat|czech_num_items:'dítě':'děti':'dětí'}"></i
-                    >){/if}
-                  </td>
-                </tr>
-                {/foreach}
-              </tbody>
-            </table>
-            {/if}
-          </div>
-
-          <div class="tab-pane" id="canceled">
-            <h2>
-              <i class="fa-regular fa-square-check"></i> Stornované rezervace
-              <span class="badge badge-secondary ml-1">{$canceled_count}</span>
-            </h2>
-            <p>Dnes stornované rezervace.</p>
-            {if $canceled}
-            <table class="table table-hover table-responsive-sm">
-              <thead>
-                <tr>
-                  <th class="text-right">ID</th>
-                  <th>Klient</th>
-                  <th class="text-right">Poslední změna</th>
-                  <th class="text-right" title="Datum příjezdu na parkoviště">
-                    <i class="fa-regular fa-car-side"></i>
-                  </th>
-                  <th class="text-right">K zaplacení</th>
-                </tr>
-              </thead>
-              <tbody>
-                {foreach from=$canceled item=item}
-                <tr data-id="{$item.id}">
-                  <td class="text-right monospace">
-                    <a href="{$BASE_URL}/{#reservations_url#}/{$item.id}"><code>{$item.id}</code></a>
-                  </td>
-                  <td>
-                    <strong>{$item.name|default:$item.email|default:"Rezervace `$item.id`"|escape}</strong>
-                  </td>
-                  <td class="text-right" title="{$item.last_change|date_format:'j. n. Y H:i'}">
-                    <small
-                      >{$item.last_change|date_format:'j. n. Y'}
-                      <strong>{$item.last_change|date_format:'H:i'}</strong></small
-                    >
-                  </td>
-                  <td class="text-right" title="{$item.checkin|date_format:'j. n. Y H:i'}">
-                    <small
-                      >{$item.checkin|date_format:'j. n. Y'} <strong>{$item.checkin|date_format:'H:i'}</strong></small
-                    >
-                  </td>
-                  <td class="text-right">
-                    <strong>{$item.price_remaining|nice_num:'&nbsp;'}</strong>&nbsp;{#GLOBAL_CURRENCY#}
-                  </td>
-                </tr>
-                {/foreach}
-              </tbody>
-            </table>
-            {/if}
+      <!-- Advertising CTR Box -->
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box bg-gradient-success">
+          <span class="info-box-icon"><i class="fa-regular fa-billboard fa-2x"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-text">Prokliky reklam (CTR)</span>
+            <span class="info-box-number">{$ad_totals.ctr}%</span>
+            <div class="progress">
+              <div class="progress-bar" style="width: {math equation='x * 10' x=$ad_totals.ctr max=100}%"></div>
+            </div>
+            <span class="progress-description text-sm">
+              Zobrazení: <strong>{$ad_totals.total_views}</strong> &nbsp;|&nbsp; Kliky: <strong>{$ad_totals.total_clicks}</strong>
+            </span>
           </div>
         </div>
       </div>
     </div>
-    <!-- /main tabs -->
+
+    <!-- Main Dashboard Body Layout -->
+    <div class="row">
+      <!-- Left Column: Alerts & Mappings -->
+      <div class="col-lg-6">
+        
+        <!-- Unregistered Vehicles Warning Card -->
+        <div class="card card-warning card-outline">
+          <div class="card-header">
+            <h3 class="card-title text-warning">
+              <i class="fa-solid fa-truck-flatbed-circle-question mr-2"></i>
+              Neregistrovaná vozidla u výjezdů
+            </h3>
+            <span class="badge badge-warning float-right">{$unregistered_vehicles|@count}</span>
+          </div>
+          <div class="card-body p-0">
+            {if $unregistered_vehicles}
+              <div class="table-responsive">
+                <table class="table table-hover table-head-fixed text-nowrap mb-0">
+                  <thead>
+                    <tr>
+                      <th>Výjezd ID</th>
+                      <th>Jednotka</th>
+                      <th>Detekovaný název vozidla</th>
+                      <th>Čas výjezdu</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {foreach from=$unregistered_vehicles item=item}
+                      <tr>
+                        <td>
+                          <a href="{$BASE_URL}/{#dispatches_url#}/{$item.dispatch_id}" class="btn btn-xs btn-default">
+                            <i class="fa-solid fa-eye mr-1"></i> #{$item.dispatch_id}
+                          </a>
+                        </td>
+                        <td>
+                          <a href="{$BASE_URL}/{#units_url#}/{$item.unit_id}">{$item.unit_name|escape}</a>
+                        </td>
+                        <td><span class="badge badge-danger">{$item.parsed_car_name|escape}</span></td>
+                        <td><small>{$item.received|date_format:"%d.%m.%Y %H:%M"}</small></td>
+                      </tr>
+                    {/foreach}
+                  </tbody>
+                </table>
+              </div>
+            {else}
+              <div class="p-4 text-center text-muted">
+                <i class="fa-solid fa-circle-check text-success fa-2x mb-2"></i>
+                <p class="mb-0">Všechna vozidla u výjezdů jsou řádně registrována pod příslušnými jednotkami.</p>
+              </div>
+            {/if}
+          </div>
+        </div>
+
+        <!-- Missing Event Icons / Config Card -->
+        <div class="card card-danger card-outline">
+          <div class="card-header">
+            <h3 class="card-title text-danger">
+              <i class="fa-solid fa-calendar-exclamation mr-2"></i>
+              Chybějící ikony typů událostí
+            </h3>
+          </div>
+          <div class="card-body p-0">
+            {if $missing_event_icons || $dispatches_bad_events}
+              {if $missing_event_icons}
+                <div class="p-3 bg-light-danger border-bottom">
+                  <h6 class="font-weight-bold text-sm text-uppercase text-danger mb-2">
+                    <i class="fa-solid fa-circle-exclamation mr-1"></i> Typy událostí bez ikony:
+                  </h6>
+                  <div class="d-flex flex-wrap">
+                    {foreach from=$missing_event_icons item=item}
+                      <a href="{$BASE_URL}/{#event_types_url#}/{$item.id}" class="badge badge-secondary mr-2 mb-2 p-2">
+                        <i class="fa-solid fa-pen mr-1"></i> {$item.name|escape}
+                      </a>
+                    {/foreach}
+                  </div>
+                </div>
+              {/if}
+
+              {if $dispatches_bad_events}
+                <div class="table-responsive">
+                  <table class="table table-hover text-nowrap mb-0">
+                    <thead>
+                      <tr>
+                        <th>Výjezd ID</th>
+                        <th>Jednotka</th>
+                        <th>Chybná událost / podtyp</th>
+                        <th>Čas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {foreach from=$dispatches_bad_events item=item}
+                        <tr>
+                          <td>
+                            <a href="{$BASE_URL}/{#dispatches_url#}/{$item.dispatch_id}" class="btn btn-xs btn-default">
+                              #{$item.dispatch_id}
+                            </a>
+                          </td>
+                          <td>{$item.unit_name|escape}</td>
+                          <td>
+                            <span class="text-danger font-weight-bold">{$item.event|escape}</span>
+                            {if $item.event_subtype}<br/><small class="text-muted">{$item.event_subtype|escape}</small>{/if}
+                          </td>
+                          <td><small>{$item.received|date_format:"%d.%m.%Y %H:%M"}</small></td>
+                        </tr>
+                      {/foreach}
+                    </tbody>
+                  </table>
+                </div>
+              {/if}
+            {else}
+              <div class="p-4 text-center text-muted">
+                <i class="fa-solid fa-circle-check text-success fa-2x mb-2"></i>
+                <p class="mb-0">Všechny typy událostí mají přiřazené platné ikony a nastavení.</p>
+              </div>
+            {/if}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Flow Log & Ads -->
+      <div class="col-lg-6">
+
+        <!-- Import / Ingest Flow Log Card -->
+        <div class="card card-info card-outline">
+          <div class="card-header">
+            <h3 class="card-title text-info">
+              <i class="fa-regular fa-mailbox-flag-up mr-2"></i>
+              Historie běhů e-mailového importu (Cron)
+            </h3>
+          </div>
+          <div class="card-body p-0">
+            {if $import_logs}
+              <div class="table-responsive">
+                <table class="table table-hover text-nowrap mb-0">
+                  <thead>
+                    <tr>
+                      <th>Spuštěno</th>
+                      <th>Zpracováno e-mailů</th>
+                      <th>Vytvořeno výjezdů</th>
+                      <th>Trvání</th>
+                      <th>Stav</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {foreach from=$import_logs item=log}
+                      <tr>
+                        <td><small>{$log.started_at|date_format:"%d.%m.%Y %H:%M:%S"}</small></td>
+                        <td class="text-center font-weight-bold">{$log.emails_processed}</td>
+                        <td class="text-center text-success font-weight-bold">{$log.dispatches_created}</td>
+                        <td>{$log.duration}s</td>
+                        <td>
+                          {if $log.status == 'success'}
+                            <span class="badge bg-success"><i class="fa-solid fa-check mr-1"></i> Ok</span>
+                          {else}
+                            <span class="badge bg-danger"><i class="fa-solid fa-xmark mr-1"></i> Chyba</span>
+                          {/if}
+                        </td>
+                      </tr>
+                    {/foreach}
+                  </tbody>
+                </table>
+              </div>
+            {else}
+              <div class="p-4 text-center text-muted">
+                <i class="fa-solid fa-triangle-exclamation text-warning fa-2x mb-2"></i>
+                <p class="mb-0">V databázi chybí záznamy o spuštění e-mailového parseru.</p>
+                <small class="text-muted">Zkontrolujte konfiguraci cron úloh na serveru.</small>
+              </div>
+            {/if}
+          </div>
+        </div>
+
+        <!-- Ads Campaign Statistics Card -->
+        <div class="card card-success card-outline">
+          <div class="card-header">
+            <h3 class="card-title text-success">
+              <i class="fa-regular fa-billboard mr-2"></i>
+              Přehled reklamních kampaní
+            </h3>
+          </div>
+          <div class="card-body p-0">
+            {if $ad_campaigns}
+              <div class="table-responsive">
+                <table class="table table-hover text-nowrap mb-0">
+                  <thead>
+                    <tr>
+                      <th>Kampaň / Inzerent</th>
+                      <th>Stav</th>
+                      <th class="text-right">Zobrazení</th>
+                      <th class="text-right">Prokliků</th>
+                      <th class="text-right">CTR</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {foreach from=$ad_campaigns item=ad}
+                      <tr>
+                        <td>
+                          <a href="{$BASE_URL}/{#ads_url#}/{$ad.id}"><strong>{$ad.title|escape}</strong></a><br/>
+                          <small class="text-muted">{$ad.advertiser_name|escape}</small>
+                        </td>
+                        <td>
+                          {if $ad.status == 'active'}
+                            <span class="badge bg-success">Aktivní</span>
+                          {else}
+                            <span class="badge bg-secondary">Neaktivní</span>
+                          {/if}
+                        </td>
+                        <td class="text-right monospace">{$ad.display_count_total}</td>
+                        <td class="text-right monospace">{$ad.link_count_total}</td>
+                        <td class="text-right monospace text-success font-weight-bold">
+                          {if $ad.display_count_total > 0}
+                            {math equation="(x / y) * 100" x=$ad.link_count_total y=$ad.display_count_total format="%.2f"}%
+                          {else}
+                            0.00%
+                          {/if}
+                        </td>
+                      </tr>
+                    {/foreach}
+                  </tbody>
+                </table>
+              </div>
+            {else}
+              <div class="p-4 text-center text-muted">
+                <i class="fa-regular fa-folder-open fa-2x mb-2"></i>
+                <p class="mb-0">Nebyly nalezeny žádné reklamní kampaně.</p>
+              </div>
+            {/if}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </div>
 
-<div class="modal fade" id="reservation_modal" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Rezervace</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div id="reservation_modal_content"></div>
-      </div>
-      <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
-      </div> -->
-    </div>
-  </div>
-</div>
-
-{include file="inc.footer.html" charts=true footer_append=$smarty.capture.chart_dashboard_inout} {*include
-file="inc.footer.html"*}
+{include file="inc.footer.html"}
