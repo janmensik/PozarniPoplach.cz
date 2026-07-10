@@ -47,7 +47,7 @@
           <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
           </li>
-          <li class="nav-item d-flex align-items-center">
+          <li class="nav-item d-none d-sm-flex align-items-center">
             <a href="{$BASE_URL}" class="nav-link d-flex align-items-center py-0">
               <!-- <img src="{$BASE_URL}/{#APP_BRAND_LOGO#}" alt="" height="32" class="mr-2" /> -->
               <span class="brand-text-top">{#APP_NAME#}</span>
@@ -60,8 +60,7 @@
         <!-- SEARCH FORM -->
         <form action="{$BASE_URL}/{#reservations_url#}" class="form-inline ml-3">
           <div class="input-group input-group-sm">
-            <!-- <input class="form-control form-control-navbar" name="q" type="search" placeholder="Rezervace #" value="{$FILTERS.q|escape}" aria-label="Číslo rezervace" /> -->
-             <input class="form-control form-control-navbar" name="q" type="search" placeholder="Hledání" value="{$FILTERS.q|escape}" aria-label="Vyhledávání v rezervacích" />
+            <input class="form-control form-control-navbar" name="q" type="search" placeholder="Hledání" value="{$FILTERS.q|escape}" aria-label="Vyhledávání v rezervacích" />
             <div class="input-group-append">
               <button class="btn btn-navbar" type="submit">
                 <i class="fas fa-search"></i>
@@ -76,9 +75,14 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="userDropdown">
-              {if $USER.name} {$USER.name|escape} {else}
-              <i class="fas fa-user-circle"></i>
-              {/if}
+              <span class="d-none d-sm-inline">
+                {if $USER.name} {$USER.name|escape} {else}
+                <i class="fas fa-user-circle"></i>
+                {/if}
+              </span>
+              <span class="d-inline d-sm-none">
+                <i class="fas fa-user"></i>
+              </span>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" aria-labelledby="userDropdown">
               <span class="dropdown-item dropdown-header">
