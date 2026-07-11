@@ -190,4 +190,26 @@ class Ad extends Modul {
 
         return $errors;
     }
+
+    public function getAdTotals(): array {
+        return $this->DB->getRow($this->DB->query(
+            "SELECT IFNULL(SUM(display_count), 0) AS total_views, IFNULL(SUM(link_count), 0) AS total_clicks FROM advert_hit",
+            __METHOD__
+        )) ?: [];
+    }
+
+    public function getActiveReport(): array {
+        return $this->DB->getAllRows($this->DB->query(
+            "SELECT ad.id, ad.title, ad.status, adc.name AS advertiser_name, 
+                    IFNULL(SUM(adh.display_count), 0) AS display_count_total, 
+                    IFNULL(SUM(adh.link_count), 0) AS link_count_total
+             FROM advert ad 
+             JOIN advertiser adc ON ad.advertiser_id = adc.id 
+             LEFT JOIN advert_hit adh ON ad.id = adh.advert_id 
+             WHERE ad.status = 'active'
+             GROUP BY ad.id
+             ORDER BY display_count_total DESC",
+            __METHOD__
+        )) ?: [];
+    }
 }

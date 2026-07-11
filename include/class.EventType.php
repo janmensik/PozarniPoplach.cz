@@ -52,4 +52,10 @@ class EventType extends Modul {
 
         return $errors;
     }
+
+    public function getMissingIcons(): array {
+        return $this->DB->getAllRows($this->DB->query("
+            SELECT id, name, icon FROM event_type WHERE icon IS NULL OR icon = ''
+        ", __METHOD__)) ?: [];
+    }
 }

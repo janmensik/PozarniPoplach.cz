@@ -932,4 +932,34 @@ class Dispatch extends Modul {
 
         return false;
     }
+
+    public function getStats(): array {
+        return [
+            'total' => (int)$this->DB->getResult($this->DB->query("SELECT COUNT(*) FROM dispatch", __METHOD__)),
+            'last_7d' => (int)$this->DB->getResult($this->DB->query("SELECT COUNT(*) FROM dispatch WHERE received >= NOW() - INTERVAL 7 DAY", __METHOD__)),
+            'last_30d' => (int)$this->DB->getResult($this->DB->query("SELECT COUNT(*) FROM dispatch WHERE received >= NOW() - INTERVAL 30 DAY", __METHOD__)),
+        ];
+    }
+
+    public function getUnregisteredVehicles(): array {
+        return $this->DB->getAllRows($this->DB->query("
+            SELECT d.id AS dispatch_id, d.event, d.received, UNIX_TIMESTAMP(d.received) AS received_ts, duv.fullname AS parsed_car_name, u.fullname AS unit_name, u.id AS unit_id
+            FROM dispatch_unit_vehicle duv
+            JOIN dispatch d ON duv.dispatch_id = d.id
+            JOIN unit u ON d.unit_id = u.id
+            WHERE duv.unit_vehicle_id IS NULL
+            ORDER BY d.received DESC
+        ", __METHOD__)) ?: [];
+    }
+
+    public function getDispatchesWithBadEvents(): array {
+        return $this->DB->getAllRows($this->DB->query("
+            SELECT d.id AS dispatch_id, d.event, d.event_subtype, d.received, UNIX_TIMESTAMP(d.received) AS received_ts, u.fullname AS unit_name, u.id AS unit_id
+            FROM dispatch d
+            LEFT JOIN event_type et ON d.event_id = et.id
+            LEFT JOIN unit u ON d.unit_id = u.id
+            WHERE d.event_id IS NULL OR et.icon IS NULL OR et.icon = ''
+            ORDER BY d.received DESC
+        ", __METHOD__)) ?: [];
+    }
 }

@@ -19,7 +19,7 @@ beforeEach(function () {
         'DEFAULT_ITEMS_PER_PAGE_DOTS' => 3
     ]);
     $this->appd->setData('CONFIG', [
-        'import-log_url' => 'import-log'
+        'import_log_url' => 'import-log'
     ]);
 
     // Mock User
