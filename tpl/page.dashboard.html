@@ -219,7 +219,7 @@
                     <tr>
                       <th>Den</th>
                       <th class="text-center">Spuštění</th>
-                      <th class="text-center">Ok / Chyba</th>
+                      <th class="text-center">Chyba</th>
                       <th class="text-right">E-maily</th>
                       <th class="text-right">Výjezdy</th>
                       <th class="text-right">Ø čas</th>
@@ -228,17 +228,19 @@
                   </thead>
                   <tbody>
                     {foreach from=$import_logs item=log}
-                      <tr{if $log.error_runs > 0} class="table-danger"{/if}>
-                        <td><strong>{$log.day|date_format:"%d.%m.%Y"}</strong></td>
+                      <tr>
+                        <td>{$log.day|date_format:"%d.%m.%Y"}</td>
                         <td class="text-center">
                           <span class="badge badge-secondary">{$log.total_runs}×</span>
                         </td>
                         <td class="text-center">
-                          {if $log.success_runs > 0}
+                          {*if $log.success_runs > 0}
                             <span class="badge bg-success mr-1"><i class="fa-solid fa-check mr-1"></i>{$log.success_runs}</span>
-                          {/if}
+                          {/if*}
                           {if $log.error_runs > 0}
                             <span class="badge bg-danger"><i class="fa-solid fa-xmark mr-1"></i>{$log.error_runs}</span>
+                          {else}
+                            &nbsp;
                           {/if}
                         </td>
                         <td class="text-right font-weight-bold">{$log.emails_processed}</td>
