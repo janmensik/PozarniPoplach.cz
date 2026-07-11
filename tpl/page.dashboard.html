@@ -227,7 +227,7 @@
                   <tbody>
                     {foreach from=$import_logs item=log}
                       <tr>
-                        <td class="text-right"><small>{$log.started_at|date_format:"%d.%m.%Y %H:%M:%S"}</small></td>
+                        <td class="text-right"><small>{$log.started_at_ts|date_format:"%d.%m.%Y %H:%M:%S"}</small></td>
                         <td class="text-right font-weight-bold">{$log.emails_processed}</td>
                         <td class="text-right text-success font-weight-bold">{$log.dispatches_created}</td>
                         <td class="text-right">{$log.duration}s</td>

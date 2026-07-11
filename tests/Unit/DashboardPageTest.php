@@ -36,7 +36,15 @@ test('dashboard.php sets PAGE to dashboard', function () {
 
     $this->db->method('getResult')->willReturn(0);
     $this->db->method('getAllRows')->willReturn([]);
-    $this->db->method('getRow')->willReturn(['total_views' => 0, 'total_clicks' => 0]);
+    // Each getRow() call in the dashboard flow consumes the next entry:
+    // 1. Dispatch::getStats, 2. ImportLog::getStats,
+    // 3. ImportLog::get() while → false, 4. EventType::get() while → false,
+    // 5. Ad::getAdTotals get() while → false, 6. Ad::getActiveReport get() while → false.
+    $this->db->method('getRow')->willReturnOnConsecutiveCalls(
+        ['total' => 0, 'last_7d' => 0, 'last_30d' => 0],
+        ['total_runs' => 0, 'success_runs' => 0, 'error_runs' => 0, 'emails_processed' => 0, 'dispatches_created' => 0],
+        false, false, false, false, false, false, false, false
+    );
 
     $DB = $this->db;
     $User = $this->user;
@@ -73,7 +81,11 @@ test('dashboard.php calls Smarty assign when permission granted', function () {
 
     $this->db->method('getResult')->willReturn(0);
     $this->db->method('getAllRows')->willReturn([]);
-    $this->db->method('getRow')->willReturn(['total_views' => 0, 'total_clicks' => 0]);
+    $this->db->method('getRow')->willReturnOnConsecutiveCalls(
+        ['total' => 0, 'last_7d' => 0, 'last_30d' => 0],
+        ['total_runs' => 0, 'success_runs' => 0, 'error_runs' => 0, 'emails_processed' => 0, 'dispatches_created' => 0],
+        false, false, false, false, false, false, false, false
+    );
 
     $DB = $this->db;
     $User = $this->user;

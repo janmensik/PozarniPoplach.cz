@@ -19,19 +19,26 @@ class ImportLog extends Modul {
     }
 
     public function getStats(): array {
+        $row = $this->DB->getRow($this->DB->query("
+            SELECT
+                COUNT(*)                                    AS total_runs,
+                SUM(IF(status = 'success', 1, 0))          AS success_runs,
+                SUM(IF(status = 'error',   1, 0))          AS error_runs,
+                IFNULL(SUM(emails_processed), 0)           AS emails_processed,
+                IFNULL(SUM(dispatches_created), 0)         AS dispatches_created
+            FROM import_log
+        ", __METHOD__)) ?: [];
+
         return [
-            'total_runs' => (int)$this->DB->getResult($this->DB->query("SELECT COUNT(*) FROM import_log", __METHOD__)),
-            'success_runs' => (int)$this->DB->getResult($this->DB->query("SELECT COUNT(*) FROM import_log WHERE status = 'success'", __METHOD__)),
-            'error_runs' => (int)$this->DB->getResult($this->DB->query("SELECT COUNT(*) FROM import_log WHERE status = 'error'", __METHOD__)),
-            'emails_processed' => (int)$this->DB->getResult($this->DB->query("SELECT IFNULL(SUM(emails_processed), 0) FROM import_log", __METHOD__)),
-            'dispatches_created' => (int)$this->DB->getResult($this->DB->query("SELECT IFNULL(SUM(dispatches_created), 0) FROM import_log", __METHOD__)),
+            'total_runs'        => (int)($row['total_runs']        ?? 0),
+            'success_runs'      => (int)($row['success_runs']      ?? 0),
+            'error_runs'        => (int)($row['error_runs']        ?? 0),
+            'emails_processed'  => (int)($row['emails_processed']  ?? 0),
+            'dispatches_created'=> (int)($row['dispatches_created']?? 0),
         ];
     }
 
     public function getRecentLogs(int $limit = 5): array {
-        return $this->DB->getAllRows($this->DB->query(
-            "SELECT *, UNIX_TIMESTAMP(started_at) AS started_at_ts, UNIX_TIMESTAMP(finished_at) AS finished_at_ts FROM import_log ORDER BY started_at DESC LIMIT " . intval($limit),
-            __METHOD__
-        )) ?: [];
+        return $this->get(null, null, $limit) ?: [];
     }
 }

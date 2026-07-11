@@ -192,24 +192,15 @@ class Ad extends Modul {
     }
 
     public function getAdTotals(): array {
-        return $this->DB->getRow($this->DB->query(
-            "SELECT IFNULL(SUM(display_count), 0) AS total_views, IFNULL(SUM(link_count), 0) AS total_clicks FROM advert_hit",
-            __METHOD__
-        )) ?: [];
+        $rows = $this->get() ?: [];
+        return [
+            'total_views'  => array_sum(array_column($rows, 'display_count_total')),
+            'total_clicks' => array_sum(array_column($rows, 'link_count_total')),
+        ];
     }
 
     public function getActiveReport(): array {
-        return $this->DB->getAllRows($this->DB->query(
-            "SELECT ad.id, ad.title, ad.status, adc.name AS advertiser_name, 
-                    IFNULL(SUM(adh.display_count), 0) AS display_count_total, 
-                    IFNULL(SUM(adh.link_count), 0) AS link_count_total
-             FROM advert ad 
-             JOIN advertiser adc ON ad.advertiser_id = adc.id 
-             LEFT JOIN advert_hit adh ON ad.id = adh.advert_id 
-             WHERE ad.status = 'active'
-             GROUP BY ad.id
-             ORDER BY display_count_total DESC",
-            __METHOD__
-        )) ?: [];
+        // Column 10 = display_count_total → -10 means ORDER BY 10 DESC.
+        return $this->get("ad.status = 'active'", -10) ?: [];
     }
 }

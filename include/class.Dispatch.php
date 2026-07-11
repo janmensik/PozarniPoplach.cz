@@ -934,10 +934,18 @@ class Dispatch extends Modul {
     }
 
     public function getStats(): array {
+        $row = $this->DB->getRow($this->DB->query("
+            SELECT
+                COUNT(*)                                                        AS total,
+                SUM(IF(received >= NOW() - INTERVAL 7 DAY,  1, 0))             AS last_7d,
+                SUM(IF(received >= NOW() - INTERVAL 30 DAY, 1, 0))             AS last_30d
+            FROM dispatch
+        ", __METHOD__)) ?: [];
+
         return [
-            'total' => (int)$this->DB->getResult($this->DB->query("SELECT COUNT(*) FROM dispatch", __METHOD__)),
-            'last_7d' => (int)$this->DB->getResult($this->DB->query("SELECT COUNT(*) FROM dispatch WHERE received >= NOW() - INTERVAL 7 DAY", __METHOD__)),
-            'last_30d' => (int)$this->DB->getResult($this->DB->query("SELECT COUNT(*) FROM dispatch WHERE received >= NOW() - INTERVAL 30 DAY", __METHOD__)),
+            'total'   => (int)($row['total']   ?? 0),
+            'last_7d' => (int)($row['last_7d'] ?? 0),
+            'last_30d'=> (int)($row['last_30d']?? 0),
         ];
     }
 
