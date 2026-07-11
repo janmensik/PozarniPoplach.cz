@@ -212,10 +212,17 @@
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a href="{$BASE_URL}/{#mail_schedule_url#}" class="nav-link{if $PAGE=='mail-schedule'} active{/if}">
                       <i class="nav-icon {#mail_schedule_icon#}"></i>
                       <p>{#mail_schedule_title#}</p>
+                    </a>
+                  </li> -->
+
+                  <li class="nav-item">
+                    <a href="{$BASE_URL}/{#import_log_url#}" class="nav-link{if $PAGE=='import-log'} active{/if}">
+                      <i class="nav-icon {#import_log_icon#}"></i>
+                      <p>{#import_log_title#}</p>
                     </a>
                   </li>
                 </ul>

@@ -1,0 +1,79 @@
+{include file="inc.header.html" title=#import_log_title#}
+
+{include file="inc.page-breadcrumb.html"
+  page_icon=#import_log_icon#
+  page_title=#import_log_title#
+  page_b1_title=#import_log_title#
+}
+
+{if $data}
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- row table -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">{#import_log_title#}</h3>
+
+              <div class="card-tools">
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-head-fixed text-nowrap">
+                <thead>
+                  <tr>
+                    {include file="inc.activetabletitle.html" key=1 value="ID"}
+                    {include file="inc.activetabletitle.html" key=2 value="Spuštěno"}
+                    {include file="inc.activetabletitle.html" key=3 value="Dokončeno"}
+                    {include file="inc.activetabletitle.html" key=4 value="Trvání" th_class="text-right"}
+                    {include file="inc.activetabletitle.html" key=5 value="E-maily" th_class="text-center"}
+                    {include file="inc.activetabletitle.html" key=6 value="Vytvořeno výjezdů" th_class="text-center"}
+                    {include file="inc.activetabletitle.html" key=7 value="Stav"}
+                  </tr>
+                </thead>
+                <tbody>
+                  {foreach from=$data item=item}
+                    <tr>
+                      <td><code>#{$item.id}</code></td>
+                      <td>
+                        {$item.started_at_ts|date_format:'j. n. Y H:i:s'}
+                      </td>
+                      <td>
+                        {if $item.finished_at_ts}
+                          {$item.finished_at_ts|date_format:'j. n. Y H:i:s'}
+                        {else}
+                          <span class="text-muted">-</span>
+                        {/if}
+                      </td>
+                      <td class="text-right">{$item.duration|escape}s</td>
+                      <td class="text-center font-weight-bold">{$item.emails_processed|escape}</td>
+                      <td class="text-center text-success font-weight-bold">{$item.dispatches_created|escape}</td>
+                      <td>
+                        {if $item.status == 'success'}
+                          <span class="badge bg-success"><i class="fa-solid fa-check mr-1"></i> Ok</span>
+                        {else}
+                          <span class="badge bg-danger"><i class="fa-solid fa-xmark mr-1"></i> Chyba</span>
+                        {/if}
+                      </td>
+                    </tr>
+                  {/foreach}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+            {include file="inc.pagination.html" pagination=$pagination show_total=true}
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+      <!-- /.row -->
+    </div>
+  </section>
+{elseif $ERROR=='403'}
+  {include file="inc.403.html"}
+{/if}
+
+{include file="inc.footer.html"}

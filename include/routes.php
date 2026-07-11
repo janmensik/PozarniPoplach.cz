@@ -200,6 +200,11 @@ $router->get('/' . $APPD->data['CONFIG']['mail_schedule_url'], function () use (
     include('./view/page/mail-schedule.php');
 });
 
+# import log - list
+$router->get('/' . $APPD->data['CONFIG']['import_log_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
+    include('./view/page/import-log.php');
+});
+
 # *******************************************************************
 
 # index (dashboard)
