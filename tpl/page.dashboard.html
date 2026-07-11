@@ -4,7 +4,7 @@
 <!-- Main content -->
 <div class="content">
   <div class="container-fluid">
-    
+
     <!-- Top Statistics Row -->
     <div class="row">
       <!-- Total Dispatches Box -->
@@ -86,7 +86,7 @@
     <div class="row">
       <!-- Left Column: Alerts & Mappings -->
       <div class="col-lg-6">
-        
+
         <!-- Unregistered Vehicles Warning Card -->
         <div class="card card-warning card-outline">
           <div class="card-header">
@@ -104,8 +104,7 @@
                     <tr>
                       <th>Výjezd ID</th>
                       <th>Jednotka</th>
-                      <th>Detekovaný název vozidla</th>
-                      <th>Čas výjezdu</th>
+                      <th>Vozidlo</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -120,7 +119,6 @@
                           <a href="{$BASE_URL}/{#units_url#}/{$item.unit_id}">{$item.unit_name|escape}</a>
                         </td>
                         <td><span class="badge badge-danger">{$item.parsed_car_name|escape}</span></td>
-                        <td><small>{$item.received|date_format:"%d.%m.%Y %H:%M"}</small></td>
                       </tr>
                     {/foreach}
                   </tbody>
@@ -208,10 +206,10 @@
         <!-- Import / Ingest Flow Log Card -->
         <div class="card card-info card-outline">
           <div class="card-header">
-            <h3 class="card-title text-info">
-              <i class="fa-regular fa-mailbox-flag-up mr-2"></i>
-              Historie běhů e-mailového importu (Cron)
-            </h3>
+            <h3 class="card-title text-info"><a href="{$BASE_URL}/{#import_log_url#}" class="text-info">
+              <i class="{#import_log_icon#} mr-2"></i>
+              Import výjezdů
+            </a></h3>
           </div>
           <div class="card-body p-0">
             {if $import_logs}
@@ -219,20 +217,20 @@
                 <table class="table table-hover text-nowrap mb-0">
                   <thead>
                     <tr>
-                      <th>Spuštěno</th>
-                      <th>Zpracováno e-mailů</th>
-                      <th>Vytvořeno výjezdů</th>
-                      <th>Trvání</th>
+                      <th class="text-right">Spuštěno</th>
+                      <th class="text-right">E-mailů</th>
+                      <th class="text-right">Výjezdů</th>
+                      <th class="text-right">Trvání</th>
                       <th>Stav</th>
                     </tr>
                   </thead>
                   <tbody>
                     {foreach from=$import_logs item=log}
                       <tr>
-                        <td><small>{$log.started_at|date_format:"%d.%m.%Y %H:%M:%S"}</small></td>
-                        <td class="text-center font-weight-bold">{$log.emails_processed}</td>
-                        <td class="text-center text-success font-weight-bold">{$log.dispatches_created}</td>
-                        <td>{$log.duration}s</td>
+                        <td class="text-right"><small>{$log.started_at|date_format:"%d.%m.%Y %H:%M:%S"}</small></td>
+                        <td class="text-right font-weight-bold">{$log.emails_processed}</td>
+                        <td class="text-right text-success font-weight-bold">{$log.dispatches_created}</td>
+                        <td class="text-right">{$log.duration}s</td>
                         <td>
                           {if $log.status == 'success'}
                             <span class="badge bg-success"><i class="fa-solid fa-check mr-1"></i> Ok</span>
@@ -258,10 +256,10 @@
         <!-- Ads Campaign Statistics Card -->
         <div class="card card-success card-outline">
           <div class="card-header">
-            <h3 class="card-title text-success">
+            <h3 class="card-title text-success"><a href="{$BASE_URL}/{#ads_url#}" class="text-success">
               <i class="fa-regular fa-billboard mr-2"></i>
-              Přehled reklamních kampaní
-            </h3>
+              Reklamní kampaně (běžící)
+            </a></h3>
           </div>
           <div class="card-body p-0">
             {if $ad_campaigns}
@@ -279,10 +277,10 @@
                   <tbody>
                     {foreach from=$ad_campaigns item=ad}
                       <tr>
-                        <td>
+                        <td><small>
                           <a href="{$BASE_URL}/{#ads_url#}/{$ad.id}"><strong>{$ad.title|escape}</strong></a><br/>
-                          <small class="text-muted">{$ad.advertiser_name|escape}</small>
-                        </td>
+                          <span class="text-muted">{$ad.advertiser_name|escape}</span>
+                        </small></td>
                         <td>
                           {if $ad.status == 'active'}
                             <span class="badge bg-success">Aktivní</span>

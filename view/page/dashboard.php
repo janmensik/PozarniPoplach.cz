@@ -91,12 +91,13 @@ if ($ad_totals['total_views'] > 0) {
 }
 
 $ad_campaigns = $DB->getAllRows($DB->query("
-    SELECT ad.id, ad.title, ad.status, adc.name AS advertiser_name, 
-           IFNULL(SUM(adh.display_count), 0) AS display_count_total, 
+    SELECT ad.id, ad.title, ad.status, adc.name AS advertiser_name,
+           IFNULL(SUM(adh.display_count), 0) AS display_count_total,
            IFNULL(SUM(adh.link_count), 0) AS link_count_total
-    FROM advert ad 
-    JOIN advertiser adc ON ad.advertiser_id = adc.id 
-    LEFT JOIN advert_hit adh ON ad.id = adh.advert_id 
+    FROM advert ad
+    JOIN advertiser adc ON ad.advertiser_id = adc.id
+    LEFT JOIN advert_hit adh ON ad.id = adh.advert_id
+    WHERE ad.status = 'active'
     GROUP BY ad.id
     ORDER BY display_count_total DESC
 ", __METHOD__));
