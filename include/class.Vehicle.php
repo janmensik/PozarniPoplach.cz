@@ -5,7 +5,8 @@ namespace PozarniPoplach;
 use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 
-class Vehicle extends Modul {
+class Vehicle extends Modul
+{
     protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS uv.id, uv.unit_id, uv.vehicle_type_id, uv.callsign, uv.name, ut.fullname AS unit_fullname, vt.type AS vehicle_type, vt.code AS vehicle_type_code, vt.icon AS vehicle_type_icon FROM unit_vehicle uv JOIN unit ut ON uv.unit_id = ut.id JOIN vehicle_type vt ON uv.vehicle_type_id = vt.id WHERE 1 GROUP BY uv.id'; # zaklad SQL dotazu
     protected ?string $sql_update = 'UPDATE unit_vehicle uv'; # zaklad SQL dotazu - UPDATE
     protected ?string $sql_insert = 'INSERT INTO unit_vehicle uv'; # zaklad SQL dotazu - INSERT
@@ -23,12 +24,14 @@ class Vehicle extends Modul {
     ];
 
     # ...................................................................
-    public function __construct(Database &$database) {
+    public function __construct(Database &$database)
+    {
         parent::__construct($database);
     }
 
     # ...................................................................
-    public function validate(): array {
+    public function validate(): array
+    {
         $errors = [];
 
         # callsign
@@ -55,7 +58,8 @@ class Vehicle extends Modul {
     }
 
     # ...................................................................
-    public function delete(int $id): bool {
+    public function delete(int $id): bool
+    {
         if ($this->DB->query('DELETE FROM unit_vehicles WHERE id = "' . (int) $id . '";')) {
             return true;
         }

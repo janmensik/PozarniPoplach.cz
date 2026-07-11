@@ -2,7 +2,8 @@
 
 namespace PozarniPoplach {
     if (!function_exists('PozarniPoplach\mysqli_real_escape_string')) {
-        function mysqli_real_escape_string($mysqli, $string) {
+        function mysqli_real_escape_string($mysqli, $string)
+        {
             return addslashes($string ?? '');
         }
     }

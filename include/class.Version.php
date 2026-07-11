@@ -2,13 +2,15 @@
 
 namespace PozarniPoplach;
 
-class Version {
+class Version
+{
     protected $filename = './CHANGELOG.md';
     public $versions = array();
 
     # ...................................................................
     # KONSTRUKTOR
-    public function __construct(?string $filename = null) {
+    public function __construct(?string $filename = null)
+    {
         if ($filename) {
             $this->filename = $filename;
         }
@@ -18,7 +20,8 @@ class Version {
     }
 
     # ...................................................................
-    public function load(): bool {
+    public function load(): bool
+    {
         if (!file_exists($this->filename)) {
             return false;
         }
@@ -78,7 +81,8 @@ class Version {
     }
 
     # ...................................................................
-    public function getCurrentVersion(): string {
+    public function getCurrentVersion(): string
+    {
         if (empty($this->versions)) {
             return '0.0.0';
         }

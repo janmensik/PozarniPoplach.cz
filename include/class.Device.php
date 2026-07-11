@@ -5,7 +5,8 @@ namespace PozarniPoplach;
 use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 
-class Device extends Modul {
+class Device extends Modul
+{
     protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS dev.id, dev.device_uuid, dev.device_name, dev.last_seen,  UNIX_TIMESTAMP(dev.last_seen) AS last_seen_ts, dev.created_at, UNIX_TIMESTAMP(dev.created_at) AS created_at_ts, dev.ad_probability, dev.ad_sticky_duration, ut.fullname AS unit_fullname, ut.calendar_url AS unit_calendar_url, dev.calendar_show FROM alarm_device_authorized dev JOIN unit ut ON dev.unit_id = ut.id WHERE 1 GROUP BY dev.id'; # zaklad SQL dotazu
     protected ?string $sql_update = 'UPDATE alarm_device_authorized dev'; # zaklad SQL dotazu - UPDATE
     protected ?string $sql_insert = 'INSERT INTO alarm_device_authorized dev'; # zaklad SQL dotazu - INSERT
@@ -23,12 +24,14 @@ class Device extends Modul {
     ];
 
     # ...................................................................
-    public function __construct(Database &$database) {
+    public function __construct(Database &$database)
+    {
         parent::__construct($database);
     }
 
     # ...................................................................
-    public function validate(): array {
+    public function validate(): array
+    {
         $errors = [];
 
         # device_name
@@ -55,7 +58,8 @@ class Device extends Modul {
     }
 
     # ...................................................................
-    public function delete(int $id): bool {
+    public function delete(int $id): bool
+    {
         if ($this->DB->query('DELETE FROM alarm_device_authorized WHERE id = "' . (int) $id . '";')) {
             return true;
         }

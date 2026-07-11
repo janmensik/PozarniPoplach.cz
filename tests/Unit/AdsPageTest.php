@@ -38,7 +38,8 @@ beforeEach(function () {
 
     // We need to define some functions that might be called
     if (!function_exists('pagination')) {
-        function pagination($a, $b, $c, $d) {
+        function pagination($a, $b, $c, $d)
+        {
             return [];
         }
     }

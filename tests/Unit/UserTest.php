@@ -7,15 +7,18 @@ use Janmensik\Jmlib\Database;
 use Casbin\Enforcer;
 
 // Subclass to bypass mysqli dependencies in unit tests
-class UserTestable extends User {
-    public function sanitize($value = null, $type = 'text', $required = false, $extra_data = null) {
+class UserTestable extends User
+{
+    public function sanitize($value = null, $type = 'text', $required = false, $extra_data = null)
+    {
         return $value;
     }
 
     /**
      * Overridden to avoid mysqli_real_escape_string during unit tests
      */
-    public function setter(?int $int = null): bool|int {
+    public function setter(?int $int = null): bool|int
+    {
         $set = [];
         foreach ($this->elements as $el) {
             if (isset($this->data[$el])) {

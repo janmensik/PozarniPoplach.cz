@@ -64,7 +64,8 @@ function something()
 }
 
 if (!function_exists('pagination')) {
-    function pagination($items_per_page, $total_items, $current_page, $dots) {
+    function pagination($items_per_page, $total_items, $current_page, $dots)
+    {
         return [];
     }
 }

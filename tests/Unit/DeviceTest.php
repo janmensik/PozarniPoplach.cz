@@ -6,15 +6,18 @@ use PozarniPoplach\Device;
 use Janmensik\Jmlib\Database;
 
 // Subclass to bypass mysqli dependencies in unit tests
-class DeviceTestable extends Device {
-    public function sanitize($value = null, $type = 'text', $required = false, $extra_data = null) {
+class DeviceTestable extends Device
+{
+    public function sanitize($value = null, $type = 'text', $required = false, $extra_data = null)
+    {
         return $value;
     }
 
     /**
      * Overridden to avoid mysqli_real_escape_string during unit tests
      */
-    public function setter(?int $int = null): bool|int {
+    public function setter(?int $int = null): bool|int
+    {
         $set = [];
         foreach ($this->elements as $el) {
             if (isset($this->data[$el])) {

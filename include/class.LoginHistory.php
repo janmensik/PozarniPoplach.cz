@@ -5,7 +5,8 @@ namespace PozarniPoplach;
 use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 
-class LoginHistory extends Modul {
+class LoginHistory extends Modul
+{
     protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS u.id, UNIX_TIMESTAMP(upr.date) AS date, INET_NTOA(upr.ip) AS ip, u.name, u.email, u.note, u.status FROM user_login upr JOIN user u ON u.id = upr.user_id'; # zaklad SQL dotazu
     protected ?string $sql_update = 'UPDATE user_login upr'; # zaklad SQL dotazu - UPDATE
     protected ?string $sql_insert = 'INSERT INTO user_login'; # zaklad SQL dotazu - INSERT
@@ -21,7 +22,8 @@ class LoginHistory extends Modul {
     );
 
     # ...................................................................
-    public function __construct(Database &$database) {
+    public function __construct(Database &$database)
+    {
         parent::__construct($database);
     }
 }

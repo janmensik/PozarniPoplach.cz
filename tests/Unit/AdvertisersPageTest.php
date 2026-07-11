@@ -37,7 +37,8 @@ beforeEach(function () {
     $GLOBALS['APPD'] = $this->appd;
 
     if (!function_exists('pagination')) {
-        function pagination($a, $b, $c, $d) {
+        function pagination($a, $b, $c, $d)
+        {
             return [];
         }
     }

@@ -6,7 +6,8 @@ use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 use Casbin\Enforcer;
 
-class User extends Modul {
+class User extends Modul
+{
     protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS u.id, u.name, u.email, u.status, u.page_schema, u.password FROM user u GROUP BY u.id'; # zaklad SQL dotazu
     protected ?string $sql_update = 'UPDATE user u'; # zaklad SQL dotazu - UPDATE
     protected ?string $sql_insert = 'INSERT INTO user'; # zaklad SQL dotazu - INSERT
@@ -47,13 +48,15 @@ class User extends Modul {
 
     # ...................................................................
     # KONSTRUKTOR
-    public function __construct(Database &$database, ?Enforcer &$casbin) {
+    public function __construct(Database &$database, ?Enforcer &$casbin)
+    {
         $this->CASBIN = &$casbin;
         return (parent::__construct($database));
     }
 
     # ...................................................................
-    public function getWithLastLogin(array|string|null $where = null, string|null $order = null, int|null $limit = null, int|null $limit_from = null): array|bool|null {
+    public function getWithLastLogin(array|string|null $where = null, string|null $order = null, int|null $limit = null, int|null $limit_from = null): array|bool|null
+    {
         $temp = $this->sql_base;
 
         $this->sql_base = str_replace('FROM user u', ', temp1.last_login, temp1.ip FROM user u', $this->sql_base);
@@ -68,12 +71,14 @@ class User extends Modul {
 
     # ...................................................................
     # vrati normalne + vsechny weby (ne deleted), atd.
-    public function getComplete(array|string|null $where = null, string|null $order = null, int|null $limit = null, int|null $limit_from = null): array|bool|null {
+    public function getComplete(array|string|null $where = null, string|null $order = null, int|null $limit = null, int|null $limit_from = null): array|bool|null
+    {
         return ($this->get($where, $order, $limit, $limit_from));
     }
 
     # ...................................................................
-    public function hasPermission(string|null $page = null, string|null $action = null): bool {
+    public function hasPermission(string|null $page = null, string|null $action = null): bool
+    {
         if (!isset($this->user['status'])) {
             return false;
         }
@@ -86,7 +91,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function generatePassword(?int $length = 8): string {
+    public function generatePassword(?int $length = 8): string
+    {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
@@ -96,12 +102,14 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function getPasswordHash(?string $password = null): string {
+    public function getPasswordHash(?string $password = null): string
+    {
         return (sha1($password));
     }
 
     # ...................................................................
-    public function verify(?string $user = null, ?string $password = null): array|bool|null {
+    public function verify(?string $user = null, ?string $password = null): array|bool|null
+    {
         $user = $this->getComplete(array($this->sql_table . '.email = "' . mysqli_real_escape_string($this->DB->db, $user) . '"', $this->sql_table . '.status NOT IN( "deleted","disabled")'), null, 1);
 
 
@@ -130,7 +138,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function verifyPermanent(?string $hash = null): int|bool|null {
+    public function verifyPermanent(?string $hash = null): int|bool|null
+    {
         $user = $this->getComplete(array('SHA1(CONCAT(' . $this->sql_table . '.id, ' . $this->sql_table . '.email, ' . $this->sql_table . '.password)) = "' . mysqli_real_escape_string($this->DB->db, $hash) . '"', $this->sql_table . '.status NOT IN("deleted","disabled")'), null, 1);
 
         if (is_array($user)) {
@@ -153,7 +162,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function getPermanentHash(?int $user_id = null): string|bool|null {
+    public function getPermanentHash(?int $user_id = null): string|bool|null
+    {
         if (!$user_id) {
             return (false);
         }
@@ -169,7 +179,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function updateLastLogin(?int $id = null, ?string $ip = null): bool {
+    public function updateLastLogin(?int $id = null, ?string $ip = null): bool
+    {
         # aktualizace posledniho prihlaseni
         $ipToUse = $ip ? $ip : getip();
 
@@ -184,7 +195,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function load(?int $user_id = null): array|bool|null {
+    public function load(?int $user_id = null): array|bool|null
+    {
         unset($this->cache);
 
         $user = $this->getComplete(array($this->sql_table . '.id = "' . ($user_id ? $user_id : $this->user['id']) . '"'), null, 1);
@@ -199,7 +211,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    private function processUser(): void {
+    private function processUser(): void
+    {
         if (isset($this->user['page_schema']) && is_string($this->user['page_schema'])) {
             $this->user['page_schema'] = @unserialize(stripslashes($this->user['page_schema']), ['allowed_classes' => false]);
         }
@@ -209,7 +222,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function validate(?int $id = null): array {
+    public function validate(?int $id = null): array
+    {
         $errors = [];
 
         # name
@@ -231,7 +245,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function set(array|false|null $set = null, array|int|null $ids = null, string|null $special = null): int|false {
+    public function set(array|false|null $set = null, array|int|null $ids = null, string|null $special = null): int|false
+    {
         # vycistim cache
         unset($this->cache);
 
@@ -246,7 +261,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function getUser(?string $what = null): array|bool|null {
+    public function getUser(?string $what = null): array|bool|null
+    {
         if (!isset($this->user)) {
             return ($what ? null : []);
         }
@@ -263,13 +279,15 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function logout(): bool {
+    public function logout(): bool
+    {
         unset($this->user);
         return (true);
     }
 
     # ...................................................................
-    public function setPageSchema(?string $page = null, ?array $data = null): array|bool|null {
+    public function setPageSchema(?string $page = null, ?array $data = null): array|bool|null
+    {
         if (!$page) {
             return (false);
         }
@@ -308,7 +326,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function clearPageSchema(?int $user_id = null): bool {
+    public function clearPageSchema(?int $user_id = null): bool
+    {
         if ((int) $user_id && !$this->user['id']) {
             return (false);
         }
@@ -319,7 +338,8 @@ class User extends Modul {
     }
 
     # ...................................................................
-    public function getPageSchema(?string $page = null): array|bool|null {
+    public function getPageSchema(?string $page = null): array|bool|null
+    {
         if (!$page) {
             return (false);
         }

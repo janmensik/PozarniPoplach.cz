@@ -6,12 +6,15 @@ use PozarniPoplach\Advertiser;
 use Janmensik\Jmlib\Database;
 
 // Subclass to bypass mysqli dependencies in unit tests
-class AdvertiserTestable extends Advertiser {
-    public function sanitize($value = null, $type = 'text', $required = false, $extra_data = null) {
+class AdvertiserTestable extends Advertiser
+{
+    public function sanitize($value = null, $type = 'text', $required = false, $extra_data = null)
+    {
         return $value;
     }
 
-    public function setter(?int $int = null): bool|int {
+    public function setter(?int $int = null): bool|int
+    {
         $set = [];
         foreach ($this->elements as $el) {
             if (isset($this->data[$el])) {

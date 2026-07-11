@@ -5,7 +5,8 @@ namespace PozarniPoplach;
 use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 
-class ImportLog extends Modul {
+class ImportLog extends Modul
+{
     protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS il.id, UNIX_TIMESTAMP(il.started_at) AS started_at_ts, UNIX_TIMESTAMP(il.finished_at) AS finished_at_ts, il.duration, il.emails_processed, il.dispatches_created, il.status FROM import_log il'; # zaklad SQL dotazu
     protected ?string $sql_update = 'UPDATE import_log il'; # zaklad SQL dotazu - UPDATE
     protected ?string $sql_insert = 'INSERT INTO import_log'; # zaklad SQL dotazu - INSERT
@@ -14,11 +15,13 @@ class ImportLog extends Modul {
     protected ?array $fulltext_columns = array('il.status');
 
     # ...................................................................
-    public function __construct(Database &$database) {
+    public function __construct(Database &$database)
+    {
         parent::__construct($database);
     }
 
-    public function getStats(): array {
+    public function getStats(): array
+    {
         $row = $this->DB->getRow($this->DB->query("
             SELECT
                 COUNT(*)                                    AS total_runs,
@@ -34,11 +37,12 @@ class ImportLog extends Modul {
             'success_runs'      => (int)($row['success_runs']      ?? 0),
             'error_runs'        => (int)($row['error_runs']        ?? 0),
             'emails_processed'  => (int)($row['emails_processed']  ?? 0),
-            'dispatches_created'=> (int)($row['dispatches_created']?? 0),
+            'dispatches_created' => (int)($row['dispatches_created'] ?? 0),
         ];
     }
 
-    public function getDailyStats(int $days = 7): array {
+    public function getDailyStats(int $days = 7): array
+    {
         return $this->DB->getAllRows($this->DB->query("
             SELECT
                 DATE(started_at)                            AS day,

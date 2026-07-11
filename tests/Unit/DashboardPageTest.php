@@ -43,7 +43,14 @@ test('dashboard.php sets PAGE to dashboard', function () {
     $this->db->method('getRow')->willReturnOnConsecutiveCalls(
         ['total' => 0, 'last_7d' => 0, 'last_30d' => 0],
         ['total_runs' => 0, 'success_runs' => 0, 'error_runs' => 0, 'emails_processed' => 0, 'dispatches_created' => 0],
-        false, false, false, false, false, false, false, false
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
     );
 
     $DB = $this->db;
@@ -84,7 +91,14 @@ test('dashboard.php calls Smarty assign when permission granted', function () {
     $this->db->method('getRow')->willReturnOnConsecutiveCalls(
         ['total' => 0, 'last_7d' => 0, 'last_30d' => 0],
         ['total_runs' => 0, 'success_runs' => 0, 'error_runs' => 0, 'emails_processed' => 0, 'dispatches_created' => 0],
-        false, false, false, false, false, false, false, false
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
     );
 
     $DB = $this->db;

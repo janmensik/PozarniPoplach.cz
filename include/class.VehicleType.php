@@ -5,7 +5,8 @@ namespace PozarniPoplach;
 use Janmensik\Jmlib\Modul;
 use Janmensik\Jmlib\Database;
 
-class VehicleType extends Modul {
+class VehicleType extends Modul
+{
     protected ?string $sql_base = 'SELECT SQL_CALC_FOUND_ROWS vt.id, vt.type, vt.code, vt.icon FROM vehicle_type vt GROUP BY vt.id'; # zaklad SQL dotazu
     protected ?string $sql_update = 'UPDATE vehicle_type vt'; # zaklad SQL dotazu - UPDATE
     protected ?string $sql_insert = 'INSERT INTO vehicle_type vt'; # zaklad SQL dotazu - INSERT
@@ -22,12 +23,14 @@ class VehicleType extends Modul {
     ];
 
     # ...................................................................
-    public function __construct(Database &$database) {
+    public function __construct(Database &$database)
+    {
         parent::__construct($database);
     }
 
     # ...................................................................
-    public function validate(): array {
+    public function validate(): array
+    {
         $errors = [];
 
         # type
