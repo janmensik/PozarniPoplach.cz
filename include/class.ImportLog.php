@@ -38,7 +38,21 @@ class ImportLog extends Modul {
         ];
     }
 
-    public function getRecentLogs(int $limit = 5): array {
-        return $this->get(null, null, $limit) ?: [];
+    public function getDailyStats(int $days = 7): array {
+        return $this->DB->getAllRows($this->DB->query("
+            SELECT
+                DATE(started_at)                            AS day,
+                COUNT(*)                                    AS total_runs,
+                SUM(IF(status = 'success', 1, 0))          AS success_runs,
+                SUM(IF(status = 'error',   1, 0))          AS error_runs,
+                IFNULL(SUM(emails_processed), 0)           AS emails_processed,
+                IFNULL(SUM(dispatches_created), 0)         AS dispatches_created,
+                ROUND(AVG(duration), 1)                    AS avg_duration,
+                MAX(duration)                              AS max_duration
+            FROM import_log
+            WHERE started_at >= NOW() - INTERVAL " . intval($days) . " DAY
+            GROUP BY DATE(started_at)
+            ORDER BY day DESC
+        ", __METHOD__)) ?: [];
     }
 }

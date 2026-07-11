@@ -54,8 +54,8 @@ $dispatch_stats = $Dispatch->getStats();
 # Ingest / Import logs stats
 $import_stats = $ImportLog->getStats();
 
-# Get last 5 import logs
-$import_logs = $ImportLog->getRecentLogs(5);
+# Get import log aggregated by day (last 7 days)
+$import_logs = $ImportLog->getDailyStats(7);
 
 # 2. Dispatches with unregistered vehicles
 $unregistered_vehicles = $Dispatch->getUnregisteredVehicles();

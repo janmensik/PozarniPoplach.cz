@@ -208,36 +208,43 @@
           <div class="card-header">
             <h3 class="card-title text-info"><a href="{$BASE_URL}/{#import_log_url#}" class="text-info">
               <i class="{#import_log_icon#} mr-2"></i>
-              Import výjezdů
+              Import výjezdů <small class="text-muted ml-1">(posledních 7 dní)</small>
             </a></h3>
           </div>
           <div class="card-body p-0">
             {if $import_logs}
               <div class="table-responsive">
-                <table class="table table-hover text-nowrap mb-0">
+                <table class="table table-hover text-nowrap mb-0 table-sm">
                   <thead>
                     <tr>
-                      <th class="text-right">Spuštěno</th>
-                      <th class="text-right">E-mailů</th>
-                      <th class="text-right">Výjezdů</th>
-                      <th class="text-right">Trvání</th>
-                      <th>Stav</th>
+                      <th>Den</th>
+                      <th class="text-center">Spuštění</th>
+                      <th class="text-center">Ok / Chyba</th>
+                      <th class="text-right">E-maily</th>
+                      <th class="text-right">Výjezdy</th>
+                      <th class="text-right">Ø čas</th>
+                      <th class="text-right">Max čas</th>
                     </tr>
                   </thead>
                   <tbody>
                     {foreach from=$import_logs item=log}
-                      <tr>
-                        <td class="text-right"><small>{$log.started_at_ts|date_format:"%d.%m.%Y %H:%M:%S"}</small></td>
-                        <td class="text-right font-weight-bold">{$log.emails_processed}</td>
-                        <td class="text-right text-success font-weight-bold">{$log.dispatches_created}</td>
-                        <td class="text-right">{$log.duration}s</td>
-                        <td>
-                          {if $log.status == 'success'}
-                            <span class="badge bg-success"><i class="fa-solid fa-check mr-1"></i> Ok</span>
-                          {else}
-                            <span class="badge bg-danger"><i class="fa-solid fa-xmark mr-1"></i> Chyba</span>
+                      <tr{if $log.error_runs > 0} class="table-danger"{/if}>
+                        <td><strong>{$log.day|date_format:"%d.%m.%Y"}</strong></td>
+                        <td class="text-center">
+                          <span class="badge badge-secondary">{$log.total_runs}×</span>
+                        </td>
+                        <td class="text-center">
+                          {if $log.success_runs > 0}
+                            <span class="badge bg-success mr-1"><i class="fa-solid fa-check mr-1"></i>{$log.success_runs}</span>
+                          {/if}
+                          {if $log.error_runs > 0}
+                            <span class="badge bg-danger"><i class="fa-solid fa-xmark mr-1"></i>{$log.error_runs}</span>
                           {/if}
                         </td>
+                        <td class="text-right font-weight-bold">{$log.emails_processed}</td>
+                        <td class="text-right text-success font-weight-bold">{$log.dispatches_created}</td>
+                        <td class="text-right text-muted"><small>{$log.avg_duration}s</small></td>
+                        <td class="text-right text-muted"><small>{$log.max_duration}s</small></td>
                       </tr>
                     {/foreach}
                   </tbody>
@@ -252,6 +259,7 @@
             {/if}
           </div>
         </div>
+
 
         <!-- Ads Campaign Statistics Card -->
         <div class="card card-success card-outline">
