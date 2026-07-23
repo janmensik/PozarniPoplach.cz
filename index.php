@@ -19,6 +19,14 @@ class_alias(\Janmensik\Jmlib\AppData::class, 'AppData');
 class_alias(\Janmensik\Jmlib\Modul::class, 'Modul');
 
 # *******************************************************************
+# HTTP SECURITY HEADERS
+# *******************************************************************
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('X-XSS-Protection: 1; mode=block');
+header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+
+# *******************************************************************
 # GLOBAL APPDATA
 # *******************************************************************
 $APPD = AppData::getInstance();
