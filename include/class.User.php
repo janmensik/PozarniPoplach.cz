@@ -214,7 +214,15 @@ class User extends Modul
     private function processUser(): void
     {
         if (isset($this->user['page_schema']) && is_string($this->user['page_schema'])) {
-            $this->user['page_schema'] = @unserialize(stripslashes($this->user['page_schema']), ['allowed_classes' => false]);
+            $raw = stripslashes($this->user['page_schema']);
+            $decoded = @json_decode($raw, true);
+            if ($decoded === null && $raw !== "null" && !empty($raw)) {
+                // If it looks like a serialized array, fall back to safe unserialize for backward compatibility
+                if (strpos($raw, 'a:') === 0) {
+                    $decoded = @unserialize($raw, ['allowed_classes' => false]);
+                }
+            }
+            $this->user['page_schema'] = $decoded;
         }
         if (!isset($this->user['page_schema']) || !is_array($this->user['page_schema'])) {
             $this->user['page_schema'] = array('global' => array(), 'pages' => array());
@@ -319,7 +327,7 @@ class User extends Modul
         }
         # ulozeni do sql
         if ($this->user['id'] && isset($save2sql)) {
-            $this->set(array('page_schema' => '"' . addslashes(serialize($this->user['page_schema'])) . '"'), $this->user['id']);
+            $this->set(array('page_schema' => '"' . addslashes(json_encode($this->user['page_schema'])) . '"'), $this->user['id']);
         }
 
         return ($data);
