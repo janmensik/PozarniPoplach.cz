@@ -32,3 +32,10 @@
 **Vulnerability:** An incomplete file upload validation in `view/page/ad-edit.php` allowed files to be uploaded based purely on their extension, leaving the system susceptible to MIME type spoofing and related upload vulnerabilities.
 **Learning:** Checking only the file extension is not sufficient, as it doesn't guarantee the file content matches. Validating the file contents (MIME type) is crucial to defend against malicious uploads.
 **Prevention:** Always use `finfo_file` (or similar file content analysis tools) alongside extension validation to ensure uploaded files genuinely correspond to the expected types, avoiding reliance on user-provided extensions or spoofable HTTP headers like `$_FILES['...']['type']`.
+
+## 2024-08-01 - [Critical] Insecure Deserialization Migrated (CWE-502)
+**Vulnerability:** A critical insecure deserialization vulnerability was found where `unserialize()` was called on untrusted data without setting `allowed_classes` to `false`. While `['allowed_classes' => false]` was previously added as a mitigation, `unserialize()` is still inherently dangerous when applied to untrusted data, as array/scalar deserialization can sometimes be manipulated or lead to resource exhaustion if an exploit gadget is discovered.
+**Learning:** `unserialize()` is inherently dangerous when applied to untrusted or potentially compromised data. Even data from caches or databases must be treated cautiously, particularly in environments susceptible to other vulnerabilities (like SQL injection or local file inclusion).
+**Prevention:**
+1. Always use `json_encode()` and `json_decode()` instead of `serialize()` and `unserialize()` when exchanging data. JSON format does not execute code upon parsing.
+2. Ensure backward compatibility by checking for `a:` or `O:` prefixes when migrating from old serialized strings, safely parsing them with `['allowed_classes' => false]` during transition, and re-saving as JSON.
