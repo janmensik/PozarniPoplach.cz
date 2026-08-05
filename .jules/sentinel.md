@@ -32,3 +32,8 @@
 **Vulnerability:** An incomplete file upload validation in `view/page/ad-edit.php` allowed files to be uploaded based purely on their extension, leaving the system susceptible to MIME type spoofing and related upload vulnerabilities.
 **Learning:** Checking only the file extension is not sufficient, as it doesn't guarantee the file content matches. Validating the file contents (MIME type) is crucial to defend against malicious uploads.
 **Prevention:** Always use `finfo_file` (or similar file content analysis tools) alongside extension validation to ensure uploaded files genuinely correspond to the expected types, avoiding reliance on user-provided extensions or spoofable HTTP headers like `$_FILES['...']['type']`.
+
+## 2023-10-27 - Fix insecure deserialization
+**Vulnerability:** A critical insecure deserialization vulnerability was found where `unserialize()` was called on untrusted data in `include/class.User.php` when deserializing user configuration from the database (`page_schema`), and in `lib/functions/function.kurzy_cnb.php` when deserializing cached currency files. If an attacker manages to tamper with this data, PHP Object Injection may lead to Remote Code Execution (RCE).
+**Learning:** `unserialize()` is inherently dangerous when applied to untrusted or potentially compromised data. We should use `json_encode()` and `json_decode()` instead. Always handle migration from serialization gracefully.
+**Prevention:** Use `json_encode()` and `json_decode()` instead of `serialize()` and `unserialize()` when persisting or exchanging data.
