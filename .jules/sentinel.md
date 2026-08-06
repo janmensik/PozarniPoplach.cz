@@ -32,3 +32,11 @@
 **Vulnerability:** An incomplete file upload validation in `view/page/ad-edit.php` allowed files to be uploaded based purely on their extension, leaving the system susceptible to MIME type spoofing and related upload vulnerabilities.
 **Learning:** Checking only the file extension is not sufficient, as it doesn't guarantee the file content matches. Validating the file contents (MIME type) is crucial to defend against malicious uploads.
 **Prevention:** Always use `finfo_file` (or similar file content analysis tools) alongside extension validation to ensure uploaded files genuinely correspond to the expected types, avoiding reliance on user-provided extensions or spoofable HTTP headers like `$_FILES['...']['type']`.
+
+## 2024-10-25 - [Medium] Insecure Deserialization Mitigation
+
+**Vulnerability:** Although the `unserialize()` call in `include/class.User.php` was somewhat mitigated by using `['allowed_classes' => false]`, keeping `unserialize()` presents unnecessary risks related to PHP's complex serialization format, especially if the data gets tampered with.
+
+**Learning:** It is always a better security practice to use `json_encode()` and `json_decode()` instead of PHP's native `serialize()` and `unserialize()` when persisting simple configuration data (like the page schema). Using a backward compatibility check (`strpos($raw, 'a:') === 0 || strpos($raw, 'O:') === 0`) allows for a smooth migration of legacy data to the new format without breaking existing user configurations.
+
+**Prevention:** Always prefer JSON for data serialization, and only use `serialize()` when absolutely necessary for complex objects (which itself should be avoided in most data persistence scenarios).
