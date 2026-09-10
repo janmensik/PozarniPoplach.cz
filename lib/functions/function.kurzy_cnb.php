@@ -13,7 +13,11 @@ function kurzy_cnb($cacheFile = './cache/kurzy_cnb.txt') {
         # soubor s cache existuje a je ještě platný
         $data = file_get_contents($cacheFile);
         if ($data) {
-            $data = unserialize($data, ['allowed_classes' => false]);
+            if (strpos($data, 'a:') === 0) {
+                $data = unserialize($data, ['allowed_classes' => false]);
+            } else {
+                $data = json_decode($data, true);
+            }
         }
       # pokud se podařilo soubor přečíst a neni v něm blbost, vratim
         if (is_array($data)) {
@@ -28,12 +32,16 @@ function kurzy_cnb($cacheFile = './cache/kurzy_cnb.txt') {
     # ulož stav do cache
     if (is_array($data)) {
         $fp = @fopen($cacheFile, 'w');
-        @fwrite($fp, serialize($data));
+        @fwrite($fp, json_encode($data));
         @fclose($fp);
     } elseif (file_exists($cacheFile)) {
         $data = file_get_contents($cacheFile);
         if ($data) {
-            $data = unserialize($data, ['allowed_classes' => false]);
+            if (strpos($data, 'a:') === 0) {
+                $data = unserialize($data, ['allowed_classes' => false]);
+            } else {
+                $data = json_decode($data, true);
+            }
         } else {
             $data = null;
         }
