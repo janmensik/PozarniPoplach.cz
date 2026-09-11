@@ -32,3 +32,9 @@
 **Vulnerability:** An incomplete file upload validation in `view/page/ad-edit.php` allowed files to be uploaded based purely on their extension, leaving the system susceptible to MIME type spoofing and related upload vulnerabilities.
 **Learning:** Checking only the file extension is not sufficient, as it doesn't guarantee the file content matches. Validating the file contents (MIME type) is crucial to defend against malicious uploads.
 **Prevention:** Always use `finfo_file` (or similar file content analysis tools) alongside extension validation to ensure uploaded files genuinely correspond to the expected types, avoiding reliance on user-provided extensions or spoofable HTTP headers like `$_FILES['...']['type']`.
+## 2024-06-27 - Safe Migration from serialize() to json_encode()
+**Vulnerability:** When replacing `unserialize()` with `json_decode()` to mitigate Insecure Deserialization, reading legacy data that was originally serialized can break the application if a fallback isn't implemented. Additionally, applying `stripslashes()` before `json_decode()` will break JSON payloads, as JSON heavily relies on backslashes.
+**Learning:** Migrating persistence mechanisms from PHP's `serialize()` to JSON requires a robust backward-compatibility layer. `stripslashes()` is only safe for `unserialize()`, but destructive to `json_decode()`.
+**Prevention:**
+1. Check the data format using string prefixes (like `a:` or `O:`) to detect legacy serialized data and process it with `unserialize()`, and only then apply legacy sanitization like `stripslashes()`.
+2. Default to `json_decode()` for everything else, without applying `stripslashes()`.
