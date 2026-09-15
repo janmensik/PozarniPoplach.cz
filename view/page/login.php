@@ -53,6 +53,7 @@ if (empty($_POST['email']) || empty($_POST['password'])) {
     }
 
     # verified
+    session_regenerate_id(true); // Prevent session fixation
     $APPD->setData('USER', $User->load($user_id));
     $_SESSION['user_id'] = $user_id;
 

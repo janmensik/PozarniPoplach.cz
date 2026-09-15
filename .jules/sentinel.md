@@ -38,3 +38,8 @@
 **Prevention:**
 1. Check the data format using string prefixes (like `a:` or `O:`) to detect legacy serialized data and process it with `unserialize()`, and only then apply legacy sanitization like `stripslashes()`.
 2. Default to `json_decode()` for everything else, without applying `stripslashes()`.
+
+## 2026-09-15 - Session Fixation Vulnerability
+**Vulnerability:** A session fixation vulnerability was found in `view/page/login.php` because `session_regenerate_id(true)` was not called upon successful user authentication. This could allow an attacker to hijack a user's session if they can pre-set the session ID.
+**Learning:** Always regenerate the session ID when a user's authentication state changes (e.g., logging in or logging out) to prevent session fixation attacks.
+**Prevention:** Add `session_regenerate_id(true)` immediately after verifying credentials and before setting session variables related to authentication.
