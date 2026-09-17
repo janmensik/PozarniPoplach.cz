@@ -80,15 +80,7 @@ class Ad extends Modul
         $expiresAt = date('Y-m-d H:i:s', time() + ($device['ad_sticky_duration'] * 60));
 
         if ($roll <= $device['ad_probability']) {
-            // Roll successful: Pick a random active ad
-            // Optimization: Fetch only IDs instead of full rows to avoid heavy hydration overhead
-            $ads = $this->DB->getAllRows($this->DB->query(
-                'SELECT id FROM advert WHERE status = "active" LIMIT 20'
-            ));
-            if (!empty($ads) && is_array($ads)) {
-                $randomAd = $ads[array_rand($ads)];
-                $newAdId = $randomAd['id'];
-            }
+            $newAdId = $this->pickRandomAdId();
         }
 
         // 4. Persist the new state
@@ -104,6 +96,21 @@ class Ad extends Modul
             return $this->getAdData($newAdId, $unitId, true); // Log hit only on the first display of the window
         }
 
+        return null;
+    }
+
+    # ...................................................................
+    /**
+     * Picks a random active ad ID. Returns null if no active ads exist.
+     */
+    private function pickRandomAdId(): int|null
+    {
+        $ads = $this->DB->getAllRows($this->DB->query(
+            'SELECT id FROM advert WHERE status = "active" LIMIT 20'
+        ));
+        if (!empty($ads) && is_array($ads)) {
+            return (int) $ads[array_rand($ads)]['id'];
+        }
         return null;
     }
 
@@ -155,16 +162,8 @@ class Ad extends Modul
     # ...................................................................
     public function getAd(int $unit_id): array|null
     {
-        # Conditions: Only Active ads
-        $where = array('ad.status="active"');
-
-        $ad = $this->getRandom($where, 8, 10, null, 1);
-
-        if (!empty($ad)) {
-            return $this->getAdData($ad[0]['id'], $unit_id, true);
-        }
-
-        return null;
+        $adId = $this->pickRandomAdId();
+        return $adId ? $this->getAdData($adId, $unit_id, true) : null;
     }
 
     # ...................................................................
