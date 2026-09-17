@@ -60,11 +60,27 @@ class Dispatch extends Modul
     /**
      * identify unit by its pincode
      * @param int|null $unit_id Unit's ID to check.
+     * @param bool $full_data Whether to fetch full relational data (vehicles).
      * @return array|null Return full dispatch data of the last dispatch for the given unit or any unit if null is provided, or null if not found.
      *
      */
-    public function getLastDispatch(int|null $unit_id = null): array|null
+    public function getLastDispatch(int|null $unit_id = null, bool $full_data = true): array|null
     {
+        if (!$full_data) {
+            // Optimization: Lightweight query to avoid massive joins and GROUP BY during high-frequency peacetime polling
+            $where_sql = 'dis.dispatched_at < NOW()';
+            if (!empty($unit_id) && (int) $unit_id) {
+                $where_sql .= ' AND dis.unit_id = "' . intval($unit_id) . '"';
+            }
+            $query = 'SELECT dis.id, UNIX_TIMESTAMP(dis.dispatched_at) AS dispatched_at_ts, u.fullname AS unit_fullname '
+                   . 'FROM dispatch dis '
+                   . 'LEFT JOIN unit u ON dis.unit_id = u.id '
+                   . 'WHERE ' . $where_sql . ' '
+                   . 'ORDER BY dis.dispatched_at DESC LIMIT 1';
+            $row = $this->DB->getRow($this->DB->query($query, __METHOD__ . ' get lightweight base dispatch'));
+            return $row ?: null;
+        }
+
         # where condition
         if (!empty($unit_id) && (int) $unit_id) {
             $where[] = 'dis.unit_id = "' . intval($unit_id) . '"';

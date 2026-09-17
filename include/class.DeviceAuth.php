@@ -40,7 +40,7 @@ class DeviceAuth extends Modul
                   VALUES ("' . mysqli_real_escape_string($this->DB->db, $deviceCode) . '",
                           "' . mysqli_real_escape_string($this->DB->db, $deviceUuid) . '",
                           "pending",
-                          "' . $expiresAt . '")';
+                          "' . mysqli_real_escape_string($this->DB->db, $expiresAt) . '")';
 
         if ($this->DB->query($query, __METHOD__)) {
             return [
@@ -99,7 +99,7 @@ class DeviceAuth extends Modul
     {
         $query = 'UPDATE alarm_device_session
                   SET status = "linked", unit_id = ' . intval($unitId) . ',
-                      device_name = "' . mysqli_real_escape_string($this->DB->db, $deviceName) . '"
+                      device_name = "' . mysqli_real_escape_string($this->DB->db, (string)$deviceName) . '"
                   WHERE device_code = "' . mysqli_real_escape_string($this->DB->db, $deviceCode) . '"
                   AND status = "pending" AND expires_at > NOW()';
 
@@ -167,20 +167,15 @@ class DeviceAuth extends Modul
      */
     public function getRequestCredentials(): array
     {
-        $headers = [];
-        foreach ($_SERVER as $name => $value) {
-            if (substr($name, 0, 5) == 'HTTP_') {
-                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-            }
-        }
-
-        $uuid = $headers['X-Device-Uuid'] ?? $_REQUEST['uuid'] ?? null;
+        // Optimization: Access required headers directly via exact keys instead of iterating over entire $_SERVER.
+        // This improves complexity from O(n) relative to $_SERVER size to O(1) and eliminates string manipulation overhead.
+        $uuid = $_SERVER['HTTP_X_DEVICE_UUID'] ?? $_GET['uuid'] ?? $_POST['uuid'] ?? $_REQUEST['uuid'] ?? null;
 
         $token = null;
-        if (isset($headers['Authorization']) && preg_match('/Bearer\s+(.*)$/i', $headers['Authorization'], $matches)) {
+        if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Bearer\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
             $token = $matches[1];
-        } elseif (isset($headers['X-Device-Token'])) {
-            $token = $headers['X-Device-Token'];
+        } elseif (isset($_SERVER['HTTP_X_DEVICE_TOKEN'])) {
+            $token = $_SERVER['HTTP_X_DEVICE_TOKEN'];
         }
 
         return [
@@ -198,15 +193,17 @@ class DeviceAuth extends Modul
      */
     public function validateDevice(string $deviceUuid, string $refreshToken): int|null
     {
-        $query = 'SELECT unit_id, refresh_token_hash FROM alarm_device_authorized
+        $query = 'SELECT unit_id, refresh_token_hash, UNIX_TIMESTAMP(last_seen) AS last_seen_ts FROM alarm_device_authorized
                   WHERE device_uuid = "' . mysqli_real_escape_string($this->DB->db, $deviceUuid) . '" LIMIT 1';
 
         $device = $this->DB->getRow($this->DB->query($query, __METHOD__));
 
         if ($device && hash_equals($device['refresh_token_hash'], hash('sha256', $refreshToken))) {
-            // Update last seen
-            $this->DB->query('UPDATE alarm_device_authorized SET last_seen = NOW()
-                              WHERE device_uuid = "' . mysqli_real_escape_string($this->DB->db, $deviceUuid) . '"');
+            // Update last seen only if it's been more than 5 minutes to reduce DB load
+            if (!isset($device['last_seen_ts']) || (time() - (int)$device['last_seen_ts']) >= 300) {
+                $this->DB->query('UPDATE alarm_device_authorized SET last_seen = NOW()
+                                  WHERE device_uuid = "' . mysqli_real_escape_string($this->DB->db, $deviceUuid) . '"');
+            }
             return (int)$device['unit_id'];
         }
 
