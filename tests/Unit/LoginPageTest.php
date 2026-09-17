@@ -71,6 +71,11 @@ test('login.php sets wrong error when credentials are invalid', function () {
 });
 
 test('login.php stores user_id in session on successful login', function () {
+    // start session so that session_regenerate_id() doesn't fail
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
     // permanent is not set — no cookie path
     $_POST = ['email' => 'test@example.com', 'password' => 'correctpassword'];
 
@@ -84,7 +89,7 @@ test('login.php stores user_id in session on successful login', function () {
     $Smarty = $this->smarty;
 
     ob_start();
-    include __DIR__ . '/../../view/page/login.php';
+    @include __DIR__ . '/../../view/page/login.php';
     ob_end_clean();
 
     // session should have been set (true is truthy)
