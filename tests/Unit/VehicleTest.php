@@ -82,7 +82,7 @@ test('Vehicle maps data from post correctly', function () {
 test('Vehicle delete calls DB query', function () {
     $this->db->expects($this->once())
              ->method('query')
-             ->with($this->stringContains('DELETE FROM unit_vehicles WHERE id = "123"'))
+             ->with($this->stringContains('DELETE FROM unit_vehicle WHERE id = 123'))
              ->willReturn(true);
 
     $result = $this->vehicle->delete(123);

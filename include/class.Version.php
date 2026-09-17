@@ -4,8 +4,8 @@ namespace PozarniPoplach;
 
 class Version
 {
-    protected $filename = './CHANGELOG.md';
-    public $versions = array();
+    protected string $filename = './CHANGELOG.md';
+    public array $versions = [];
 
     # ...................................................................
     # KONSTRUKTOR
@@ -16,7 +16,6 @@ class Version
         }
 
         $this->load();
-        return (true);
     }
 
     # ...................................................................

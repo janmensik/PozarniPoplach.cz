@@ -60,9 +60,6 @@ class Vehicle extends Modul
     # ...................................................................
     public function delete(int $id): bool
     {
-        if ($this->DB->query('DELETE FROM unit_vehicles WHERE id = "' . (int) $id . '";')) {
-            return true;
-        }
-        return false;
+        return (bool) $this->DB->query('DELETE FROM unit_vehicle WHERE id = ' . $id);
     }
 }

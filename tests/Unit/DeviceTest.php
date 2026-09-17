@@ -95,7 +95,7 @@ test('Device maps data from post correctly', function () {
 test('Device delete calls DB query', function () {
     $this->db->expects($this->once())
              ->method('query')
-             ->with($this->stringContains('DELETE FROM alarm_device_authorized WHERE id = "123"'))
+             ->with($this->stringContains('DELETE FROM alarm_device_authorized WHERE id = 123'))
              ->willReturn(true);
 
     $result = $this->device->delete(123);
