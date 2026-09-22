@@ -109,3 +109,148 @@ test('User generatePassword returns string of requested length', function () {
 test('User hasPermission returns false if no user is loaded', function () {
     expect($this->user->hasPermission('dashboard', 'view'))->toBeFalse();
 });
+
+// ----------------------------------------------------------------
+// getPermanentHash
+// ----------------------------------------------------------------
+
+test('getPermanentHash returns false when user_id is null', function () {
+    expect($this->user->getPermanentHash(null))->toBeFalse();
+    expect($this->user->getPermanentHash(0))->toBeFalse();
+});
+
+test('getPermanentHash returns null when user not found in DB', function () {
+    $this->db->method('query')->willReturn(true);
+    $this->db->method('getResult')->willReturn(0);
+    $this->db->method('getRow')->willReturn(false);
+
+    $result = $this->user->getPermanentHash(999);
+    expect($result)->toBeNull();
+});
+
+test('getPermanentHash returns sha1 hash of id+email+password', function () {
+    $this->db->expects($this->once())->method('query')->willReturn(true);
+    // getId() uses getRow() directly (no getResult), return row then false to end iteration
+    $this->db->expects($this->exactly(2))->method('getRow')->willReturnOnConsecutiveCalls(
+        [
+            'id'          => 5,
+            'email'       => 'test@test.cz',
+            'password'    => 'hashedpw',
+            'name'        => 'Test',
+            'status'      => 'admin',
+            'page_schema' => null,
+        ],
+        false // terminates the while loop
+    );
+
+    $result = $this->user->getPermanentHash(5);
+    expect($result)->toBe(sha1('5test@test.czhashedpw'));
+});
+
+// ----------------------------------------------------------------
+// verifyPermanent
+// ----------------------------------------------------------------
+
+test('verifyPermanent returns null when user not found', function () {
+    $this->db->method('query')->willReturn(true);
+    $this->db->method('getResult')->willReturn(0);
+    $this->db->method('getRow')->willReturn(false);
+
+    $result = $this->user->verifyPermanent('badhash');
+    expect($result)->toBeNull();
+});
+
+// ----------------------------------------------------------------
+// updateLastLogin
+// ----------------------------------------------------------------
+
+test('updateLastLogin executes INSERT INTO user_login', function () {
+    // Set a minimal user state so user['id'] exists
+    $ref = new ReflectionProperty(User::class, 'user');
+    $ref->setValue($this->user, ['id' => 10, 'page_schema' => null]);
+
+    $this->db->expects($this->once())
+        ->method('query')
+        ->with($this->callback(function ($sql) {
+            return str_contains($sql, 'INSERT INTO user_login')
+                && str_contains($sql, 'INET_ATON');
+        }));
+
+    $this->user->updateLastLogin(10, '127.0.0.1');
+    expect(true)->toBeTrue();
+});
+
+test('updateLastLogin falls back to 127.0.0.1 for invalid IP', function () {
+    $ref = new ReflectionProperty(User::class, 'user');
+    $ref->setValue($this->user, ['id' => 1, 'page_schema' => null]);
+
+    $this->db->expects($this->once())
+        ->method('query')
+        ->with($this->stringContains('INET_ATON("127.0.0.1")'));
+
+    $this->user->updateLastLogin(1, 'not-an-ip');
+    expect(true)->toBeTrue();
+});
+
+// ----------------------------------------------------------------
+// getComplete
+// ----------------------------------------------------------------
+
+test('getComplete returns null when no users match', function () {
+    $this->db->method('query')->willReturn(true);
+    $this->db->method('getResult')->willReturn(0);
+    $this->db->method('getRow')->willReturn(false);
+
+    $result = $this->user->getComplete(['u.id = "0"']);
+    expect($result)->toBeFalsy();
+});
+
+// ----------------------------------------------------------------
+// getPageSchema / clearPageSchema
+// ----------------------------------------------------------------
+
+test('getPageSchema returns false when page is null', function () {
+    expect($this->user->getPageSchema(null))->toBeFalse();
+    expect($this->user->getPageSchema(''))->toBeFalse();
+});
+
+test('getPageSchema returns merged global and page schema', function () {
+    $ref = new ReflectionProperty(User::class, 'user');
+    $ref->setValue($this->user, [
+        'id'          => 1,
+        'page_schema' => [
+            'global' => ['order' => 2],
+            'pages'  => ['dispatches' => ['q' => 'fire']],
+        ],
+    ]);
+
+    $result = $this->user->getPageSchema('dispatches');
+    expect($result)->toHaveKey('order');
+    expect($result)->toHaveKey('q');
+    expect($result['q'])->toBe('fire');
+    expect($result['order'])->toBe(2);
+});
+
+test('getPageSchema returns only global schema when page has no entries', function () {
+    $ref = new ReflectionProperty(User::class, 'user');
+    $ref->setValue($this->user, [
+        'id'          => 1,
+        'page_schema' => [
+            'global' => ['order' => 5],
+            'pages'  => ['units' => null], // page exists but is not an array → falls to global
+        ],
+    ]);
+
+    $result = $this->user->getPageSchema('units');
+    expect($result)->toBe(['order' => 5]);
+});
+
+test('clearPageSchema returns false when user_id provided but no user loaded', function () {
+    // With an empty array user, user['id'] is not set, so (int)user_id && !user['id'] → false
+    $ref = new ReflectionProperty(User::class, 'user');
+    $ref->setValue($this->user, []); // no id
+
+    $result = $this->user->clearPageSchema(99);
+    expect($result)->toBeFalse();
+});
+

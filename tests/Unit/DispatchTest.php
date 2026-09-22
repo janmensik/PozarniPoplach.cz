@@ -126,3 +126,50 @@ test('extractUnitRegistration extracts the first matching registration from an a
     ];
     expect($this->dispatch->extractUnitRegistration($emails))->toBe('111111');
 });
+
+// ----------------------------------------------------------------
+// getLastDispatch
+// ----------------------------------------------------------------
+
+test('getLastDispatch returns null when no dispatch found (lightweight)', function () {
+    $this->db->expects($this->once())->method('query')->willReturn(true);
+    $this->db->expects($this->once())->method('getRow')->willReturn(null);
+
+    $result = $this->dispatch->getLastDispatch(null, false);
+    expect($result)->toBeNull();
+});
+
+test('getLastDispatch lightweight returns row when found', function () {
+    $row = ['id' => 5, 'dispatched_at_ts' => 1700000000, 'unit_fullname' => 'Brno'];
+
+    $this->db->expects($this->once())->method('query')
+        ->with($this->stringContains('ORDER BY dis.dispatched_at DESC LIMIT 1'))
+        ->willReturn(true);
+    $this->db->expects($this->once())->method('getRow')->willReturn($row);
+
+    $result = $this->dispatch->getLastDispatch(null, false);
+    expect($result)->toBe($row);
+});
+
+test('getLastDispatch lightweight includes unit_id filter when provided', function () {
+    $this->db->expects($this->once())->method('query')
+        ->with($this->callback(function ($sql) {
+            return str_contains($sql, 'dis.unit_id = "42"');
+        }))
+        ->willReturn(true);
+    $this->db->expects($this->once())->method('getRow')->willReturn(null);
+
+    $this->dispatch->getLastDispatch(42, false);
+    expect(true)->toBeTrue();
+});
+
+test('getLastDispatch full_data returns null when no rows in DB', function () {
+    // Full data path uses get() which calls query + getResult + getRow in a while loop
+    $this->db->method('query')->willReturn(true);
+    $this->db->method('getResult')->willReturn(0);
+    $this->db->method('getRow')->willReturn(false);
+
+    $result = $this->dispatch->getLastDispatch(null, true);
+    expect($result)->toBeNull();
+});
+

@@ -108,3 +108,93 @@ test('Ad setter includes banner_image_url in SQL', function () {
     $result = $this->testableAd->setter();
     expect($result)->toBe(123);
 });
+
+// ----------------------------------------------------------------
+// setAdHit
+// ----------------------------------------------------------------
+
+test('setAdHit executes INSERT INTO advert_hit', function () {
+    $this->db->expects($this->once())
+        ->method('query')
+        ->with($this->callback(function ($sql) {
+            return str_contains($sql, 'INSERT INTO advert_hit')
+                && str_contains($sql, 'advert_id')
+                && str_contains($sql, 'unit_id');
+        }));
+
+    $this->ad->setAdHit(3, 7);
+    expect(true)->toBeTrue();
+});
+
+test('setAdHit uses correct advert_id and unit_id values', function () {
+    $this->db->expects($this->once())
+        ->method('query')
+        ->with($this->callback(function ($sql) {
+            return str_contains($sql, '"99"') // advert_id
+                && str_contains($sql, '"12"'); // unit_id
+        }));
+
+    $this->ad->setAdHit(12, 99);
+    expect(true)->toBeTrue();
+});
+
+// ----------------------------------------------------------------
+// logLinkHit
+// ----------------------------------------------------------------
+
+test('logLinkHit executes UPDATE on advert_hit for correct ad', function () {
+    $this->db->expects($this->once())
+        ->method('query')
+        ->with($this->callback(function ($sql) {
+            return str_contains($sql, 'UPDATE advert_hit')
+                && str_contains($sql, 'link_count = link_count + 1')
+                && str_contains($sql, 'advert_id = 55');
+        }));
+
+    $this->ad->logLinkHit(55);
+    expect(true)->toBeTrue();
+});
+
+// ----------------------------------------------------------------
+// getAdForDevice
+// ----------------------------------------------------------------
+
+test('getAdForDevice returns null when device not found', function () {
+    $this->db->expects($this->once())->method('query')->willReturn(true);
+    $this->db->expects($this->once())->method('getRow')->willReturn(null);
+
+    $result = $this->ad->getAdForDevice('unknown-uuid', 1);
+    expect($result)->toBeNull();
+});
+
+test('getAdForDevice returns null during sticky silence window (no current ad)', function () {
+    // Device has a valid sticky window but current_ad_id is null → silence
+    $this->db->expects($this->once())->method('query')->willReturn(true);
+    $this->db->expects($this->once())->method('getRow')->willReturn([
+        'ad_probability'    => 80,
+        'ad_sticky_duration' => 30,
+        'current_ad_id'     => null,
+        'ad_expires_at'     => date('Y-m-d H:i:s', time() + 3600), // valid window
+    ]);
+
+    $result = $this->ad->getAdForDevice('uuid-silence', 1);
+    expect($result)->toBeNull();
+});
+
+test('getAdForDevice updates state and returns null when no active ads exist (roll wins)', function () {
+    // Expired window → dice roll. No active ads in DB → null.
+    // Calls: 1 query (SELECT device) + 1 query (SELECT active ads) + 1 query (UPDATE state) = 3
+    $this->db->expects($this->exactly(3))->method('query')->willReturn(true);
+    $this->db->expects($this->once())->method('getRow')->willReturn([
+        'ad_probability'     => 100, // always show
+        'ad_sticky_duration' => 30,
+        'current_ad_id'      => null,
+        'ad_expires_at'      => date('Y-m-d H:i:s', time() - 100), // expired
+    ]);
+    // pickRandomAdId uses getAllRows — return empty so newAdId = null
+    $this->db->expects($this->once())->method('getAllRows')->willReturn([]);
+
+    $result = $this->ad->getAdForDevice('uuid-no-ads', 1);
+    expect($result)->toBeNull();
+});
+

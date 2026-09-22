@@ -334,7 +334,7 @@ class User extends Modul
     # ...................................................................
     public function clearPageSchema(?int $user_id = null): bool
     {
-        if ((int) $user_id && !$this->user['id']) {
+        if ((int) $user_id && !($this->user['id'] ?? null)) {
             return (false);
         }
 
