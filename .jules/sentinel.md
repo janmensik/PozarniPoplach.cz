@@ -43,3 +43,8 @@
 **Vulnerability:** A session fixation vulnerability was found in `view/page/login.php` because `session_regenerate_id(true)` was not called upon successful user authentication. This could allow an attacker to hijack a user's session if they can pre-set the session ID.
 **Learning:** Always regenerate the session ID when a user's authentication state changes (e.g., logging in or logging out) to prevent session fixation attacks.
 **Prevention:** Add `session_regenerate_id(true)` immediately after verifying credentials and before setting session variables related to authentication.
+
+## 2024-06-27 - Weak Password Hashing (sha1)
+**Vulnerability:** The application was using `sha1()` for storing and verifying passwords in `include/class.User.php`. `sha1` is considered cryptographically broken and makes offline dictionary and brute-force attacks trivial.
+**Learning:** Legacy algorithms like `md5` and `sha1` should never be used for password hashing.
+**Prevention:** Always use PHP's native `password_hash()` (with `PASSWORD_DEFAULT` or `PASSWORD_BCRYPT`) and `password_verify()` for secure password storage. Additionally, include a seamless upgrade path (checking the old hash function as a fallback) to rehash passwords dynamically upon login without disrupting users. Ensure the database column for the password hash can accommodate larger hashes (e.g., at least `VARCHAR(255)`). Avoid manual SQL string escaping if using the internal abstraction layer (`$this->set(['password' => $newHash]...`).

@@ -117,7 +117,7 @@ elseif (!empty($_POST)) {
         if ($id != 'new' && $User->getUser('status') != 'admin' && empty($_POST['old_password'])) {
             $APPD->MESSAGES['error']['old_password'] = 'empty';
             $error = true;
-        } elseif ($id != 'new' && $User->getUser('status') != 'admin' && $data['password'] != $User->getPasswordHash($_POST['old_password'])) {
+        } elseif ($id != 'new' && $User->getUser('status') != 'admin' && !$User->verifyPassword($_POST['old_password'], $data['password'])) {
             $APPD->MESSAGES['error']['old_password'] = 'wrong';
             $error = true;
         }
