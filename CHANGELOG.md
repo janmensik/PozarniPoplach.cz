@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Major libs update: `casbin/casbin` (^4.5), `chillerlan/php-qrcode` (^6.0)
 - Synced `class.Ad.php` QR code options and method signature with Alarm project
 - Removed unused dependencies: `getbrevo/brevo-php`, `php-imap/php-imap`
+- Enforced PHP version limit `~8.2.0` and `platform.php` `8.2.33` for production compatibility
 
 ## [0.18.3] - 2026-09-22
 
