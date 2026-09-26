@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.4] - 2026-09-26
+
+### Changed
+- Major libs update: `casbin/casbin` (^4.5), `chillerlan/php-qrcode` (^6.0)
+- Synced `class.Ad.php` QR code options and method signature with Alarm project
+- Removed unused dependencies: `getbrevo/brevo-php`, `php-imap/php-imap`
+
 ## [0.18.3] - 2026-09-22
 
 ### Changed
