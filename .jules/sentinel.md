@@ -48,3 +48,8 @@
 **Vulnerability:** The application was using `sha1()` for storing and verifying passwords in `include/class.User.php`. `sha1` is considered cryptographically broken and makes offline dictionary and brute-force attacks trivial.
 **Learning:** Legacy algorithms like `md5` and `sha1` should never be used for password hashing.
 **Prevention:** Always use PHP's native `password_hash()` (with `PASSWORD_DEFAULT` or `PASSWORD_BCRYPT`) and `password_verify()` for secure password storage. Additionally, include a seamless upgrade path (checking the old hash function as a fallback) to rehash passwords dynamically upon login without disrupting users. Ensure the database column for the password hash can accommodate larger hashes (e.g., at least `VARCHAR(255)`). Avoid manual SQL string escaping if using the internal abstraction layer (`$this->set(['password' => $newHash]...`).
+
+## 2024-10-24 - [Critical] Predictable Password Generation
+**Vulnerability:** The `createPassword()` function relied on `substr(sha1(time() . $salt), 0, $length)` to generate temporary passwords. Because `time()` is predictable and known (or easily guessable), an attacker could locally pre-compute the expected `sha1` hash and predict generated passwords, rendering them insecure.
+**Learning:** Functions that generate security-sensitive data (like passwords, keys, or authentication tokens) must never rely on predictable sources of entropy such as time, `rand()`, or `mt_rand()`.
+**Prevention:** Always use cryptographically secure random number generators (CSPRNG), such as PHP's `random_int()` or `random_bytes()`, when generating secrets to ensure sufficient, unpredictable entropy.
