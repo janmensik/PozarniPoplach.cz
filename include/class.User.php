@@ -104,7 +104,14 @@ class User extends Modul
     # ...................................................................
     public function getPasswordHash(?string $password = null): string
     {
-        return (sha1($password));
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    # ...................................................................
+    public function verifyPassword(?string $password = null, ?string $hash = null): bool
+    {
+        if ($password === null || $password === '' || $hash === null || $hash === '') return false;
+        return password_verify($password, $hash) || sha1($password) === $hash;
     }
 
     # ...................................................................
@@ -120,9 +127,16 @@ class User extends Modul
             return (null);
         }
 
-        if ($this->getPasswordHash($password) != $this->user['password']) {
+        if (!$this->verifyPassword($password, $this->user['password'])) {
             unset($this->user);
             return (false);
+        }
+
+        // Seamless migration and automatic rehash for weak hashes
+        if (password_needs_rehash($this->user['password'], PASSWORD_DEFAULT)) {
+            $newHash = password_hash($password, PASSWORD_DEFAULT);
+            $this->set(['password' => $newHash], $this->user['id']);
+            $this->user['password'] = $newHash;
         }
 
         # overeni, pak predelat

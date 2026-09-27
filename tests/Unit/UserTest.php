@@ -82,9 +82,21 @@ test('User validation passes if all fields are valid', function () {
     expect($errors)->toBeEmpty();
 });
 
-test('User password hash returns sha1', function () {
+test('User password hash uses secure password_hash', function () {
     $password = 'secret123';
-    expect($this->user->getPasswordHash($password))->toBe(sha1($password));
+    $hash = $this->user->getPasswordHash($password);
+    expect(password_verify($password, $hash))->toBeTrue();
+});
+
+test('User verifyPassword handles legacy sha1 and secure hashes', function () {
+    $password = 'secret123';
+    $secureHash = $this->user->getPasswordHash($password);
+    $legacyHash = sha1($password);
+
+    expect($this->user->verifyPassword($password, $secureHash))->toBeTrue();
+    expect($this->user->verifyPassword($password, $legacyHash))->toBeTrue();
+    expect($this->user->verifyPassword('wrong', $secureHash))->toBeFalse();
+    expect($this->user->verifyPassword('wrong', $legacyHash))->toBeFalse();
 });
 
 test('User logout clears user data', function () {
