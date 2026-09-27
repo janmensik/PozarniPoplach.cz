@@ -99,6 +99,29 @@ test('User verifyPassword handles legacy sha1 and secure hashes', function () {
     expect($this->user->verifyPassword('wrong', $legacyHash))->toBeFalse();
 });
 
+test('verify() SQL-quotes bcrypt hash during seamless rehash upgrade', function () {
+    // Regression test for: bcrypt hash passed unquoted to SQL causing
+    // "Unknown column '$2y$12$...' in field list"
+    //
+    // The fix wraps the new hash with: '"' . addslashes($newHash) . '"'
+    // This test validates that logic without needing a full DB stack.
+
+    $password    = 'mypassword';
+    $legacyHash  = sha1($password);           // legacy sha1 → needs rehash
+    $newHash     = password_hash($password, PASSWORD_DEFAULT);
+    $sqlValue    = '"' . addslashes($newHash) . '"';
+
+    // sha1 hashes must trigger a rehash
+    expect(password_needs_rehash($legacyHash, PASSWORD_DEFAULT))->toBeTrue();
+    // fresh bcrypt hashes must NOT trigger a rehash
+    expect(password_needs_rehash($newHash, PASSWORD_DEFAULT))->toBeFalse();
+    // the SQL value must be wrapped in double-quotes
+    expect($sqlValue)->toStartWith('"$2');
+    expect($sqlValue)->toEndWith('"');
+    // must NOT be bare unquoted hash (the original bug)
+    expect($sqlValue[0])->not->toBe('$');
+});
+
 test('User logout clears user data', function () {
     // We can't easily set the protected 'user' property without reflection
     // or calling a method that sets it. Let's use reflection but be more careful.

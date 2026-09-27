@@ -61,7 +61,10 @@
         "Tqjk",
         "UPRESNENÍ",
         "UPXLC",
-        "Zpmkgl"
+        "Zpmkgl",
+        "badhash",
+        "hashedpw",
+        "mypassword"
     ],
     "files.exclude": {
         "node_modules/": true

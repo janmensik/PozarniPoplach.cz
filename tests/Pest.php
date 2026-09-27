@@ -1,5 +1,9 @@
 <?php
 
+// Namespace shims for domain classes that use unqualified mysqli_real_escape_string
+// Must be loaded before any test file to ensure hermetic test isolation.
+require_once __DIR__ . '/namespace-shims.php';
+
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 

@@ -135,7 +135,7 @@ class User extends Modul
         // Seamless migration and automatic rehash for weak hashes
         if (password_needs_rehash($this->user['password'], PASSWORD_DEFAULT)) {
             $newHash = password_hash($password, PASSWORD_DEFAULT);
-            $this->set(['password' => $newHash], $this->user['id']);
+            $this->set(['password' => '"' . addslashes($newHash) . '"'], $this->user['id']);
             $this->user['password'] = $newHash;
         }
 
