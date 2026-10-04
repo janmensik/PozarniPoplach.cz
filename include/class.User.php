@@ -110,7 +110,9 @@ class User extends Modul
     # ...................................................................
     public function verifyPassword(?string $password = null, ?string $hash = null): bool
     {
-        if ($password === null || $password === '' || $hash === null || $hash === '') return false;
+        if ($password === null || $password === '' || $hash === null || $hash === '') {
+            return false;
+        }
         return password_verify($password, $hash) || sha1($password) === $hash;
     }
 
