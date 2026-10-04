@@ -20,3 +20,7 @@ p, disabled, settings, read, allow
 p, disabled, version-history, read, allow
 
 p, deleted, version-history, read, allow
+
+# Device activation — managers may activate kiosk devices (admin has wildcard * above)
+p, manager, activate, read,  allow
+p, manager, activate, write, allow

@@ -60,7 +60,14 @@ if (empty($_POST['email']) || empty($_POST['password'])) {
     $APPD->MESSAGES['saved']['login'] = 'logged';
     $APPD->hibernateMessages();
 
-    header('Location: ' . $APPD->getData('BASE_URL'));
+    // Honour redirect-after-login (e.g. /activate/XXXX stored before login)
+    $redirectAfterLogin = $_SESSION['login_redirect'] ?? null;
+    unset($_SESSION['login_redirect']);
+    if ($redirectAfterLogin && str_starts_with($redirectAfterLogin, '/')) {
+        header('Location: ' . $APPD->getData('BASE_URL') . $redirectAfterLogin);
+    } else {
+        header('Location: ' . $APPD->getData('BASE_URL'));
+    }
     header("Connection: close");
     return;
 }

@@ -93,13 +93,15 @@ class DeviceAuth extends Modul
      * @param string $deviceCode The code scanned from the QR.
      * @param int $unitId The ID of the unit to authorize this device for.
      * @param string|null $deviceName Optional name for the device.
+     * @param int|null $activatedByUserId ID of the admin user who activated the device.
      * @return bool Success status.
      */
-    public function linkSessionToUnit(string $deviceCode, int $unitId, ?string $deviceName = null): bool
+    public function linkSessionToUnit(string $deviceCode, int $unitId, ?string $deviceName = null, ?int $activatedByUserId = null): bool
     {
         $query = 'UPDATE alarm_device_session
                   SET status = "linked", unit_id = ' . intval($unitId) . ',
-                      device_name = "' . mysqli_real_escape_string($this->DB->db, (string)$deviceName) . '"
+                      device_name = "' . mysqli_real_escape_string($this->DB->db, (string)$deviceName) . '",
+                      activated_by_user_id = ' . ($activatedByUserId ? intval($activatedByUserId) : 'NULL') . '
                   WHERE device_code = "' . mysqli_real_escape_string($this->DB->db, $deviceCode) . '"
                   AND status = "pending" AND expires_at > NOW()';
 

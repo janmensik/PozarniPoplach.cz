@@ -8,3 +8,10 @@
 -- Password column must hold bcrypt hashes (60 chars) instead of SHA1 (40 chars).
 -- VARCHAR(255) is the safe recommended size for any future hash algorithm upgrade.
 ALTER TABLE `user` MODIFY `password` VARCHAR(255) NOT NULL;
+
+/* 0.20.0 — device session tracking */
+/* device-login — authenticated device pairing */
+-- Tracks which admin user activated each device session.
+ALTER TABLE `alarm_device_session`
+    ADD `activated_by_user_id` INT(10) UNSIGNED NULL DEFAULT NULL
+        AFTER `device_name`;

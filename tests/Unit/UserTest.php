@@ -289,3 +289,71 @@ test('clearPageSchema returns false when user_id provided but no user loaded', f
     expect($result)->toBeFalse();
 });
 
+// ----------------------------------------------------------------
+// getUnitsForUser
+// ----------------------------------------------------------------
+
+test('getUnitsForUser returns all active units for admin user', function () {
+    $ref = new ReflectionProperty(User::class, 'user');
+    $ref->setValue($this->user, ['id' => 1, 'status' => 'admin']);
+
+    $mockRows = [
+        ['id' => 10, 'fullname' => 'JSDH Brno'],
+        ['id' => 20, 'fullname' => 'JSDH Praha'],
+    ];
+
+    $this->db->expects($this->once())
+        ->method('query')
+        ->with($this->callback(function ($sql) {
+            return str_contains($sql, "SELECT id, fullname FROM unit WHERE status = 'ok'");
+        }))
+        ->willReturn(true);
+
+    $this->db->expects($this->once())
+        ->method('getAllRows')
+        ->willReturn($mockRows);
+
+    $result = $this->user->getUnitsForUser();
+    expect($result)->toBe($mockRows);
+});
+
+test('getUnitsForUser returns assigned units via user2unit for non-admin user', function () {
+    $ref = new ReflectionProperty(User::class, 'user');
+    $ref->setValue($this->user, ['id' => 5, 'status' => 'manager']);
+
+    $mockRows = [
+        ['id' => 10, 'fullname' => 'JSDH Brno'],
+    ];
+
+    $this->db->expects($this->once())
+        ->method('query')
+        ->with($this->callback(function ($sql) {
+            return str_contains($sql, 'JOIN user2unit uu ON uu.unit_id = u.id')
+                && str_contains($sql, 'WHERE uu.user_id = 5');
+        }))
+        ->willReturn(true);
+
+    $this->db->expects($this->once())
+        ->method('getAllRows')
+        ->willReturn($mockRows);
+
+    $result = $this->user->getUnitsForUser();
+    expect($result)->toBe($mockRows);
+});
+
+test('getUnitsForUser returns empty array when query returns empty or null', function () {
+    $ref = new ReflectionProperty(User::class, 'user');
+    $ref->setValue($this->user, ['id' => 99, 'status' => 'partner']);
+
+    $this->db->expects($this->once())
+        ->method('query')
+        ->willReturn(true);
+
+    $this->db->expects($this->once())
+        ->method('getAllRows')
+        ->willReturn(null);
+
+    $result = $this->user->getUnitsForUser();
+    expect($result)->toBe([]);
+});
+

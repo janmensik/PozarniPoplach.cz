@@ -26,6 +26,11 @@ $router->get('/logout', function () use ($Smarty, $DB, $User, $CASBIN) {
 $router->get('/login', function () use ($Smarty, $DB, $CASBIN) {
     $APPD = AppData::getInstance();
     $APPD->setData('PAGE', 'login');
+
+    // Store redirect target so it survives the POST redirect (e.g. from /activate/XXXX)
+    if (!empty($_GET['redirect'])) {
+        $_SESSION['login_redirect'] = '/' . ltrim(urldecode($_GET['redirect']), '/');
+    }
 });
 
 # *******************************************************************
@@ -203,6 +208,23 @@ $router->get('/' . $APPD->data['CONFIG']['mail_schedule_url'], function () use (
 # import log - list
 $router->get('/' . $APPD->data['CONFIG']['import_log_url'], function () use ($Smarty, $DB, $User, $CASBIN) {
     include('./view/page/import-log.php');
+});
+
+# *******************************************************************
+
+# Device Activation — with code in path (e.g. /activate/ABCD1234)
+$router->match('GET|POST', '/activate/([A-Za-z0-9]{4,16})', function ($code) use ($Smarty, $DB, $User, $CASBIN) {
+    $APPD = AppData::getInstance();
+    $APPD->setData('PAGE', 'activate');
+    $APPD->setData('DEVICE_CODE', $code);
+    include('./view/page/activate.php');
+});
+
+# Device Activation — without code (manual entry fallback)
+$router->match('GET|POST', '/activate', function () use ($Smarty, $DB, $User, $CASBIN) {
+    $APPD = AppData::getInstance();
+    $APPD->setData('PAGE', 'activate');
+    include('./view/page/activate.php');
 });
 
 # *******************************************************************

@@ -326,6 +326,31 @@ namespace Tests\Unit {
         expect($result)->toBeTrue();
     });
 
+    test('linkSessionToUnit includes activated_by_user_id when provided', function () {
+        $this->db->expects($this->once())
+            ->method('query')
+            ->with($this->callback(function ($sql) {
+                return str_contains($sql, 'activated_by_user_id = 42')
+                    && str_contains($sql, 'unit_id = 5');
+            }))
+            ->willReturn(true);
+
+        $result = $this->deviceAuth->linkSessionToUnit('MYCODE', 5, 'Kiosk Brno', 42);
+        expect($result)->toBeTrue();
+    });
+
+    test('linkSessionToUnit sets activated_by_user_id to NULL when omitted or null', function () {
+        $this->db->expects($this->once())
+            ->method('query')
+            ->with($this->callback(function ($sql) {
+                return str_contains($sql, 'activated_by_user_id = NULL');
+            }))
+            ->willReturn(true);
+
+        $result = $this->deviceAuth->linkSessionToUnit('MYCODE', 5, 'Kiosk Brno', null);
+        expect($result)->toBeTrue();
+    });
+
     // ----------------------------------------------------------------
     // validateDevice
     // ----------------------------------------------------------------

@@ -383,4 +383,35 @@ class User extends Modul
             return (null);
         }
     }
+
+    # ...................................................................
+    /**
+     * Returns units available to this user for device assignment.
+     * Users with status='admin' see all active units.
+     * All other users see only units assigned via the user2unit table.
+     *
+     * @return array List of ['id', 'fullname'] rows.
+     */
+    public function getUnitsForUser(): array
+    {
+        $userId     = (int)($this->user['id'] ?? 0);
+        $userStatus = $this->user['status'] ?? '';
+
+        if ($userStatus === 'admin') {
+            $result = $this->DB->getAllRows($this->DB->query(
+                "SELECT id, fullname FROM unit WHERE status = 'ok' ORDER BY fullname ASC",
+                __METHOD__
+            ));
+        } else {
+            $result = $this->DB->getAllRows($this->DB->query(
+                "SELECT u.id, u.fullname FROM unit u
+                 JOIN user2unit uu ON uu.unit_id = u.id
+                 WHERE uu.user_id = " . $userId . " AND u.status = 'ok'
+                 ORDER BY u.fullname ASC",
+                __METHOD__
+            ));
+        }
+
+        return $result ?: [];
+    }
 }
