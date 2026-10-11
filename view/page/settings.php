@@ -56,6 +56,11 @@ if (!$data && $id != "new") {
     return;
 }
 
+# CSRF protection
+if (empty($_SESSION['csrf_token_settings'])) {
+    $_SESSION['csrf_token_settings'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token_settings'];
 
 # *******************************************************************
 # FORM Sanitation & Validation
@@ -64,6 +69,14 @@ if (!$data && $id != "new") {
 # ...................................................................
 #  Reset Pageschema
 if (!empty($_POST['reset']) && $data['id']) {
+    if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token_settings'], (string)$_POST['csrf_token'])) {
+        $APPD->MESSAGES['error']['settings'] = 'csrf';
+        $APPD->hibernateMessages();
+        header('Location: ' . $APPD->getData('BASE_URL') .  '/' . $APPD->data['CONFIG']['settings_url']);
+        header("Connection: close");
+        return;
+    }
+
     $User->clearPageSchema($data['id']);
 
     $APPD->hibernateMessages();
@@ -82,6 +95,11 @@ if (!empty($_POST['reset']) && $data['id']) {
 #  Other changes
 elseif (!empty($_POST)) {
     $error = false;
+
+    if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token_settings'], (string)$_POST['csrf_token'])) {
+        $APPD->MESSAGES['error']['settings'] = 'csrf';
+        $error = true;
+    }
 
     # 1. Initialize data (if editing)
     if ($id != 'new') {
@@ -187,6 +205,8 @@ if (!empty($_POST) && !isset($user_id)) {
 # *******************************************************************
 # OUTPUT
 # *******************************************************************
+
+$Smarty->assign('csrf_token_settings', $csrf_token);
 
 $Smarty->assign('user_text', $User->text);
 
