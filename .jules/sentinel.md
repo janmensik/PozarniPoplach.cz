@@ -48,3 +48,11 @@
 **Vulnerability:** The application was using `sha1()` for storing and verifying passwords in `include/class.User.php`. `sha1` is considered cryptographically broken and makes offline dictionary and brute-force attacks trivial.
 **Learning:** Legacy algorithms like `md5` and `sha1` should never be used for password hashing.
 **Prevention:** Always use PHP's native `password_hash()` (with `PASSWORD_DEFAULT` or `PASSWORD_BCRYPT`) and `password_verify()` for secure password storage. Additionally, include a seamless upgrade path (checking the old hash function as a fallback) to rehash passwords dynamically upon login without disrupting users. Ensure the database column for the password hash can accommodate larger hashes (e.g., at least `VARCHAR(255)`). Avoid manual SQL string escaping if using the internal abstraction layer (`$this->set(['password' => $newHash]...`).
+
+## 2026-10-11 - [High] Missing CSRF Protection on Settings Page
+**Vulnerability:** The settings page (`view/page/settings.php`) lacked Cross-Site Request Forgery (CSRF) protection for updating sensitive user data (name, email, password) and resetting user schemas. An attacker could trick an authenticated user into visiting a malicious site that submits a forged POST request to modify the user's account details.
+**Learning:** State-changing operations, particularly those involving sensitive user preferences or credentials, must be protected against CSRF. Relying on an active session without verifying intent allows attackers to leverage the victim's session.
+**Prevention:**
+1. Generate a cryptographically secure, unpredictable CSRF token (using `random_bytes`) and bind it to the user's session.
+2. Embed the token in all sensitive forms as a hidden field.
+3. Validate the token in the form processing script using a timing-attack resistant comparison (like `hash_equals`) before processing any state-changing operations.
