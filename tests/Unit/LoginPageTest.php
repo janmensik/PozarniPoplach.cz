@@ -141,3 +141,26 @@ test('login.php unsets invalid login_redirect not starting with slash', function
     expect(isset($_SESSION['user_id']))->toBeTrue();
     expect(isset($_SESSION['login_redirect']))->toBeFalse();
 });
+
+test('login.php unsets invalid login_redirect starting with double slash (protocol-relative)', function () {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $_POST = ['email' => 'test@example.com', 'password' => 'correctpassword'];
+    $_SESSION['login_redirect'] = '//malicious.com';
+
+    $this->user->method('verify')->willReturn(true);
+    $this->user->method('load')->willReturn(['id' => 1, 'email' => 'test@example.com']);
+
+    $User = $this->user;
+    $APPD = $this->appd;
+    $Smarty = $this->smarty;
+
+    ob_start();
+    @include __DIR__ . '/../../view/page/login.php';
+    ob_end_clean();
+
+    expect(isset($_SESSION['user_id']))->toBeTrue();
+    expect(isset($_SESSION['login_redirect']))->toBeFalse();
+});
