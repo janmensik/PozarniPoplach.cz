@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{$BASE_URL}/ui/application.css" />
 
     <link rel="shortcut icon" href="{$BASE_URL}/favicon.ico" type="image/x-icon" />
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
   <body class="hold-transition login-page">
 
@@ -89,7 +91,7 @@
             </form>
 
           {else}
-            {* ── NO VALID CODE STATE ── *}
+            {* ── NO VALID CODE / MANUAL ENTRY STATE ── *}
 
             {if $error}
               <div class="alert alert-danger">
@@ -97,10 +99,29 @@
               </div>
             {/if}
 
-            <div class="text-center text-muted py-4">
+            <div class="text-center text-muted py-2">
               <i class="fas fa-qrcode fa-3x mb-3 d-block"></i>
-              <p>Prosím naskenujte QR kód na výjezdovém panelu nebo otevřete odkaz s platným aktivačním kódem.</p>
-              <a href="{$BASE_URL}" class="btn btn-outline-secondary btn-sm mt-2">
+              <p class="mb-3">Naskenujte QR kód na výjezdovém panelu nebo zadejte aktivační kód ručně:</p>
+            </div>
+
+            <form method="get" action="{$BASE_URL}/activate"
+                  x-data="{ manualCode: '' }"
+                  @submit.prevent="if (manualCode.trim()) window.location.href = '{$BASE_URL}/activate/' + encodeURIComponent(manualCode.trim().toUpperCase())">
+              <div class="input-group mb-3">
+                <input type="text" name="code" x-model="manualCode"
+                       class="form-control text-uppercase text-center font-weight-bold"
+                       placeholder="např. ABCD2345" maxlength="16" pattern="[A-Za-z0-9]{ldelim}4,16{rdelim}"
+                       autocomplete="off" required />
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-danger" :disabled="!manualCode.trim()">
+                    <i class="fas fa-arrow-right mr-1"></i> Ověřit kód
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div class="text-center mt-3">
+              <a href="{$BASE_URL}" class="btn btn-outline-secondary btn-sm">
                 <i class="fas fa-arrow-left mr-1"></i> Zpět do administrace
               </a>
             </div>

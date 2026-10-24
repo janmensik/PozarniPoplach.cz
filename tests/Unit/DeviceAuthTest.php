@@ -197,6 +197,34 @@ namespace Tests\Unit {
         expect(strlen($result['refresh_token']))->toBe(64); // hex encoded 32 bytes
     });
 
+    test('authorizeDevice copies activated_by_user_id into alarm_device_authorized', function () {
+        $capturedInsertSql = '';
+        $this->db->expects($this->exactly(3))
+            ->method('query')
+            ->willReturnCallback(function ($query) use (&$capturedInsertSql) {
+                if (str_contains($query, 'INSERT INTO alarm_device_authorized')) {
+                    $capturedInsertSql = $query;
+                }
+                return true;
+            });
+
+        $this->db->expects($this->once())
+            ->method('getRow')
+            ->willReturn([
+                'status' => 'linked',
+                'unit_id' => 123,
+                'device_uuid' => 'uuid-123',
+                'device_name' => 'Test Device',
+                'activated_by_user_id' => 17,
+            ]);
+
+        $result = $this->deviceAuth->authorizeDevice('VALIDCODE');
+
+        expect($result)->toBeArray();
+        expect($capturedInsertSql)->toContain('activated_by_user_id');
+        expect($capturedInsertSql)->toContain('17');
+    });
+
     // ----------------------------------------------------------------
     // initSession
     // ----------------------------------------------------------------

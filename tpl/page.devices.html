@@ -39,6 +39,7 @@
                     {include file="inc.activetabletitle.html" key=8 value="% reklamy" th_class="text-right"}
                     {include file="inc.activetabletitle.html" key=9 value="Timeout reklamy" th_class="text-right"}
                     {include file="inc.activetabletitle.html" key=7 value="Kalendář?" th_class="text-center"}
+                    {include file="inc.activetabletitle.html" key=14 value="Autorizoval"}
                     {include file="inc.activetabletitle.html" key=7 value="Registrován" th_class="text-right"}
                     {include file="inc.activetabletitle.html" key=5 value="Naposled aktivní" th_class="text-right"}
                   </tr>
@@ -59,6 +60,13 @@
                             <i class="fa-regular fa-calendar-circle-minus" title="Kalendář je dostupný, ale na zařízení nebude zobrazen."></i>
                         {else}
                             &nbsp;
+                        {/if}
+                      </td>
+                      <td>
+                        {if $item.activated_by_user_id}
+                          <a href="{$BASE_URL}/{#users_url#}/{$item.activated_by_user_id}">{$item.activated_by_user_name|default:$item.activated_by_user_id|escape}</a>
+                        {else}
+                          <span class="text-muted">—</span>
                         {/if}
                       </td>
                       <td class="text-right"><abbr class="timeago" title="před {agots ts=$item.created_at_ts lang='cs2' justone=true}"><small>{$item.created_at_ts|date_format:"j. n. Y"|escape}</small></abbr></td>

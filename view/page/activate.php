@@ -16,10 +16,10 @@ $APPD->setData('PAGE', 'activate');
 # PROGRAM
 # *******************************************************************
 
-// 1. Retrieve device code from route capture or POST fallback
-$device_code = $APPD->getData('DEVICE_CODE') ?? $_GET['code'] ?? $_POST['code'] ?? null;
+// 1. Retrieve device code from manual entry (GET/POST) or route capture
+$device_code = $_GET['code'] ?? $_POST['code'] ?? $APPD->getData('DEVICE_CODE') ?? null;
 if (!empty($device_code)) {
-    $device_code = strtoupper(trim($device_code));
+    $device_code = strtoupper(trim((string)$device_code));
 }
 
 // 2. Auth guard — must be logged in

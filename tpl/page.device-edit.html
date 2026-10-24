@@ -35,6 +35,15 @@
                 <input type="text" class="form-control" name="device_name" id="f_device_name" value="{$data.device_name|escape}" placeholder="Např. TV v garáži" />
               </div>
             </div>
+
+            {if $data.activated_by_user_id}
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Autorizoval:</label>
+              <div class="col-sm-6 d-flex align-items-center">
+                <a href="{$BASE_URL}/{#users_url#}/{$data.activated_by_user_id}">{$data.activated_by_user_name|default:$data.activated_by_user_id|escape}</a>
+              </div>
+            </div>
+            {/if}
           </fieldset>
 
           <fieldset>

@@ -122,16 +122,19 @@ class DeviceAuth extends Modul
         if ($session && $session['status'] === 'linked' && !empty($session['unit_id'])) {
             $refreshToken = bin2hex(random_bytes(32));
             $refreshTokenHash = hash('sha256', $refreshToken);
+            $activatedByUserId = !empty($session['activated_by_user_id']) ? intval($session['activated_by_user_id']) : 'NULL';
 
             // Move to authorized table
-            $query = 'INSERT INTO alarm_device_authorized (device_uuid, unit_id, device_name, refresh_token_hash)
+            $query = 'INSERT INTO alarm_device_authorized (device_uuid, unit_id, device_name, activated_by_user_id, refresh_token_hash)
                       VALUES ("' . mysqli_real_escape_string($this->DB->db, $session['device_uuid']) . '",
                               ' . intval($session['unit_id']) . ',
-                              "' . mysqli_real_escape_string($this->DB->db, $session['device_name']) . '",
+                              "' . mysqli_real_escape_string($this->DB->db, (string)($session['device_name'] ?? '')) . '",
+                              ' . $activatedByUserId . ',
                               "' . mysqli_real_escape_string($this->DB->db, $refreshTokenHash) . '")
                       ON DUPLICATE KEY UPDATE
                               unit_id = VALUES(unit_id),
                               device_name = VALUES(device_name),
+                              activated_by_user_id = VALUES(activated_by_user_id),
                               refresh_token_hash = VALUES(refresh_token_hash),
                               last_seen = NOW()';
 
@@ -154,7 +157,7 @@ class DeviceAuth extends Modul
      */
     private function checkSessionStatusWithExtraFields(string $deviceCode): array|null
     {
-        $query = 'SELECT status, unit_id, device_uuid, device_name FROM alarm_device_session
+        $query = 'SELECT status, unit_id, device_uuid, device_name, activated_by_user_id FROM alarm_device_session
                   WHERE device_code = "' . mysqli_real_escape_string($this->DB->db, $deviceCode) . '"
                   AND expires_at > NOW() LIMIT 1';
 

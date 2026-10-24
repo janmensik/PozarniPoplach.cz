@@ -15,3 +15,7 @@ ALTER TABLE `user` MODIFY `password` VARCHAR(255) NOT NULL;
 ALTER TABLE `alarm_device_session`
     ADD `activated_by_user_id` INT(10) UNSIGNED NULL DEFAULT NULL
         AFTER `device_name`;
+
+ALTER TABLE `alarm_device_authorized`
+    ADD `activated_by_user_id` INT(10) UNSIGNED NULL DEFAULT NULL
+        AFTER `device_name`;
