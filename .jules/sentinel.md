@@ -48,3 +48,8 @@
 **Vulnerability:** The application was using `sha1()` for storing and verifying passwords in `include/class.User.php`. `sha1` is considered cryptographically broken and makes offline dictionary and brute-force attacks trivial.
 **Learning:** Legacy algorithms like `md5` and `sha1` should never be used for password hashing.
 **Prevention:** Always use PHP's native `password_hash()` (with `PASSWORD_DEFAULT` or `PASSWORD_BCRYPT`) and `password_verify()` for secure password storage. Additionally, include a seamless upgrade path (checking the old hash function as a fallback) to rehash passwords dynamically upon login without disrupting users. Ensure the database column for the password hash can accommodate larger hashes (e.g., at least `VARCHAR(255)`). Avoid manual SQL string escaping if using the internal abstraction layer (`$this->set(['password' => $newHash]...`).
+
+## 2025-02-18 - Fix Open Redirect in login redirect logic
+**Vulnerability:** The application was vulnerable to Open Redirect in `view/page/login.php` when handling the `login_redirect` session variable. The validation only checked if the URL started with a single slash (`str_starts_with($redirectAfterLogin, '/')`), allowing protocol-relative URLs (e.g., `//evil.com`) to pass the check and redirect users to malicious domains.
+**Learning:** Checking for a single leading slash is insufficient for relative URL validation in PHP and web contexts because browsers interpret `//` as a protocol-relative absolute URL.
+**Prevention:** Always explicitly deny protocol-relative URLs when validating relative paths by combining a check for a single slash with a negation for double slashes: `str_starts_with($url, '/') && !str_starts_with($url, '//')`.
